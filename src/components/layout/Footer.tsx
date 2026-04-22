@@ -1,36 +1,21 @@
-import Link from 'next/link'
-
-const links = [
-  { href: '/cartelera', label: 'Cartelera' },
-  { href: '/discos', label: 'Discos' },
-  { href: '/merch', label: 'Merch' },
-  { href: '/proyectos', label: 'Proyectos' },
-]
-
 export function Footer() {
   return (
-    <footer className="border-t border-cream/10 px-6 py-12 md:px-12">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div>
-          <p className="font-serif text-xl font-light text-cream">Not a Bot</p>
-          <p className="font-sans text-xs text-cream-muted mt-1">Jazz en las Rocas · Ciudad de México</p>
-        </div>
-        <nav className="flex flex-wrap gap-6">
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="font-sans text-xs uppercase tracking-widest text-cream-muted hover:text-cream transition-colors"
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
+    <footer className="px-8 md:px-16 py-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-t border-white/[0.06]">
+      <div className="font-serif text-xl text-cream">
+        Parker <span className="italic" style={{ color: 'var(--color-parker-bronze)' }}>&</span> Lenox
       </div>
-      <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-cream/5">
-        <p className="font-sans text-xs text-cream-dim">
-          © {new Date().getFullYear()} Not a Bot. Todos los derechos reservados.
-        </p>
+      <div className="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-white/25 text-center leading-loose">
+        Ciudad de México<br />
+        Miércoles a Domingo · 8PM — 2AM<br />
+        reservas@parkerandlenox.com
+      </div>
+      <div className="flex flex-col items-start md:items-end gap-2">
+        <a href="/cartelera" className="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-white/30 hover:text-parker-bronze transition-colors duration-300 hoverable">
+          Cartelera
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-white/30 hover:text-parker-bronze transition-colors duration-300 hoverable">
+          Instagram
+        </a>
       </div>
     </footer>
   )

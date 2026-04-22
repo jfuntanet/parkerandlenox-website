@@ -25,7 +25,7 @@ export default async function CheckoutPage({ params }: Props) {
 
   return (
     <div className="relative min-h-screen pt-32 pb-24">
-      <GrainOverlay opacity={0.03} />
+      <GrainOverlay />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at 60% 20%, #1a0a15 0%, transparent 50%)' }}

@@ -24,7 +24,7 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <div className="relative min-h-screen pt-24">
-      <GrainOverlay opacity={0.04} />
+      <GrainOverlay />
 
       <div className="relative h-[60vh] w-full overflow-hidden">
         {event.imageUrl ? (

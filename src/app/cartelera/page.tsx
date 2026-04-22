@@ -14,7 +14,7 @@ export default async function CarreleraPage() {
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at 20% 10%, #2a0a05 0%, transparent 50%)' }}
       />
-      <GrainOverlay opacity={0.03} />
+      <GrainOverlay />
 
       <div className="relative z-10 px-6 md:px-12 max-w-6xl mx-auto">
         <div className="mb-16">

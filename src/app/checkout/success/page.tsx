@@ -6,7 +6,7 @@ export const metadata = { title: 'Compra confirmada — Not a Bot' }
 export default function CheckoutSuccessPage() {
   return (
     <div className="relative min-h-screen flex items-center justify-center">
-      <GrainOverlay opacity={0.04} />
+      <GrainOverlay />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at 50% 40%, #0a1a0a 0%, transparent 60%)' }}
