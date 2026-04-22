@@ -2,24 +2,22 @@
 
 import Link from 'next/link'
 
-export default function CheckoutError() {
+export default function CheckoutError({ error }: { error: Error }) {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="text-center max-w-md">
-        <p className="font-sans text-xs uppercase tracking-widest text-gold mb-4">Error</p>
-        <h1 className="font-serif text-3xl font-light text-cream mb-6">
-          No pudimos procesar tu compra
-        </h1>
-        <p className="font-sans text-sm text-cream-muted mb-8 leading-relaxed">
-          Ocurrió un error al conectar con el servidor de pagos. Por favor intenta de nuevo o contáctanos.
-        </p>
-        <Link
-          href="/cartelera"
-          className="inline-block border border-gold/40 px-8 py-3 font-sans text-xs uppercase tracking-widest text-gold hover:bg-gold/10 transition-colors duration-500"
-        >
-          Volver a la cartelera
-        </Link>
-      </div>
+    <div className="min-h-screen pt-32 pb-24 flex flex-col items-center justify-center px-8 text-center">
+      <p className="font-mono text-[0.6rem] tracking-widest uppercase mb-4"
+        style={{ color: 'var(--color-lenox-red)' }}>
+        Error al procesar
+      </p>
+      <p className="font-serif text-2xl font-light text-cream mb-8">
+        {error.message || 'Ocurrió un error inesperado.'}
+      </p>
+      <Link
+        href="/cartelera"
+        className="font-mono text-[0.6rem] tracking-widest uppercase text-white/40 hover:text-cream transition-colors hoverable"
+      >
+        ← Volver a la cartelera
+      </Link>
     </div>
   )
 }
