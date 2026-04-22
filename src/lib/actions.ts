@@ -7,10 +7,10 @@ const API_KEY = process.env.CORE_API_KEY!
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
 
 export async function initiateCheckout(formData: FormData) {
-  const slug = formData.get('slug') as string
-  const ticketTypeId = formData.get('ticketTypeId') as string
-  const quantity = Number(formData.get('quantity'))
-  const customerName = formData.get('customerName') as string
+  const slug          = formData.get('slug')          as string
+  const ticketTypeId  = formData.get('ticketTypeId')  as string
+  const quantity      = Number(formData.get('quantity'))
+  const customerName  = formData.get('customerName')  as string
   const customerEmail = formData.get('customerEmail') as string
 
   if (!slug || !ticketTypeId || !quantity || !customerName || !customerEmail) {
@@ -30,7 +30,7 @@ export async function initiateCheckout(formData: FormData) {
       customerName,
       customerEmail,
       successUrl: `${APP_URL}/checkout/success`,
-      cancelUrl: `${APP_URL}/cartelera/${slug}`,
+      cancelUrl:  `${APP_URL}/cartelera/${slug}`,
     }),
   })
 

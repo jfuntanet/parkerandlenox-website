@@ -1,15 +1,13 @@
-import type { TicketEvent, EventDetail, Project, Release, Product } from '@/types/api'
+import type { TicketEvent, EventDetail } from '@/types/api'
 
 const BASE = process.env.CORE_API_URL!
-const API_KEY = process.env.CORE_API_KEY!
+const KEY  = process.env.CORE_API_KEY!
 
-async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
-    ...options,
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-      ...options?.headers,
+      'x-api-key': KEY,
     },
     next: { revalidate: 60 },
   })
@@ -18,25 +16,9 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export async function getEvents(): Promise<TicketEvent[]> {
-  return apiFetch('/v1/tickets/public/events?brand=notabot')
+  return apiFetch('/v1/tickets/public/events?brand=parker_lenox')
 }
 
 export async function getEventDetail(slug: string): Promise<EventDetail> {
   return apiFetch(`/v1/tickets/events/${slug}/availability`)
-}
-
-export async function getProjects(): Promise<Project[]> {
-  return apiFetch('/v1/projects/public')
-}
-
-export async function getReleases(): Promise<Release[]> {
-  return apiFetch('/v1/releases')
-}
-
-export async function getRelease(id: string): Promise<Release> {
-  return apiFetch(`/v1/releases/${id}`)
-}
-
-export async function getProducts(): Promise<Product[]> {
-  return apiFetch('/v1/products/public')
 }
