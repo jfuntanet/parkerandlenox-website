@@ -1,18 +1,22 @@
 export const dynamic = 'force-dynamic'
 
+import { IntroSection }     from '@/components/sections/IntroSection'
+import { SalaSelector }     from '@/components/sections/SalaSelector'
 import { CarreleraPreview } from '@/components/sections/CarreleraPreview'
-import { getEvents } from '@/lib/api'
+import { ManifestoSection } from '@/components/sections/ManifestoSection'
+import { ScrollReveal }     from '@/components/ui/ScrollReveal'
+import { getEvents }        from '@/lib/api'
 
 export default async function HomePage() {
   const events = await getEvents().catch(() => [])
 
   return (
     <>
-      {/* HeroSection - to be implemented in Task 5 */}
-      {/* ProyectosStrip - out of scope */}
+      <IntroSection />
+      <SalaSelector />
       <CarreleraPreview events={events} />
-      {/* DiscosPreview - out of scope */}
-      {/* MerchPreview - out of scope */}
+      <ManifestoSection />
+      <ScrollReveal />
     </>
   )
 }

@@ -1,79 +1,52 @@
 import Link from 'next/link'
+import { ConcertCard } from '@/components/ui/ConcertCard'
 import type { TicketEvent } from '@/types/api'
 
-export function CarreleraPreview({ events }: { events: TicketEvent[] }) {
-  return (
-    <section className="py-20 overflow-hidden">
+interface Props {
+  events: TicketEvent[]
+}
 
-      {/* Título enorme + link desktop */}
-      <div
-        className="flex items-baseline justify-between mb-8"
-        style={{ paddingLeft: 'clamp(24px, 4vw, 48px)', paddingRight: 'clamp(24px, 4vw, 48px)' }}
-      >
-        <h2
-          className="font-serif italic text-cream"
-          style={{
-            fontSize: 'clamp(72px, 10vw, 140px)',
-            fontWeight: 700,
-            lineHeight: 0.9,
-          }}
-        >
-          Cartelera
-        </h2>
-        <Link
-          href="/cartelera"
-          className="hidden md:block font-sans text-cream-muted hover:text-cream transition-colors flex-shrink-0 ml-8"
-          style={{ fontSize: '10px', letterSpacing: '0.25em', textTransform: 'uppercase' }}
-        >
-          Ver todo →
-        </Link>
+export function CarreleraPreview({ events }: Props) {
+  const preview = events.slice(0, 4)
+
+  return (
+    <section className="px-8 md:px-16 py-20 border-t border-white/[0.08]">
+      <div className="flex items-center gap-6 mb-12 reveal">
+        <div className="flex-1 h-px"
+          style={{ background: 'linear-gradient(to right, rgba(160,120,74,0.35), transparent)' }} />
+        <span className="font-mono text-[0.6rem] tracking-[0.5em] uppercase"
+          style={{ color: 'var(--color-parker-concrete)' }}>
+          Programa — Esta semana
+        </span>
+        <div className="flex-1 h-px"
+          style={{ background: 'linear-gradient(to left, rgba(192,32,42,0.35), transparent)' }} />
       </div>
 
-      {/* Scroll horizontal cinemático */}
-      {events.length > 0 ? (
-        <div
-          className="flex gap-4 no-scrollbar"
-          style={{
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            paddingLeft: 'clamp(24px, 4vw, 48px)',
-            paddingRight: '80px',
-            paddingBottom: '8px',
-          }}
-        >
-          {events.map((e) => (
-            <div key={e.slug} className="flex-shrink-0 w-80 snap-start">
-              {/* Placeholder for horizontal card - will be implemented in Task 6 */}
-              <div className="bg-gradient-to-br from-gold/10 to-transparent rounded-lg p-6 border border-gold/20">
-                <h3 className="font-serif text-lg text-cream">{e.title}</h3>
-                <p className="text-cream-muted text-sm mt-2">{e.venue}</p>
-              </div>
+      {preview.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/[0.06]">
+          {preview.map((event, i) => (
+            <div key={event.slug} className={`bg-black reveal reveal-delay-${Math.min(i + 1, 3)}`}>
+              <ConcertCard event={event} />
             </div>
           ))}
         </div>
       ) : (
-        <p
-          className="font-sans text-cream-muted"
-          style={{
-            paddingLeft: 'clamp(24px, 4vw, 48px)',
-            fontSize: '14px',
-          }}
-        >
-          No hay conciertos próximos. Vuelve pronto.
+        <p className="font-body text-center py-12" style={{ color: 'rgba(237,232,220,0.5)' }}>
+          No hay conciertos programados esta semana.
         </p>
       )}
 
-      {/* Link móvil */}
-      <div className="mt-6 md:hidden" style={{ paddingLeft: 'clamp(24px, 4vw, 48px)' }}>
+      <div className="text-center mt-10 reveal reveal-delay-2">
         <Link
           href="/cartelera"
-          className="font-sans text-gold"
-          style={{ fontSize: '10px', letterSpacing: '0.25em', textTransform: 'uppercase' }}
+          className="inline-flex items-center gap-4 font-mono text-[0.65rem] tracking-[0.3em] uppercase hover:text-cream transition-colors hoverable"
+          style={{ color: 'rgba(237,232,220,0.5)' }}
         >
-          Ver cartelera completa →
+          <span className="w-8 h-px block" style={{ background: 'var(--color-parker-bronze)' }} />
+          Cartelera completa
+          <span className="w-8 h-px block" style={{ background: 'var(--color-parker-bronze)' }} />
         </Link>
       </div>
-
     </section>
   )
 }
