@@ -1,0 +1,22 @@
+services:
+  parker-lenox-site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: parker-lenox-site:latest
+    container_name: parker-lenox-site
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - n8n_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plx-site.rule=Host(`staging.parkerandlenox.com`)"
+      - "traefik.http.routers.plx-site.entrypoints=websecure"
+      - "traefik.http.routers.plx-site.tls=true"
+      - "traefik.http.routers.plx-site.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.plx-site.loadbalancer.server.port=3000"
+
+networks:
+  n8n_default:
+    external: true

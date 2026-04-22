@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direcciones Visuales — Not a Bot</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #111; color: #eee; font-family: system-ui, sans-serif; padding: 32px 24px; }
+  h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+  .lead { font-size: 13px; color: #666; margin-bottom: 36px; max-width: 600px; line-height: 1.6; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+  .card {
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+  .card:hover { border-color: #555; }
+  .card.selected { border-color: #e8d5a0 !important; }
+
+  .card-demo {
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* OPCIÓN A — Constructivismo */
+  .demo-a {
+    background: #0a0a0a;
+  }
+  .demo-a .bg-shape {
+    position: absolute;
+    top: 0; right: 0;
+    width: 55%;
+    height: 100%;
+    background: #c0001a;
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+  .demo-a .label-a {
+    position: absolute;
+    top: 18px; left: 20px;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .demo-a .headline {
+    position: relative;
+    z-index: 2;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 0.9;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .demo-a .headline span {
+    color: #c0001a;
+    display: block;
+    font-size: 28px;
+    letter-spacing: 0.1em;
+  }
+  .demo-a .diagonal {
+    position: absolute;
+    top: 40px; right: 20px;
+    width: 2px;
+    height: 80px;
+    background: #fff;
+    transform: rotate(30deg);
+    z-index: 3;
+  }
+  .demo-a .tagline {
+    position: relative;
+    z-index: 2;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-top: 10px;
+  }
+
+  /* OPCIÓN B — Post-punk / Fanzine */
+  .demo-b {
+    background: #080808;
+  }
+  .demo-b .texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
+  }
+  .demo-b .big-type {
+    position: relative;
+    z-index: 2;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #f5e642;
+    margin-bottom: 8px;
+  }
+  .demo-b .headline {
+    position: relative;
+    z-index: 2;
+    font-family: Georgia, serif;
+    font-size: 52px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+  }
+  .demo-b .headline em {
+    font-style: normal;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    display: block;
+    color: #f5e642;
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+  }
+  .demo-b .scratch {
+    position: absolute;
+    top: 30px; right: 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    writing-mode: vertical-rl;
+  }
+  .demo-b .torn {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: #f5e642;
+    clip-path: polygon(0 60%, 3% 20%, 6% 70%, 9% 30%, 12% 80%, 15% 25%, 18% 75%, 21% 35%, 24% 70%, 27% 20%, 30% 80%, 33% 30%, 36% 75%, 40% 20%, 44% 80%, 48% 25%, 52% 70%, 56% 30%, 60% 75%, 64% 25%, 68% 70%, 72% 30%, 76% 75%, 80% 20%, 84% 80%, 88% 25%, 92% 70%, 96% 30%, 100% 60%, 100% 100%, 0 100%);
+  }
+
+  /* OPCIÓN C — Teatro oscuro / Cartel dramático */
+  .demo-c {
+    background: #050505;
+  }
+  .demo-c .spotlight {
+    position: absolute;
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(ellipse, rgba(210,170,60,0.18) 0%, transparent 70%);
+  }
+  .demo-c .rule-top {
+    position: absolute;
+    top: 28px; left: 24px; right: 24px;
+    height: 1px;
+    background: #7a6020;
+  }
+  .demo-c .rule-bottom {
+    position: absolute;
+    bottom: 28px; left: 24px; right: 24px;
+    height: 1px;
+    background: #7a6020;
+  }
+  .demo-c .eyebrow {
+    position: relative;
+    z-index: 2;
+    font-family: 'Courier New', monospace;
+    font-size: 8px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: #9a7a28;
+    margin-bottom: 12px;
+  }
+  .demo-c .headline {
+    position: relative;
+    z-index: 2;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 0.95;
+    color: #f0e8d0;
+    letter-spacing: -0.01em;
+  }
+  .demo-c .headline em {
+    font-style: italic;
+    color: #d4aa48;
+  }
+  .demo-c .sub {
+    position: relative;
+    z-index: 2;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #5a4a20;
+    margin-top: 12px;
+  }
+
+  .card-body { padding: 18px 20px 22px; }
+  .card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #ccc; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: #777; line-height: 1.55; }
+  .card-palette { display: flex; gap: 6px; margin-top: 12px; }
+  .swatch { width: 20px; height: 20px; border-radius: 3px; }
+  .card-type { font-size: 11px; color: #555; margin-top: 8px; font-style: italic; }
+
+  .hint { margin-top: 32px; font-size: 12px; color: #444; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Dirección visual — Not a Bot</h1>
+<p class="lead">Tres propuestas para reemplazar el romanticismo elegante actual por algo con más energía, presencia y actitud. ¿Cuál te resuena más?</p>
+
+<div class="cards">
+
+  <!-- OPCIÓN A -->
+  <div class="card" onclick="toggleSelect(this)" data-choice="a">
+    <div class="card-demo demo-a">
+      <div class="bg-shape"></div>
+      <div class="label-a">Ciudad de México</div>
+      <div class="diagonal"></div>
+      <div class="headline">NOT<span>A BOT</span></div>
+      <div class="tagline">Jazz · Vinilo · Resistencia</div>
+    </div>
+    <div class="card-body">
+      <div class="card-label">A — Constructivismo radical</div>
+      <div class="card-desc">Geometría agresiva, bloques de color, tipografía condensada en negrita. Piensa en carteles de propaganda soviética o Bauhaus, pero para jazz. Rojo/negro/blanco. Muy visual, muy político, muy de resistencia.</div>
+      <div class="card-palette">
+        <div class="swatch" style="background:#0a0a0a" title="Negro"></div>
+        <div class="swatch" style="background:#c0001a" title="Rojo combativo"></div>
+        <div class="swatch" style="background:#ffffff" title="Blanco"></div>
+        <div class="swatch" style="background:#888888" title="Gris medio"></div>
+      </div>
+      <div class="card-type">Tipografía: Impact/Black condensada + monoespaciada</div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B -->
+  <div class="card" onclick="toggleSelect(this)" data-choice="b">
+    <div class="card-demo demo-b">
+      <div class="texture"></div>
+      <div class="scratch">Resistencia</div>
+      <div class="big-type">☞ Not a Bot presenta</div>
+      <div class="headline">Jazz<em>underground · cdmx</em></div>
+      <div class="torn"></div>
+    </div>
+    <div class="card-body">
+      <div class="card-label">B — Post-punk / Fanzine</div>
+      <div class="card-desc">Collage, texturas escaneadas, mezcla de serif y monoespaciada. Amarillo eléctrico sobre negro profundo. La estética del fanzine hecho a mano elevada a web. Raw, inesperado, con mucha personalidad underground.</div>
+      <div class="card-palette">
+        <div class="swatch" style="background:#080808" title="Negro profundo"></div>
+        <div class="swatch" style="background:#f5e642" title="Amarillo eléctrico"></div>
+        <div class="swatch" style="background:#ffffff" title="Blanco"></div>
+        <div class="swatch" style="background:#c0001a" title="Rojo acento"></div>
+      </div>
+      <div class="card-type">Tipografía: Serif pesada + Courier/monoespaciada</div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN C -->
+  <div class="card" onclick="toggleSelect(this)" data-choice="c">
+    <div class="card-demo demo-c">
+      <div class="spotlight"></div>
+      <div class="rule-top"></div>
+      <div class="rule-bottom"></div>
+      <div class="eyebrow">Not a Bot · Temporada 2026</div>
+      <div class="headline">Jazz<br>en <em>las</em><br>Rocas</div>
+      <div class="sub">Cartel de conciertos · Ciudad de México</div>
+    </div>
+    <div class="card-body">
+      <div class="card-label">C — Cartel de teatro / poster art</div>
+      <div class="card-desc">La base oscura actual se mantiene, pero más dramática y teatral. Serif clásica con mucho peso. Inspirado en carteles de ópera y cabaret del siglo XX. Dorado como acento (no decoración). Más imposing, menos refinado.</div>
+      <div class="card-palette">
+        <div class="swatch" style="background:#050505" title="Negro casi puro"></div>
+        <div class="swatch" style="background:#d4aa48" title="Dorado fuerte"></div>
+        <div class="swatch" style="background:#f0e8d0" title="Crema más blanca"></div>
+        <div class="swatch" style="background:#9a2020" title="Rojo oscuro"></div>
+      </div>
+      <div class="card-type">Tipografía: Serif editorial pesada (Playfair, Freight, etc.)</div>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">Haz clic en la opción que más te resuene — o coméntame en el terminal qué elementos te gustan de cada una.</p>
+
+<script>
+function toggleSelect(el) {
+  const wasSelected = el.classList.contains('selected');
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  if (!wasSelected) {
+    el.classList.add('selected');
+    const choice = el.dataset.choice;
+    const text = el.querySelector('.card-label').textContent;
+    if (window.__sp_recordEvent) window.__sp_recordEvent('click', choice, text);
+  }
+}
+</script>
+
+</body>
+</html>
