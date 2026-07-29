@@ -1,5 +1,8 @@
 FROM node:20.19-alpine AS builder
 WORKDIR /app
+# NEXT_PUBLIC_APP_URL debe estar disponible en build time — Next.js lo hornea en sitemap/robots (SSG).
+ARG NEXT_PUBLIC_APP_URL=https://parkerandlenox.com
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 COPY package*.json ./
 RUN npm ci
 COPY . .

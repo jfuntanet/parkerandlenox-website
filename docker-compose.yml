@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://parkerandlenox.com}
     image: parker-lenox-site:latest
     container_name: parker-lenox-site
     restart: unless-stopped
@@ -11,11 +13,22 @@ services:
       - n8n_default
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.plx-site.rule=Host(`staging.parkerandlenox.com`)"
-      - "traefik.http.routers.plx-site.entrypoints=websecure"
-      - "traefik.http.routers.plx-site.tls=true"
-      - "traefik.http.routers.plx-site.tls.certresolver=mytlschallenge"
-      - "traefik.http.routers.plx-site.priority=100"
+      # ── Router PROD (parkerandlenox.com + www) ──
+      # Cert LE emitido vía HTTP-01 (ver ref_traefik_http_01_resolver).
+      # Middleware redirige www → apex conservando path/query.
+      - "traefik.http.routers.plx-prod.rule=Host(`parkerandlenox.com`) || Host(`www.parkerandlenox.com`)"
+      - "traefik.http.routers.plx-prod.middlewares=plx-www-to-apex@docker"
+      - "traefik.http.routers.plx-prod.entrypoints=websecure"
+      - "traefik.http.routers.plx-prod.tls=true"
+      - "traefik.http.routers.plx-prod.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.plx-prod.tls.domains[0].main=parkerandlenox.com"
+      - "traefik.http.routers.plx-prod.tls.domains[0].sans=www.parkerandlenox.com"
+      - "traefik.http.routers.plx-prod.priority=100"
+      - "traefik.http.routers.plx-prod.service=plx-site"
+      - "traefik.http.middlewares.plx-www-to-apex.redirectregex.regex=^https?://www\\.parkerandlenox\\.com/(.*)"
+      - "traefik.http.middlewares.plx-www-to-apex.redirectregex.replacement=https://parkerandlenox.com/$${1}"
+      - "traefik.http.middlewares.plx-www-to-apex.redirectregex.permanent=true"
+      # ── Service ──
       - "traefik.http.services.plx-site.loadbalancer.server.port=3000"
 
 networks:
