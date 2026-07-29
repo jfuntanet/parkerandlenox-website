@@ -29,15 +29,9 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-5 flex items-center justify-between bg-black border-b border-white/[0.08]">
-        <Link href="/" className="font-serif text-xl text-cream hoverable relative z-50 flex items-center gap-1" onClick={() => setOpen(false)}>
-          <span>Parker</span>
-          <span className="relative inline-block h-6 w-5 overflow-hidden align-middle -ml-1" aria-hidden="true">
-            <img src="/parker-lenox-logo.webp" alt=""
-              className="absolute left-1/2 top-1/2 h-6 max-w-none"
-              style={{ transform: 'translate(-50%, -40%)' }} />
-          </span>
-          <span>Lenox</span>
+      <nav className="fixed top-0 left-0 right-0 z-50 px-2 md:px-8 py-5 flex items-center justify-between bg-black border-b border-white/[0.08]">
+        <Link href="/" className="hoverable relative z-50 flex items-center" onClick={() => setOpen(false)}>
+          <img src="/parker-lenox-logo.webp" alt="Parker & Lenox" className="h-8 md:h-12 w-auto" />
         </Link>
 
         <button
