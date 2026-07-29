@@ -35,7 +35,7 @@ export function Navbar() {
           <span className="relative inline-block h-6 w-5 overflow-hidden align-middle -ml-1" aria-hidden="true">
             <img src="/parker-lenox-logo.webp" alt=""
               className="absolute left-1/2 top-1/2 h-6 max-w-none"
-              style={{ transform: 'translate(-50%, -50%)' }} />
+              style={{ transform: 'translate(-50%, -40%)' }} />
           </span>
           <span>Lenox</span>
         </Link>
