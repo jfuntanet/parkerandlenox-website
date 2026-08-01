@@ -25,3 +25,12 @@ export function formatTime(timeStr: string): string {
   const h = hours % 12 || 12
   return `${h}:${String(minutes).padStart(2, '0')}${suffix}`
 }
+
+export function formatDateShort(dateStr: string): string {
+  if (!dateStr) return ''
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
+  // Ej: 'sáb 14 jul' — sin año, abreviado
+  const out = date.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' })
+  return out.replace(/\.,?/g, '')
+}

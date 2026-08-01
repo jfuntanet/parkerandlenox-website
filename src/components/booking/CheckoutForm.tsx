@@ -122,8 +122,9 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
   const router = useRouter()
   const storageKey = 'plx-checkout-' + slug
 
-  // Estado principal
-  const [ticketTypeId, setTicketTypeId] = useState(ticketTypes[0]?.id ?? '')
+  // Estado principal — arranca en el primer set con cupo (no dejar preseleccionado uno agotado)
+  const _firstAvailable = ticketTypes.find(t => (t.available ?? 1) > 0) ?? ticketTypes[0]
+  const [ticketTypeId, setTicketTypeId] = useState(_firstAvailable?.id ?? '')
   const [quantity, setQuantity]         = useState(Math.max(1, Math.min(10, initialQty)))
   const [customerName, setCustomerName]   = useState('')
   const [customerEmail, setCustomerEmail] = useState('')
@@ -257,6 +258,15 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
     try {
       const validGuests = guests.filter(g => (g.name && g.name.trim()) || (g.email && g.email.trim()))
       const extraItems = Array.from(merchCart.entries()).map(([productId, q]) => ({ productId, quantity: q }))
+      // Marketing Analytics: el beacon (Beacon.tsx) expone el sid (cookie pl_sid) y las UTMs
+      // en window.__PL_SID / __PL_UTM. Los mandamos para que el core atribuya la orden a la
+      // sesión (orders.last_session_hash + last_utm_*). Sin esto la vista Fuentes ve 0 órdenes.
+      const _w = (typeof window !== 'undefined' ? window : undefined) as unknown as {
+        __PL_SID?: string
+        __PL_UTM?: { source?: string | null; medium?: string | null; campaign?: string | null; content?: string | null }
+      } | undefined
+      const _plSid = _w?.__PL_SID || null
+      const _plUtm = _w?.__PL_UTM || null
       const res = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -266,6 +276,11 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           couponCode: couponApplied ? couponApplied.code : (couponCode.trim() || undefined),
           customerNotes: customerNotes.trim() || undefined,
           extraItems: extraItems.length ? extraItems : undefined,
+          session_hash_source: _plSid || undefined,
+          utm_source: _plUtm?.source || undefined,
+          utm_medium: _plUtm?.medium || undefined,
+          utm_campaign: _plUtm?.campaign || undefined,
+          utm_content: _plUtm?.content || undefined,
         }),
       })
       const data = await res.json()
@@ -349,15 +364,21 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         {ticketTypes.length > 1 && (
           <fieldset className="border-0 p-0 m-0">
             <legend className="sr-only">Tipo de boleto</legend>
-            {ticketTypes.map(tt => (
-              <label key={tt.id} className="flex items-center justify-between border-b border-white/10 py-3 hover:border-white/25 transition-colors hoverable cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <input type="radio" checked={ticketTypeId===tt.id} onChange={()=>setTicketTypeId(tt.id)} style={{accentColor: accent}} />
-                  <span className="font-body text-base text-cream">{tt.name}</span>
-                </div>
-                <span className="font-mono text-sm" style={{color: accent}}>{formatPrice(tt.price)}</span>
-              </label>
-            ))}
+            {ticketTypes.map(tt => {
+              const isSoldOut = (tt.available ?? 1) <= 0
+              return (
+                <label key={tt.id} className={`flex items-center justify-between border-b border-white/10 py-3 transition-colors ${isSoldOut ? 'cursor-not-allowed opacity-70' : 'hover:border-white/25 hoverable cursor-pointer'}`}>
+                  <div className="flex items-center gap-3">
+                    <input type="radio" checked={ticketTypeId===tt.id} onChange={()=>!isSoldOut && setTicketTypeId(tt.id)} disabled={isSoldOut} style={{accentColor: accent}} />
+                    <span className={`font-body text-base ${isSoldOut ? 'line-through text-cream/50' : 'text-cream'}`}>{tt.name}</span>
+                    {isSoldOut && (
+                      <span className="font-mono text-[0.65rem] tracking-widest uppercase font-bold" style={{ color: 'var(--color-lenox-red)' }}>SOLD OUT</span>
+                    )}
+                  </div>
+                  <span className={`font-mono text-sm ${isSoldOut ? 'line-through opacity-50' : ''}`} style={{color: accent}}>{formatPrice(tt.price)}</span>
+                </label>
+              )
+            })}
           </fieldset>
         )}
 
@@ -510,7 +531,10 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
               {event.title}
             </p>
             <p className="font-mono text-[0.65rem] tracking-[0.2em] uppercase text-white/60 mt-auto">
-              {formatDateShort(event.date)}{event.time ? ` · ${formatTime(event.time)}` : ''}
+              {formatDateShort(event.date)}
+              {selectedType?.startTime
+                ? ` · ${formatTime(selectedType.startTime)}`
+                : (event.time && ticketTypes.length <= 1 ? ` · ${formatTime(event.time)}` : '')}
             </p>
           </div>
         </div>

@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props) {
 
   const title = detail ? `${detail.event.title} — Parker & Lenox` : 'Evento — Parker & Lenox'
   const description = detail
-    ? `${detail.event.title} en ${detail.event.venue}. ${formatDateShort(detail.event.date)}${detail.event.time ? ` · ${formatTime(detail.event.time)}` : ''} · Parker & Lenox, CDMX.`
+    ? `${detail.event.title} en ${detail.event.venue}. ${formatDateShort(detail.event.date)}${detail.event.time && detail.ticketTypes.length <= 1 ? ` · ${formatTime(detail.event.time)}` : ''} · Parker & Lenox, CDMX.`
     : 'Evento en Parker & Lenox — jazz en vivo y vinyl bar en la Ciudad de México.'
   const canonicalPath = `/cartelera/${slug}`
   const image = detail?.event.imageUrl || '/banner-plx.jpg'
@@ -174,7 +174,7 @@ export default async function EventDetailPage({ params }: Props) {
                       Ya pasó
                     </span>
                   )}
-                  {formatDateShort(event.date)}{event.time ? ` · ${formatTime(event.time)}` : ''}
+                  {formatDateShort(event.date)}{event.time && ticketTypes.length <= 1 ? ` · ${formatTime(event.time)}` : ''}
                 </p>
               </div>
 

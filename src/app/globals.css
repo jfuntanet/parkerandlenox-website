@@ -23,21 +23,18 @@
     background-color: #080808;
     color: #EDE8DC;
     scroll-behavior: smooth;
-    cursor: none;
   }
 
   body {
     background-color: #080808;
     min-height: 100vh;
     font-family: var(--font-body);
-    overflow-x: hidden;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
   }
 
-  a, button { cursor: none; }
 
   ::selection {
     background-color: #5C1A1A;
@@ -123,10 +120,17 @@
   50%       { opacity: 1; }
 }
 
+/* Apertura suave de contenido de accordion (checkout, faqs). */
+@keyframes stepBodyOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* 'both' = apply first keyframe immediately (opacity:0 during delay) + hold last keyframe after */
 .animate-fade-up { animation: fadeUp 1s ease both; }
 .animate-grow-line { animation: growLine 2s ease both; }
 .animate-pulse-opacity { animation: pulse-opacity 2s ease-in-out infinite; }
+.animate-step-open { animation: stepBodyOpen 280ms ease-out both; }
 
 /* ── Utilities ── */
 .font-serif  { font-family: var(--font-serif); }

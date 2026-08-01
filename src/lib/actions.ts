@@ -12,6 +12,15 @@ export async function initiateCheckout(formData: FormData) {
   const quantity      = Number(formData.get('quantity'))
   const customerName  = formData.get('customerName')  as string
   const customerEmail = formData.get('customerEmail') as string
+  const couponCode    = (formData.get('couponCode') as string | null) || undefined
+
+  // Guests dinámicos: guestName[n], guestEmail[n]
+  const guests: { name?: string; email?: string }[] = []
+  for (let i = 1; i < quantity; i++) {
+    const gName  = (formData.get(`guestName${i}`)  as string | null) || ''
+    const gEmail = (formData.get(`guestEmail${i}`) as string | null) || ''
+    if (gName || gEmail) guests.push({ name: gName || undefined, email: gEmail || undefined })
+  }
 
   if (!slug || !ticketTypeId || !quantity || !customerName || !customerEmail) {
     throw new Error('Todos los campos son requeridos')
@@ -19,18 +28,13 @@ export async function initiateCheckout(formData: FormData) {
 
   const res = await fetch(`${BASE}/v1/tickets/checkout`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-    },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
     body: JSON.stringify({
-      slug,
-      ticketTypeId,
-      quantity,
-      customerName,
-      customerEmail,
+      slug, ticketTypeId, quantity, customerName, customerEmail,
+      guests: guests.length ? guests : undefined,
+      couponCode,
       successUrl: `${APP_URL}/checkout/success`,
-      cancelUrl:  `${APP_URL}/cartelera/${slug}`,
+      cancelUrl:  `${APP_URL}/cartelera/${slug}?cancelled=1`,
     }),
   })
 

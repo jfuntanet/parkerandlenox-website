@@ -1,3 +1,11 @@
+export interface TicketEventSet {
+  name: string
+  startTime: string | null
+  price: number
+  available: number
+  soldOut: boolean
+}
+
 export interface TicketEvent {
   slug: string
   title: string
@@ -11,6 +19,8 @@ export interface TicketEvent {
   available: number
   totalCapacity: number
   soldOut: boolean
+  ticketTypes?: TicketEventSet[]
+  hasSoldOutSet?: boolean
 }
 
 export interface TicketType {
@@ -18,6 +28,7 @@ export interface TicketType {
   name: string
   price: number
   available: number
+  startTime?: string | null
 }
 
 export interface EventDetail {
@@ -29,6 +40,12 @@ export interface EventDetail {
     time: string
     venue: string
     brand: string
+    social?: {
+      instagram?: string | null
+      spotify?: string | null
+      tiktok?: string | null
+      youtube?: string | null
+    }
   }
   ticketTypes: TicketType[]
   salesActive: boolean

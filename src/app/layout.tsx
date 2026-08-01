@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next'
+import { Suspense } from 'react'
 import { Playfair_Display, Cormorant_Garamond, Space_Mono } from 'next/font/google'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { TrackingScripts, TrackingNoscript } from '@/components/analytics/TrackingScripts'
 import { PageviewTracker } from '@/components/analytics/PageviewTracker'
+import Beacon from '@/components/analytics/Beacon'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -96,6 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <TrackingScripts />
         <PageviewTracker />
+        <Suspense fallback={null}><Beacon /></Suspense>
       </body>
     </html>
   )
