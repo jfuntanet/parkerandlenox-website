@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 export function SalaSelector() {
+  const t = useTranslations('home')
   const [split, setSplit] = useState(50)
   const containerRef = useRef<HTMLDivElement>(null)
   const draggingRef = useRef(false)
@@ -69,7 +70,7 @@ export function SalaSelector() {
         touchAction: 'pan-y',
         overscrollBehaviorX: 'contain',
       }}
-      aria-label="Arrastra el logo & para descubrir Parker o Lenox"
+      aria-label={t('divider.sliderAria')}
     >
       {/* PARKER — layer base */}
       <div
@@ -92,13 +93,13 @@ export function SalaSelector() {
           style={{ left: '50%', paddingLeft: '5px' }}
         >
           <p className="font-mono text-[0.6rem] md:text-[0.7rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-parker-bronze)' }}>
-            Live Music
+            {t('parker.eyebrow')}
           </p>
           <p className="font-body font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.55rem)', color: 'rgba(237,232,220,0.75)' }}>
-            Speakeasy con música en vivo todas las noches. Jazz, blues, soul, funk.
+            {t('parker.description')}
           </p>
           <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1rem, 1.35vw, 1.4rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
-            La buena música es para quien la sabe encontrar.
+            {t('parker.tagline')}
           </p>
         </div>
       </div>
@@ -116,13 +117,13 @@ export function SalaSelector() {
           style={{ right: '50%', paddingRight: '5px' }}
         >
           <p className="font-mono text-[0.6rem] md:text-[0.7rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-lenox-red)' }}>
-            Hi-Fi
+            {t('lenox.eyebrow')}
           </p>
           <p className="font-body font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.55rem)', color: 'rgba(237,232,220,0.75)' }}>
-            Selectores de vinilos y coctelería especializada.
+            {t('lenox.description')}
           </p>
           <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1rem, 1.35vw, 1.4rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
-            Ven por los cocteles, quédate por la música.
+            {t('lenox.tagline')}
           </p>
         </div>
 
@@ -177,14 +178,14 @@ export function SalaSelector() {
           className="absolute font-mono text-[0.55rem] tracking-[0.3em] uppercase whitespace-nowrap opacity-40 top-[calc(38%+40px)] md:top-[calc(39%+55px)]"
           style={{ color: 'var(--color-parker-bronze)' }}
         >
-          ← arrastra →
+          {t('divider.hint')}
         </p>
       </div>
 
 {/* Frase inferior — mantra */}
       <div className="absolute bottom-[10%] left-0 right-0 z-30 pointer-events-none text-center px-6">
         <p className="font-mono uppercase text-white/60" style={{ fontSize: 'clamp(0.55rem, 1vw, 0.7rem)', letterSpacing: '0.4em' }}>
-          Un lugar. Dos experiencias.
+          {t('mantra')}
         </p>
       </div>
     </section>

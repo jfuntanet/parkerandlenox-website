@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { PRESS_BLURBS, type PressMention, type Tier } from '@/data/press-data'
 
 const TIER_ACCENT: Record<Tier, string> = {
@@ -26,6 +29,7 @@ function countryChip(country: string, countries?: string[]): string | null {
 }
 
 export function FeaturedCard({ mention }: { mention: PressMention }) {
+  const t = useTranslations('press')
   const accent = TIER_ACCENT[mention.tier]
   const when   = mention.year ? String(mention.year) : (mention.date || '')
   const blurb  = PRESS_BLURBS[mention.id]
@@ -79,7 +83,7 @@ export function FeaturedCard({ mention }: { mention: PressMention }) {
         </div>
         <span className="font-mono text-[0.5rem] tracking-[0.25em] uppercase opacity-60 group-hover:opacity-100 transition-opacity"
           style={{ color: accent }}>
-          Leer →
+          {t('cardRead')}
         </span>
       </div>
     </a>

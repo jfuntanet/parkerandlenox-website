@@ -1,15 +1,23 @@
-export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Coctelería — Parker & Lenox' }
-
+import { getTranslations } from 'next-intl/server'
 import { MenuPageView } from '@/components/booking/MenuPageView'
 
-export default function CoctelesPage() {
+export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'menu.cocteles' })
+  return { title: `${t('title')} — Parker & Lenox` }
+}
+
+export default async function CoctelesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'menu' })
   return (
     <MenuPageView
       menuKeyword="barra"
-      title="Coctelería"
-      eyebrow="Barra de autor"
-      emptyMsg="Cargando menú… si no aparece pronto, refresca la página."
+      title={t('cocteles.title')}
+      eyebrow={t('cocteles.eyebrow')}
+      emptyMsg={t('loading')}
       hidePrices
     />
   )

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 export function NewsletterSection() {
+  const t = useTranslations('newsletter')
   const [email, setEmail]     = useState('')
   const [name, setName]       = useState('')
   const [status, setStatus]   = useState<'idle' | 'loading' | 'ok' | 'err'>('idle')
@@ -19,10 +21,10 @@ export function NewsletterSection() {
         body: JSON.stringify({ email: email.trim(), name: name.trim() || undefined }),
       })
       const data = await res.json().catch(() => ({}))
-      if (!res.ok) { setStatus('err'); setErrMsg(data.error || 'No pudimos suscribirte'); return }
+      if (!res.ok) { setStatus('err'); setErrMsg(data.error || t('errorDefault')); return }
       setStatus('ok')
     } catch {
-      setStatus('err'); setErrMsg('Error de conexión')
+      setStatus('err'); setErrMsg(t('errorNetwork'))
     }
   }
 
@@ -42,30 +44,30 @@ export function NewsletterSection() {
 
       <div className="relative z-10 max-w-[720px] mx-auto text-center flex flex-col items-center gap-6">
         <p className="font-mono text-[0.6rem] tracking-[0.5em] uppercase" style={{ color: 'var(--color-parker-bronze)' }}>
-          Newsletter
+          {t('eyebrow')}
         </p>
         <h2 className="font-serif font-light leading-[1.1]" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.6rem)' }}>
-          <span className="whitespace-nowrap">Suscríbete y entérate primero</span>{' '}
-          <span className="whitespace-nowrap">de nuestros eventos.</span>
+          <span className="whitespace-nowrap">{t('titlePart1')}</span>{' '}
+          <span className="whitespace-nowrap">{t('titlePart2')}</span>
         </h2>
         <p className="font-body font-light leading-relaxed max-w-[42ch]" style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)', color: 'rgba(237,232,220,0.6)' }}>
-          Una vez por semana, los conciertos que vienen. Sin spam.
+          {t('subtitle')}
         </p>
 
         {status === 'ok' ? (
           <div className="mt-4 flex flex-col items-center gap-2">
             <p className="font-serif text-2xl md:text-3xl" style={{ color: 'var(--color-parker-bronze)' }}>
-              ¡Listo! Revisa tu correo.
+              {t('successTitle')}
             </p>
             <p className="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-white/50">
-              Te enviamos un email para confirmar la suscripción
+              {t('successHint')}
             </p>
           </div>
         ) : (
           <form onSubmit={onSubmit} className="w-full mt-4 flex flex-col gap-3">
             <input
               type="text"
-              placeholder="Tu nombre (opcional)"
+              placeholder={t('namePlaceholder')}
               value={name}
               onChange={e => setName(e.target.value)}
               disabled={status === 'loading'}
@@ -74,7 +76,7 @@ export function NewsletterSection() {
             <input
               type="email"
               required
-              placeholder="Tu email"
+              placeholder={t('emailPlaceholder')}
               value={email}
               onChange={e => setEmail(e.target.value)}
               disabled={status === 'loading'}
@@ -90,7 +92,7 @@ export function NewsletterSection() {
                 border: '2px solid var(--color-parker-bronze)',
               }}
             >
-              {status === 'loading' ? 'Enviando…' : 'Suscribirme'}
+              {status === 'loading' ? t('buttonLoading') : t('buttonIdle')}
             </button>
             {status === 'err' && (
               <p className="font-mono text-[0.6rem] tracking-widest px-2 mt-1" style={{ color: 'var(--color-lenox-red)' }}>

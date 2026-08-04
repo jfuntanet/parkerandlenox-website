@@ -1,10 +1,12 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { FeaturedCard } from './FeaturedCard'
 import type { PressMention } from '@/data/press-data'
 
 export function ArticlesGrid({ featured }: { featured: PressMention[] }) {
+  const t = useTranslations('press')
   const ref = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft]   = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -45,7 +47,7 @@ export function ArticlesGrid({ featured }: { featured: PressMention[] }) {
       <div className="flex items-center gap-4 mb-4">
         <span className="font-mono uppercase tracking-[0.4em] shrink-0"
           style={{ color: 'var(--color-parker-bronze)', fontSize: 'clamp(0.7rem, 0.9vw, 0.85rem)' }}>
-          Artículos y reseñas
+          {t('articlesSection')}
         </span>
         <span className="flex-1 h-px"
           style={{ background: 'linear-gradient(to right, rgba(160,120,74,0.35), transparent)' }} />
@@ -54,7 +56,7 @@ export function ArticlesGrid({ featured }: { featured: PressMention[] }) {
             type="button"
             onClick={() => scrollBy(-1)}
             disabled={!canScrollLeft}
-            aria-label="Ver artículos anteriores"
+            aria-label={t('arrowPrev')}
             className="flex items-center justify-center w-9 h-9 rounded-full border transition-colors duration-300 hoverable disabled:cursor-not-allowed"
             style={arrowStyle(canScrollLeft)}
           >
@@ -66,7 +68,7 @@ export function ArticlesGrid({ featured }: { featured: PressMention[] }) {
             type="button"
             onClick={() => scrollBy(1)}
             disabled={!canScrollRight}
-            aria-label="Ver siguientes artículos"
+            aria-label={t('arrowNext')}
             className="flex items-center justify-center w-9 h-9 rounded-full border transition-colors duration-300 hoverable disabled:cursor-not-allowed"
             style={arrowStyle(canScrollRight)}
           >
