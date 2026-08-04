@@ -37,7 +37,7 @@ export function FeaturedCard({ mention }: { mention: PressMention }) {
       href={mention.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex flex-col p-5 md:p-6 border transition-colors duration-300 hoverable h-full min-h-[220px] hover:border-white/25"
+      className="group relative flex flex-col p-5 md:p-6 border transition-colors duration-300 hoverable h-full min-h-[220px] hover:border-white/25 overflow-hidden"
       style={{
         borderColor: 'rgba(255,255,255,0.10)',
         background: 'linear-gradient(160deg, rgba(255,255,255,0.02), rgba(255,255,255,0) 60%)',
@@ -50,15 +50,15 @@ export function FeaturedCard({ mention }: { mention: PressMention }) {
       </h3>
 
       {/* Título (sólo si no es genérico) + blurb curado */}
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="flex-1 flex flex-col gap-2 min-h-0 overflow-hidden">
         {showTitle && (
-          <p className="font-serif italic font-light leading-snug"
+          <p className="font-serif italic font-light leading-snug line-clamp-2"
             style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', color: 'rgba(237,232,220,0.72)' }}>
             “{mention.title}”
           </p>
         )}
         {blurb && (
-          <p className="font-body font-light leading-relaxed"
+          <p className="font-body font-light leading-relaxed line-clamp-4"
             style={{ fontSize: 'clamp(0.82rem, 0.9vw, 0.9rem)', color: 'rgba(237,232,220,0.55)' }}>
             {blurb}
           </p>

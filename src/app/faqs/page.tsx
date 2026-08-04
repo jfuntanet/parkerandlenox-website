@@ -7,7 +7,7 @@ interface Section { id: string; title: string; faqs: Faq[] }
 const HERO_FAQS: Faq[] = [
   { q: '¿Qué es Parker & Lenox?', a: 'Un club de jazz y listening bar en el corazón de la CDMX. Buena música, coctelería de autor, comida extraordinaria y una experiencia sonora envolvente.' },
   { q: '¿A qué hora abren y cierran?', a: 'Lenox abre de martes a sábado desde las 6:00 p.m., Parker abre a las 9:00 p.m. Ambos cierran tarde dependiendo del evento. Domingos y lunes cerramos.' },
-  { q: '¿Necesito reservación para entrar?', a: 'No manejamos reservaciones sino entradas directas a cada show. El acceso a Parker se hace comprando boletos en línea. Solo los miembros del Cool Cat Club tienen acceso a reservas anticipadas.' },
+  { q: '¿Necesito reservación para entrar?', a: 'En Lenox no necesitas boleto ni reservación: entras por orden de llegada, sujeto a disponibilidad. Para Parker (los conciertos) sí requieres comprar boleto en línea. Solo los miembros del Cool Cat Club tienen acceso a reservas anticipadas.' },
 ]
 
 // Las 12 preguntas restantes en 3 columnas temáticas.
@@ -155,7 +155,7 @@ export default function FaqsPage() {
             </a>
             <a href="mailto:hello@parkerandlenox.com"
               className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] uppercase px-5 py-2.5 border border-white/15 text-white/60 hover:text-cream hover:border-white/40 transition-colors hoverable">
-              Escríbenos
+              hello@parkerandlenox.com
             </a>
           </div>
         </section>
