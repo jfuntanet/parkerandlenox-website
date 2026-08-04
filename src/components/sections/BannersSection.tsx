@@ -9,7 +9,7 @@ interface Banner {
 
 const BANNERS: Banner[] = [
   { src: '/banner-jazz.png',  alt: 'Jazz más allá del club — Oh! Jazz',                      href: 'https://www.ohjazz.tv/home-esp', external: true },
-  { src: '/banner-finas.png', alt: 'Sesiones Finas',                                          href: '/#cartelera' },
+  { src: '/banner-finas.png', alt: 'Finas Selecciones',                                       href: '/#cartelera' },
   { src: '/banner-merch.png', alt: 'Vinilos y coctelería — Lenox Records',                    href: 'https://lenoxrecords.com', external: true },
   { src: '/banner-plx.jpg',   alt: 'Parker & Lenox',                                          href: '/#cartelera' },
 ]

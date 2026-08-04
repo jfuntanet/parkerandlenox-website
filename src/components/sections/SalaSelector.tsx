@@ -122,7 +122,7 @@ export function SalaSelector() {
             Selectores de vinilos y coctelería especializada.
           </p>
           <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1rem, 1.35vw, 1.4rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
-            Ven por un cocktail, quédate por la música.
+            Ven por los cocteles, quédate por la música.
           </p>
         </div>
 
