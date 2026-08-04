@@ -1,12 +1,16 @@
 import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
+import { notFound } from 'next/navigation'
+import { NextIntlClientProvider, hasLocale } from 'next-intl'
+import { setRequestLocale, getMessages } from 'next-intl/server'
 import { Playfair_Display, Cormorant_Garamond, Space_Mono } from 'next/font/google'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { TrackingScripts, TrackingNoscript } from '@/components/analytics/TrackingScripts'
 import { PageviewTracker } from '@/components/analytics/PageviewTracker'
 import Beacon from '@/components/analytics/Beacon'
-import './globals.css'
+import { routing } from '@/i18n/routing'
+import '../globals.css'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -87,18 +91,35 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  if (!hasLocale(routing.locales, locale)) notFound()
+  setRequestLocale(locale)
+  const messages = await getMessages()
+
   return (
-    <html lang="es" className={`${playfair.variable} ${cormorant.variable} ${spaceMono.variable}`}>
+    <html lang={locale} className={`${playfair.variable} ${cormorant.variable} ${spaceMono.variable}`}>
       <body className="bg-black text-cream min-h-screen">
-        <TrackingNoscript />
-        <div className="grain-overlay" />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <TrackingScripts />
-        <PageviewTracker />
-        <Suspense fallback={null}><Beacon /></Suspense>
+        <NextIntlClientProvider messages={messages}>
+          <TrackingNoscript />
+          <div className="grain-overlay" />
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <TrackingScripts />
+          <PageviewTracker />
+          <Suspense fallback={null}><Beacon /></Suspense>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

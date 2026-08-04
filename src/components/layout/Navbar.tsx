@@ -1,21 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-
-const LINKS = [
-  { href: '/#cartelera', label: 'Cartelera' },
-  { href: '/cocina',    label: 'Cocina' },
-  { href: '/cocteles',  label: 'Coctelería' },
-  { href: '/faqs',      label: 'FAQs' },
-  { href: '/prensa',    label: 'Reseñas y Reconocimientos' },
-  { href: '/musicos',   label: 'Para Músicos' },
-]
+import { useTranslations } from 'next-intl'
+import { Link, usePathname } from '@/i18n/navigation'
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const t = useTranslations('nav')
+
+  const LINKS = [
+    { href: '/#cartelera', label: t('cartelera') },
+    { href: '/cocina',     label: t('cocina') },
+    { href: '/cocteles',   label: t('cocteles') },
+    { href: '/faqs',       label: t('faqs') },
+    { href: '/prensa',     label: t('prensa') },
+    { href: '/musicos',    label: t('musicos') },
+  ]
 
   useEffect(() => { setOpen(false) }, [pathname])
 
@@ -34,22 +36,25 @@ export function Navbar() {
           <img src="/parker-lenox-logo.webp" alt="Parker & Lenox" className="h-8 md:h-12 w-auto" />
         </Link>
 
-        <button
-          type="button"
-          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={open}
-          onClick={() => setOpen(o => !o)}
-          className="relative z-50 w-10 h-10 flex flex-col items-center justify-center gap-[6px] hoverable"
-        >
-          <span
-            className="block w-6 h-px bg-cream transition-transform duration-300"
-            style={open ? { transform: 'translateY(3.5px) rotate(45deg)' } : {}}
-          />
-          <span
-            className="block w-6 h-px bg-cream transition-transform duration-300"
-            style={open ? { transform: 'translateY(-3.5px) rotate(-45deg)' } : {}}
-          />
-        </button>
+        <div className="relative z-50 flex items-center gap-4">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={open}
+            onClick={() => setOpen(o => !o)}
+            className="w-10 h-10 flex flex-col items-center justify-center gap-[6px] hoverable"
+          >
+            <span
+              className="block w-6 h-px bg-cream transition-transform duration-300"
+              style={open ? { transform: 'translateY(3.5px) rotate(45deg)' } : {}}
+            />
+            <span
+              className="block w-6 h-px bg-cream transition-transform duration-300"
+              style={open ? { transform: 'translateY(-3.5px) rotate(-45deg)' } : {}}
+            />
+          </button>
+        </div>
       </nav>
 
       <div className={overlayCls} aria-hidden={!open}>

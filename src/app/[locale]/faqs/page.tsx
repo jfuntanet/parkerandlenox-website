@@ -1,48 +1,14 @@
-export const metadata = { title: 'Preguntas frecuentes — Parker & Lenox' }
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'faqs' })
+  return { title: `${t('title').replace(/\.$/, '')} — Parker & Lenox` }
+}
 
 interface Faq { q: string; a: string }
 interface Section { id: string; title: string; faqs: Faq[] }
-
-// Las 3 preguntas fundamentales — van en el hero grande.
-const HERO_FAQS: Faq[] = [
-  { q: '¿Qué es Parker & Lenox?', a: 'Un club de jazz y listening bar en el corazón de la CDMX. Buena música, coctelería de autor, comida extraordinaria y una experiencia sonora envolvente.' },
-  { q: '¿A qué hora abren y cierran?', a: 'Lenox abre de martes a sábado desde las 6:00 p.m., Parker abre a las 9:00 p.m. Ambos cierran tarde dependiendo del evento. Domingos y lunes cerramos.' },
-  { q: '¿Necesito reservación para entrar?', a: 'En Lenox no necesitas boleto ni reservación: entras por orden de llegada, sujeto a disponibilidad. Para Parker (los conciertos) sí requieres comprar boleto en línea. Solo los miembros del Cool Cat Club tienen acceso a reservas anticipadas.' },
-]
-
-// Las 12 preguntas restantes en 3 columnas temáticas.
-const SECTIONS: Section[] = [
-  {
-    id: 'sobre-el-lugar',
-    title: 'Sobre el lugar',
-    faqs: [
-      { q: '¿Cuál es la diferencia entre Parker y Lenox?', a: 'Lenox es el listening bar de entrada, relajado y abierto al público. Parker es el club interior donde suceden los conciertos en vivo y las experiencias especiales.' },
-      { q: '¿Hay música en vivo todos los días?', a: 'Sí, de martes a sábado. Puedes consultar la cartelera actualizada para ver qué artistas se presentan cada noche.' },
-      { q: '¿Dónde están ubicados?', a: 'General Prim 100, esquina con Milán 14, Colonia Juárez, CDMX. A una cuadra de Reforma.' },
-      { q: '¿Cuentan con estacionamiento o valet parking?', a: 'No contamos con estacionamiento propio, pero hay parquímetros y pensiones a menos de dos cuadras.' },
-    ],
-  },
-  {
-    id: 'boletos-y-entradas',
-    title: 'Boletos y entradas',
-    faqs: [
-      { q: '¿Cómo consigo boletos?', a: 'En línea desde este sitio, o en la taquilla del club sujeto a disponibilidad.' },
-      { q: '¿Aceptan grupos grandes?', a: 'Sí. Recomendamos comprar boletos con anticipación y avisarnos para apartar una mesa. Para experiencias privadas, contáctanos directamente.' },
-      { q: '¿Qué pasa si llego sin boletos y está lleno?', a: 'En Lenox te anotamos en lista de espera. En Parker, puedes checar si aún hay boletos disponibles en línea.' },
-      { q: '¿Hay costo de entrada para los conciertos?', a: 'Depende del evento. Algunos tienen costo, otros como las Jams de los martes son entrada libre. Consulta la cartelera.' },
-    ],
-  },
-  {
-    id: 'la-noche-del-evento',
-    title: 'La noche del evento',
-    faqs: [
-      { q: '¿Y en Lenox?', a: 'No hay reservaciones ni pago de entrada. Se acomoda por orden de llegada, conforme haya disponibilidad.' },
-      { q: '¿Cómo funciona la doble cartelera de los sábados?', a: 'Algunos sábados hay dos conciertos del mismo artista (19:30 y 22:30). El primero dura 60 min, el segundo 90. Entradas al primer set: ingreso desde 19:00, desaloje 30 min tras el show. Al segundo set: ingreso 22:00, permanencia hasta cierre.' },
-      { q: '¿Qué incluye el costo de entrada?', a: 'Acceso al club y al concierto en vivo. El consumo dentro del club se paga por separado.' },
-      { q: '¿Puedo quedarme después del show?', a: 'Claro. Parker sigue abierto y la noche continúa con buena música y ambiente.' },
-    ],
-  },
-]
 
 function HeroFaqCard({ faq }: { faq: Faq }) {
   return (
@@ -66,7 +32,52 @@ function HeroFaqCard({ faq }: { faq: Faq }) {
   )
 }
 
-export default function FaqsPage() {
+export default function FaqsPage({ params }: { params: Promise<{ locale: string }> }) {
+  return <FaqsInner paramsPromise={params} />
+}
+
+function FaqsInner({ paramsPromise }: { paramsPromise: Promise<{ locale: string }> }) {
+  const t = useTranslations('faqs')
+
+  const HERO_FAQS: Faq[] = [
+    { q: t('hero.whatQ'), a: t('hero.whatA') },
+    { q: t('hero.hoursQ'), a: t('hero.hoursA') },
+    { q: t('hero.reservationQ'), a: t('hero.reservationA') },
+  ]
+
+  const SECTIONS: Section[] = [
+    {
+      id: 'sobre-el-lugar',
+      title: t('venue.title'),
+      faqs: [
+        { q: t('venue.diffQ'), a: t('venue.diffA') },
+        { q: t('venue.liveQ'), a: t('venue.liveA') },
+        { q: t('venue.whereQ'), a: t('venue.whereA') },
+        { q: t('venue.parkingQ'), a: t('venue.parkingA') },
+      ],
+    },
+    {
+      id: 'boletos-y-entradas',
+      title: t('tickets.title'),
+      faqs: [
+        { q: t('tickets.howQ'), a: t('tickets.howA') },
+        { q: t('tickets.groupsQ'), a: t('tickets.groupsA') },
+        { q: t('tickets.soldoutQ'), a: t('tickets.soldoutA') },
+        { q: t('tickets.coverQ'), a: t('tickets.coverA') },
+      ],
+    },
+    {
+      id: 'la-noche-del-evento',
+      title: t('night.title'),
+      faqs: [
+        { q: t('night.lenoxQ'), a: t('night.lenoxA') },
+        { q: t('night.saturdayQ'), a: t('night.saturdayA') },
+        { q: t('night.includesQ'), a: t('night.includesA') },
+        { q: t('night.afterQ'), a: t('night.afterA') },
+      ],
+    },
+  ]
+
   return (
     <div className="relative min-h-screen pt-28 pb-16">
       <div className="fixed inset-0 pointer-events-none z-0"
@@ -74,26 +85,24 @@ export default function FaqsPage() {
 
       <div className="relative z-10 px-6 sm:px-12 md:px-20 lg:px-24 xl:px-32">
 
-        {/* ── HERO ── */}
         <section className="mb-16 md:mb-20 max-w-4xl mx-auto text-center">
           <p className="font-mono text-[0.6rem] tracking-[0.5em] uppercase mb-5"
             style={{ color: 'var(--color-parker-bronze)' }}>
-            Lo que suelen preguntarnos
+            {t('eyebrow')}
           </p>
           <h1 className="font-serif font-light text-cream leading-[1.02]"
             style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4rem)' }}>
-            Preguntas frecuentes.
+            {t('title')}
           </h1>
           <div className="mt-6 mx-auto h-px w-16" style={{ background: 'var(--color-parker-bronze)', opacity: 0.4 }} />
         </section>
 
-        {/* ── 3 preguntas destacadas — cards grandes en grid ── */}
         <section className="mb-20 md:mb-28 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <span className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(160,120,74,0.35))' }} />
             <span className="font-mono uppercase tracking-[0.4em]"
               style={{ color: 'var(--color-parker-bronze)', fontSize: 'clamp(0.7rem, 0.9vw, 0.85rem)' }}>
-              Las más comunes
+              {t('heroSectionLabel')}
             </span>
             <span className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(160,120,74,0.35))' }} />
           </div>
@@ -102,7 +111,6 @@ export default function FaqsPage() {
           </div>
         </section>
 
-        {/* ── 3 columnas por categoría ── */}
         <section className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-12">
             {SECTIONS.map(sec => (
@@ -137,25 +145,24 @@ export default function FaqsPage() {
           </div>
         </section>
 
-        {/* ── CTA contacto al fondo ── */}
         <section className="mt-24 max-w-2xl mx-auto text-center">
           <div className="h-px w-24 mx-auto mb-8" style={{ background: 'linear-gradient(to right, transparent, rgba(160,120,74,0.4), transparent)' }} />
           <p className="font-serif font-light text-cream mb-2"
             style={{ fontSize: 'clamp(1.2rem, 1.8vw, 1.6rem)' }}>
-            ¿No encuentras tu respuesta?
+            {t('cta.title')}
           </p>
           <p className="font-body font-light text-sm mb-6" style={{ color: 'rgba(237,232,220,0.55)' }}>
-            Estamos a un mensaje de distancia.
+            {t('cta.subtitle')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a href="https://wa.me/525521835107" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] uppercase px-5 py-2.5 border transition-colors hoverable"
               style={{ borderColor: 'var(--color-parker-bronze)', color: 'var(--color-parker-bronze)' }}>
-              WhatsApp
+              {t('cta.whatsapp')}
             </a>
             <a href="mailto:hello@parkerandlenox.com"
               className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] uppercase px-5 py-2.5 border border-white/15 text-white/60 hover:text-cream hover:border-white/40 transition-colors hoverable">
-              hello@parkerandlenox.com
+              {t('cta.email')}
             </a>
           </div>
         </section>

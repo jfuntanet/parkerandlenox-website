@@ -1,0 +1,182 @@
+{
+  "nav": {
+    "cartelera": "Lineup",
+    "cocina": "Kitchen",
+    "cocteles": "Cocktails",
+    "faqs": "FAQs",
+    "prensa": "Press & Reviews",
+    "musicos": "For Musicians"
+  },
+  "home": {
+    "parker": {
+      "eyebrow": "Live Music",
+      "description": "Speakeasy with live music every night. Jazz, blues, soul, funk.",
+      "tagline": "Good music is for those who know how to find it."
+    },
+    "lenox": {
+      "eyebrow": "Hi-Fi",
+      "description": "Vinyl selectors and craft cocktails.",
+      "tagline": "Come for the cocktails, stay for the music."
+    },
+    "divider": {
+      "hint": "← drag →",
+      "sliderAria": "Drag the & logo to discover Parker or Lenox"
+    },
+    "mantra": "One place. Two experiences."
+  },
+  "newsletter": {
+    "eyebrow": "Newsletter",
+    "titlePart1": "Subscribe and be the first to know",
+    "titlePart2": "about our events.",
+    "subtitle": "Once a week, the upcoming shows. No spam.",
+    "namePlaceholder": "Your name (optional)",
+    "emailPlaceholder": "Your email",
+    "buttonIdle": "Subscribe",
+    "buttonLoading": "Sending…",
+    "successTitle": "You're in. Check your inbox.",
+    "successHint": "We sent you an email to confirm the subscription",
+    "errorDefault": "We couldn't subscribe you",
+    "errorNetwork": "Connection error"
+  },
+  "banners": {
+    "ohjazz": "Jazz beyond the club — Oh! Jazz",
+    "sesiones": "Fine Selections",
+    "merch": "Vinyl and cocktails — Lenox Records",
+    "plx": "Parker & Lenox"
+  },
+  "faqs": {
+    "eyebrow": "What people usually ask us",
+    "title": "Frequently asked questions.",
+    "heroSectionLabel": "The most common",
+    "hero": {
+      "whatQ": "What is Parker & Lenox?",
+      "whatA": "A jazz club and listening bar in the heart of Mexico City. Great music, craft cocktails, exceptional food, and an immersive sound experience.",
+      "hoursQ": "What are your hours?",
+      "hoursA": "Lenox opens Tuesday to Saturday from 18:00; Parker opens at 21:00. Both close late depending on the event. Closed Sundays and Mondays.",
+      "reservationQ": "Do I need a reservation to get in?",
+      "reservationA": "Lenox doesn't require a ticket or reservation — entry is first-come, first-served, subject to availability. For Parker (the concerts) you do need to buy a ticket online. Only Cool Cat Club members have early reservation access."
+    },
+    "venue": {
+      "title": "About the venue",
+      "diffQ": "What's the difference between Parker and Lenox?",
+      "diffA": "Lenox is the entry listening bar — relaxed and open to the public. Parker is the inner club where live concerts and special experiences happen.",
+      "liveQ": "Is there live music every night?",
+      "liveA": "Yes, Tuesday to Saturday. Check our lineup for who's playing each night.",
+      "whereQ": "Where are you located?",
+      "whereA": "General Prim 100, corner with Milán 14, Colonia Juárez, Mexico City. One block from Reforma.",
+      "parkingQ": "Do you have parking or valet?",
+      "parkingA": "We don't have our own parking, but there are metered spots and paid lots within two blocks."
+    },
+    "tickets": {
+      "title": "Tickets & entry",
+      "howQ": "How do I get tickets?",
+      "howA": "Online from this site, or at the club box office subject to availability.",
+      "groupsQ": "Do you accept large groups?",
+      "groupsA": "Yes. We recommend buying tickets in advance and letting us know so we can set aside a table. For private experiences, contact us directly.",
+      "soldoutQ": "What if I arrive without tickets and it's full?",
+      "soldoutA": "At Lenox we'll add you to a waitlist. For Parker, you can check online if tickets are still available.",
+      "coverQ": "Is there an entrance fee for the concerts?",
+      "coverA": "Depends on the event. Some have an entrance fee, others like the Tuesday Jams are free. Check the lineup."
+    },
+    "night": {
+      "title": "Show night",
+      "lenoxQ": "And at Lenox?",
+      "lenoxA": "No reservations or entrance fee. Seating is first-come, first-served, subject to availability.",
+      "saturdayQ": "How do Saturday double shows work?",
+      "saturdayA": "Some Saturdays we run two shows of the same artist (19:30 and 22:30). The first is 60 min, the second is 90. First set tickets: entry from 19:00, exit 30 min after the show. Second set tickets: entry at 22:00, stay until closing.",
+      "includesQ": "What does the entrance fee include?",
+      "includesA": "Access to the club and the live show. Food and drinks inside are paid separately.",
+      "afterQ": "Can I stay after the show?",
+      "afterA": "Of course. Parker stays open and the night continues with great music and atmosphere."
+    },
+    "cta": {
+      "title": "Can't find your answer?",
+      "subtitle": "We're a message away.",
+      "whatsapp": "WhatsApp",
+      "email": "hello@parkerandlenox.com"
+    }
+  },
+  "menu": {
+    "cocina": { "title": "Kitchen", "eyebrow": "From the kitchen" },
+    "cocteles": { "title": "Cocktails", "eyebrow": "Craft bar" },
+    "loading": "Loading menu… if it doesn't show up soon, refresh the page."
+  },
+  "press": {
+    "eyebrow": "Press & Recognition",
+    "title": "We're grateful to the media that has written about us.",
+    "intro": "Speakeasy in Juárez. Twelve years of live music and a bar that has earned its place in travel guides and the local scene.",
+    "articlesSection": "Articles & reviews",
+    "printSection": "Print & recognition",
+    "arrowPrev": "View previous articles",
+    "arrowNext": "View next articles",
+    "cardRead": "Read →"
+  },
+  "policies": {
+    "eyebrow": "Before you buy",
+    "title": "Purchase Policy",
+    "ticketsTitle": "Ticket purchase",
+    "contactTitle": "Contact",
+    "contactAddress": "Address",
+    "contactWhatsapp": "WhatsApp",
+    "contactEmail": "Email",
+    "addressValue": "Calle Gral. Prim 100, Juárez, Cuauhtémoc, 06600 Mexico City",
+    "item1": "With your ticket you secure <strong>entry and a seat</strong>. Tables are assigned based on arrival order and party size. Entry to the show area begins at <strong>21:00</strong>, except Saturdays (19:00 and 22:00 depending on the set).",
+    "item2": "Arrival window for paid ticket holders is <strong>18:00 to 21:30</strong>. Seats of those who don't arrive by 21:30 may be reassigned to other guests already at the venue.",
+    "item3prefix": "If you can't make the event, you can <strong>reschedule</strong> for another date within the next 30 days, as long as you cancel before 22:00 the day of the event via WhatsApp",
+    "item3middle": "or email",
+    "item3suffix": ".",
+    "item4": "Saturdays feature <strong>two sets</strong>. First set ticket holders can enter Parker from 19:00 and exit 30 min after the show. Second set ticket holders enter at 22:00 and can stay until closing.",
+    "item5": "If you're a <strong>Cool Cat Club</strong> member, apply your coupon before completing your ticket or product purchase.",
+    "item6prefix": "For any special request, message us on WhatsApp at",
+    "item6suffix": "."
+  },
+  "privacy": {
+    "eyebrow": "Legal",
+    "title": "Privacy Notice",
+    "updated": "Last updated: June 23, 2026",
+    "legalDisclaimer": "This is an informational translation of our Privacy Notice. The legally binding version remains the Spanish original, in accordance with the Mexican Federal Law on Protection of Personal Data Held by Private Parties (LFPDPPP).",
+    "section1Title": "1. Data controller",
+    "section1Body": "Dos Con Todo, S.A. de C.V., commercially known as Parker & Lenox (hereinafter, \"Parker & Lenox\"), with address at Milán 14, Colonia Juárez, C.P. 06600, Mexico City, is responsible for the use, processing, and protection of your personal data.",
+    "section2Title": "2. Personal data we collect",
+    "section2Intro": "For the purposes stated in this notice, we may collect:",
+    "section2Item1": "Identification and contact data: name, email, and phone (when applicable).",
+    "section2Item2": "Data of companions (name and email, if applicable) that you provide when purchasing tickets.",
+    "section2Item3": "Information about your purchases, reservations, and event attendance.",
+    "section2Item4": "Browsing data collected automatically via cookies and similar technologies (see section 6).",
+    "section2Outro": "Your card or payment method data is processed directly by our payment provider (Stripe) and is not stored by Parker & Lenox.",
+    "section3Title": "3. Primary purposes (required for the service)",
+    "section3Item1": "Process, confirm, and deliver ticket purchases and reservations.",
+    "section3Item2": "Send tickets, confirmations, and communications related to your purchase or event.",
+    "section3Item3": "Manage access and seat assignment at the event.",
+    "section3Item4": "Provide customer support, clarifications, refunds, and billing.",
+    "section3Item5": "Comply with applicable legal obligations.",
+    "section4Title": "4. Secondary purposes (require your consent)",
+    "section4Intro": "Additionally, unless you object, we will use your data to:",
+    "section4Item1": "Send promotions, newsletters, event invitations, and marketing communications.",
+    "section4Item2": "Conduct surveys, statistics, and market studies.",
+    "section4Item3": "Build profiles and segments for advertising purposes.",
+    "section4Item4": "Create audiences and advertising/remarketing campaigns on third-party platforms such as Meta Platforms (Facebook and Instagram) and Google, including hashed matching of your email for these platforms.",
+    "section4OutroPrefix": "If you don't want your personal data used for these secondary purposes, you can express it by emailing",
+    "section4OutroSuffix": ". Your refusal will not be grounds to deny you the services you request.",
+    "section5Title": "5. Data transfers",
+    "section5Intro": "Your personal data may be shared with:",
+    "section5Item1": "Providers offering services required for our operations: payment processing (Stripe), email delivery, and technology hosting.",
+    "section5Item2": "Advertising platforms (Meta Platforms, Inc. and Google) for marketing purposes, when you have consented to the secondary purposes.",
+    "section5Outro": "Transfers necessary to fulfill the legal relationship with you do not require your consent, per article 37 of the LFPDPPP. Transfers for advertising purposes are only made with your consent.",
+    "section6Title": "6. Use of cookies, web beacons, and tracking technologies",
+    "section6Body": "Our website uses cookies, web beacons, and pixels (including the Meta pixel and Google tools) that collect data about your browsing — such as pages visited, interactions, and device type — for analytics and advertising purposes. You can disable cookies from your browser settings, keeping in mind this may affect your site experience.",
+    "section7Title": "7. ARCO rights and consent revocation",
+    "section7Body1": "You have the right to Access your personal data, Rectify it when inaccurate, Cancel it when you consider it's no longer needed, or Oppose its processing, as well as to revoke your consent or limit the use or disclosure of your data.",
+    "section7Body2Prefix": "To exercise any of these rights, send your request to",
+    "section7Body2Suffix": ", including: (i) your full name, (ii) a clear description of the request, and (iii) a contact method to reach you.",
+    "section8Title": "8. Changes to this Privacy Notice",
+    "section8Body": "We reserve the right to modify or update this Privacy Notice at any time. Any change will be published on this same page.",
+    "section9Title": "9. Consent",
+    "section9Body": "By providing your personal data and/or using our services and website, you acknowledge that you have read, understood, and accepted the terms of this Privacy Notice, and grant your consent for the processing of your data in accordance with the purposes described herein."
+  },
+  "langSwitcher": {
+    "aria": "Change language",
+    "es": "ES",
+    "en": "EN"
+  }
+}
