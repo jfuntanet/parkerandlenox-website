@@ -1,3 +1,4 @@
+import { getLocale } from 'next-intl/server'
 import { getMenus, findMenuByKeyword, type MenuSection } from '@/lib/api'
 
 interface Props {
@@ -13,6 +14,8 @@ function formatPrice(n: number) {
 }
 
 export async function MenuPageView({ menuKeyword, title, eyebrow, emptyMsg, hidePrices }: Props) {
+  const locale = await getLocale()
+  const isEn = locale === 'en'
   const menus = await getMenus().catch(() => [])
   const menu  = findMenuByKeyword(menus, menuKeyword)
   const sections: MenuSection[] = menu?.sections?.slice().sort((a,b) => a.sort_order - b.sort_order) ?? []
@@ -47,23 +50,27 @@ export async function MenuPageView({ menuKeyword, title, eyebrow, emptyMsg, hide
                     <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, rgba(192,32,42,0.35), transparent)' }} />
                   </div>
                   <div className="flex flex-col divide-y divide-white/[0.06]">
-                    {items.map(it => (
-                      <div key={it.id} className="py-5">
-                        <div className="flex items-baseline justify-between gap-3 mb-1">
-                          <h3 className="font-serif text-lg md:text-xl text-cream">{it.name}</h3>
-                          {!hidePrices && (
-                            <span className="font-mono text-sm flex-shrink-0" style={{ color: 'var(--color-parker-bronze)' }}>
-                              {formatPrice(Number(it.price))}
-                            </span>
+                    {items.map(it => {
+                      const name = isEn ? (it.name_en || it.name) : it.name
+                      const desc = isEn ? (it.description_en || it.description) : it.description
+                      return (
+                        <div key={it.id} className="py-5">
+                          <div className="flex items-baseline justify-between gap-3 mb-1">
+                            <h3 className="font-serif text-lg md:text-xl text-cream">{name}</h3>
+                            {!hidePrices && (
+                              <span className="font-mono text-sm flex-shrink-0" style={{ color: 'var(--color-parker-bronze)' }}>
+                                {formatPrice(Number(it.price))}
+                              </span>
+                            )}
+                          </div>
+                          {desc && (
+                            <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(237,232,220,0.6)' }}>
+                              {desc}
+                            </p>
                           )}
                         </div>
-                        {it.description && (
-                          <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(237,232,220,0.6)' }}>
-                            {it.description}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </section>
               )

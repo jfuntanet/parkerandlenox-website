@@ -37,53 +37,66 @@ const spaceMono = Space_Mono({
 
 const SITE_URL = 'https://parkerandlenox.com'
 const OG_IMAGE = '/og-plx.jpg'
-const DEFAULT_DESCRIPTION = 'Dos salas. Una misma noche. Jazz en vivo y vinyl bar en la Ciudad de México.'
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: 'Parker & Lenox',
-    template: '%s',
-  },
-  description: DEFAULT_DESCRIPTION,
-  applicationName: 'Parker & Lenox',
-  keywords: ['jazz', 'vinyl bar', 'speakeasy', 'Ciudad de México', 'CDMX', 'Juárez', 'Condesa', 'música en vivo', 'live music', 'coctelería', 'cocktail bar', 'HiFi'],
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'es_MX',
-    url: SITE_URL,
-    siteName: 'Parker & Lenox',
-    title: 'Parker & Lenox',
-    description: DEFAULT_DESCRIPTION,
-    images: [
-      {
-        url: OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: 'Parker & Lenox — Speakeasy en la Juárez, CDMX',
+const DESCRIPTIONS = {
+  es: 'Dos salas. Una misma noche. Jazz en vivo y vinyl bar en la Ciudad de México.',
+  en: 'Two rooms. One night. Live jazz and vinyl bar in Mexico City.',
+} as const
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  const desc = DESCRIPTIONS[locale as 'es' | 'en'] ?? DESCRIPTIONS.es
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: 'Parker & Lenox',
+      template: '%s',
+    },
+    description: desc,
+    applicationName: 'Parker & Lenox',
+    keywords: ['jazz', 'vinyl bar', 'speakeasy', 'Ciudad de México', 'CDMX', 'Juárez', 'Condesa', 'música en vivo', 'live music', 'coctelería', 'cocktail bar', 'HiFi'],
+    alternates: {
+      canonical: locale === 'es' ? '/' : `/${locale}`,
+      languages: {
+        es: '/',
+        en: '/en',
+        'x-default': '/',
       },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Parker & Lenox',
-    description: DEFAULT_DESCRIPTION,
-    images: [OG_IMAGE],
-  },
-  icons: {
-    icon: '/favicon.ico',
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180' },
-      { url: '/apple-touch-icon-512.png', sizes: '512x512' },
-    ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale === 'en' ? 'en_US' : 'es_MX',
+      url: locale === 'es' ? SITE_URL : `${SITE_URL}/${locale}`,
+      siteName: 'Parker & Lenox',
+      title: 'Parker & Lenox',
+      description: desc,
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: 'Parker & Lenox — Speakeasy en la Juárez, CDMX',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Parker & Lenox',
+      description: desc,
+      images: [OG_IMAGE],
+    },
+    icons: {
+      icon: '/favicon.ico',
+      apple: [
+        { url: '/apple-touch-icon.png', sizes: '180x180' },
+        { url: '/apple-touch-icon-512.png', sizes: '512x512' },
+      ],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  }
 }
 
 export const viewport: Viewport = {
