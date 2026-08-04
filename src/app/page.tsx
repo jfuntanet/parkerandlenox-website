@@ -13,7 +13,7 @@ const VENUE_JSONLD = {
   name: 'Parker & Lenox',
   url: 'https://parkerandlenox.com',
   logo: 'https://parkerandlenox.com/parker-lenox-logo.webp',
-  image: 'https://parkerandlenox.com/banner-plx.jpg',
+  image: 'https://parkerandlenox.com/og-plx.jpg',
   description: 'Speakeasy con dos salas —Parker & Lenox— jazz en vivo, HiFi listening y vinyl bar en la Ciudad de México.',
   telephone: '+525521835107',
   email: 'hello@parkerandlenox.com',

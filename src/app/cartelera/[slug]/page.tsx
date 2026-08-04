@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props) {
     ? `${detail.event.title} en ${detail.event.venue}. ${formatDateShort(detail.event.date)}${detail.event.time && detail.ticketTypes.length <= 1 ? ` · ${formatTime(detail.event.time)}` : ''} · Parker & Lenox, CDMX.`
     : 'Evento en Parker & Lenox — jazz en vivo y vinyl bar en la Ciudad de México.'
   const canonicalPath = `/cartelera/${slug}`
-  const image = detail?.event.imageUrl || '/banner-plx.jpg'
+  const image = detail?.event.imageUrl || '/og-plx.jpg'
 
   return {
     title,

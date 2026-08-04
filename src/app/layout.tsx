@@ -32,7 +32,7 @@ const spaceMono = Space_Mono({
 })
 
 const SITE_URL = 'https://parkerandlenox.com'
-const OG_IMAGE = '/banner-plx.jpg'
+const OG_IMAGE = '/og-plx.jpg'
 const DEFAULT_DESCRIPTION = 'Dos salas. Una misma noche. Jazz en vivo y vinyl bar en la Ciudad de México.'
 
 export const metadata: Metadata = {
@@ -57,8 +57,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: OG_IMAGE,
-        width: 2048,
-        height: 972,
+        width: 1200,
+        height: 630,
         alt: 'Parker & Lenox — Speakeasy en la Juárez, CDMX',
       },
     ],
