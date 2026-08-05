@@ -1,4 +1,7 @@
-import Link from 'next/link'
+'use client'
+
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import type { TicketEvent } from '@/types/api'
 import { formatDateShort, formatPrice } from '@/lib/format'
 
@@ -20,8 +23,7 @@ function venueAccent(venueName: string): string {
 }
 
 // Escala el font-size del título en pasos según qué tan largo sea.
-// Evita que títulos largos (ej. "Jefferson Goncalves E Bitencourt Duo Cajazz Umblues")
-// hagan crecer la card — en su lugar, la tipografía se achica.
+// Evita que títulos largos hagan crecer la card — en su lugar, la tipografía se achica.
 function titleClass(title: string): string {
   const len = title.length
   if (len > 48) return 'text-sm leading-tight'
@@ -30,15 +32,15 @@ function titleClass(title: string): string {
 }
 
 export function ConcertCardHorizontal({ event, showVenue = true }: Props) {
+  const t = useTranslations('event')
   const accent = venueAccent(event.venue)
 
   return (
     <Link
       href={`/cartelera/${event.slug}`}
-      className="group flex flex-row h-[235px] border border-white/[0.12] rounded-xl hoverable overflow-hidden hover:border-white/[0.28] transition-colors"
+      className="group flex flex-row h-[235px] border border-white/[0.12] rounded-xl hoverable overflow-hidden hover:border-white/[0.30] hover:-translate-y-0.5 transition-all duration-300"
       style={{ background: '#1a1a1a' }}
     >
-      {/* Póster a la izquierda — altura fija al card, ancho fijo */}
       {event.imageUrl && (
         <div className="relative w-[188px] shrink-0 h-full bg-black/40 overflow-hidden">
           <img
@@ -50,14 +52,13 @@ export function ConcertCardHorizontal({ event, showVenue = true }: Props) {
           {event.soldOut && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60">
               <span className="font-serif italic text-xl" style={{ color: 'var(--color-lenox-red)' }}>
-                Agotado
+                {t('cardSoldOut')}
               </span>
             </div>
           )}
         </div>
       )}
 
-      {/* Detalles a la derecha — overflow-hidden para no empujar la card */}
       <div className="flex flex-col flex-1 p-4 min-w-0 overflow-hidden">
         {showVenue && (
           <div className="flex items-center gap-2 mb-2">
@@ -79,14 +80,14 @@ export function ConcertCardHorizontal({ event, showVenue = true }: Props) {
 
         <div className="mt-auto pt-3 flex flex-col gap-2 items-start">
           <p className="font-serif text-base" style={{ color: accent }}>
-            {event.soldOut ? 'Agotado' : event.price > 0 ? formatPrice(event.price) : 'Entrada libre'}
+            {event.soldOut ? t('cardSoldOut') : event.price > 0 ? formatPrice(event.price) : t('freeEntry')}
           </p>
           {!event.soldOut && (
             <span
-              className="px-3 py-1.5 rounded-full font-mono text-[0.5rem] tracking-[0.25em] uppercase whitespace-nowrap"
+              className="px-3 py-1.5 rounded-full font-mono text-[0.5rem] tracking-[0.25em] uppercase whitespace-nowrap transition-opacity group-hover:opacity-80"
               style={{ border: `1.5px solid ${accent}`, color: accent, backgroundColor: 'transparent' }}
             >
-              {event.price > 0 ? 'Comprar boletos' : 'Más información'}
+              {event.price > 0 ? t('cardBuyTickets') : t('cardMoreInfo')}
             </span>
           )}
         </div>

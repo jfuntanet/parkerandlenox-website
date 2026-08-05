@@ -389,7 +389,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         )}
 
         <button type="submit"
-          className="w-full mt-0 md:mt-2 px-5 py-2.5 rounded-full font-mono text-[0.7rem] tracking-[0.3em] uppercase transition-all duration-200 hoverable flex items-center justify-center gap-3 hover:bg-[color:var(--color-parker-bronze)] hover:text-[color:var(--color-black)] hover:-translate-y-0.5 hover:shadow-lg"
+          className="w-full mt-0 md:mt-2 px-5 py-2.5 rounded-full font-mono text-[0.7rem] tracking-[0.3em] uppercase transition-all duration-300 hoverable flex items-center justify-center gap-3 hover:bg-[color:var(--color-parker-bronze)] hover:text-[color:var(--color-black)]"
           style={{
             background: 'transparent',
             color:  'var(--color-parker-bronze)',
@@ -693,7 +693,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           const enabled = ready && !busy
           return (
             <button type="button" onClick={handleMainCTA} disabled={!enabled}
-              className={`w-full mt-1 px-5 py-3.5 rounded-full font-mono text-sm tracking-[0.25em] uppercase transition-all duration-200 hoverable disabled:cursor-not-allowed ${enabled ? 'hover:opacity-85 hover:shadow-lg hover:-translate-y-0.5' : ''}`}
+              className={`w-full mt-1 px-5 py-3.5 rounded-full font-mono text-sm tracking-[0.25em] uppercase transition-all duration-300 hoverable disabled:cursor-not-allowed ${enabled ? 'hover:opacity-90' : ''}`}
               style={{
                 background: enabled ? accent : 'transparent',
                 color:      enabled ? 'var(--color-black)' : 'rgba(160,120,74,0.4)',

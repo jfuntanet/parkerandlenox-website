@@ -1,4 +1,7 @@
-import Link from 'next/link'
+'use client'
+
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import type { TicketEvent } from '@/types/api'
 import { formatDateShort, formatPrice } from '@/lib/format'
 
@@ -20,12 +23,13 @@ function venueAccent(venueName: string): string {
 }
 
 export function ConcertCard({ event, showVenue = true }: Props) {
+  const t = useTranslations('event')
   const accent = venueAccent(event.venue)
 
   return (
     <Link
       href={`/cartelera/${event.slug}`}
-      className="group flex flex-col h-full max-w-[75%] sm:max-w-none mx-auto border border-white/[0.12] rounded-xl hoverable overflow-hidden hover:border-white/[0.28] transition-colors"
+      className="group flex flex-col h-full max-w-[75%] sm:max-w-none mx-auto border border-white/[0.12] rounded-xl hoverable overflow-hidden hover:border-white/[0.30] hover:-translate-y-0.5 transition-all duration-300"
       style={{ background: '#1a1a1a' }}
     >
       {event.imageUrl && (
@@ -38,7 +42,7 @@ export function ConcertCard({ event, showVenue = true }: Props) {
           />
           {event.soldOut && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-              <span className="font-serif italic text-2xl sm:text-3xl" style={{ color: 'var(--color-lenox-red)' }}>Agotado</span>
+              <span className="font-serif italic text-2xl sm:text-3xl" style={{ color: 'var(--color-lenox-red)' }}>{t('cardSoldOut')}</span>
             </div>
           )}
         </div>
@@ -65,12 +69,12 @@ export function ConcertCard({ event, showVenue = true }: Props) {
 
       <div className="pt-2 sm:pt-4 flex flex-col gap-2 sm:gap-3">
         <p className="font-serif text-base sm:text-xl text-center" style={{ color: accent }}>
-          {event.soldOut ? 'Agotado' : event.price > 0 ? formatPrice(event.price) : 'Entrada libre'}
+          {event.soldOut ? t('cardSoldOut') : event.price > 0 ? formatPrice(event.price) : t('freeEntry')}
         </p>
         {!event.soldOut && (
-          <span className="w-full text-center px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-full font-mono text-[0.55rem] sm:text-[0.65rem] tracking-[0.25em] uppercase transition-colors group-hover:text-black"
+          <span className="w-full text-center px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-full font-mono text-[0.55rem] sm:text-[0.65rem] tracking-[0.25em] uppercase transition-opacity group-hover:opacity-80"
             style={{ border: `1.5px solid ${accent}`, color: accent, backgroundColor: 'transparent' }}>
-            {event.price > 0 ? 'Comprar boletos' : 'Más información'}
+            {event.price > 0 ? t('cardBuyTickets') : t('cardMoreInfo')}
           </span>
         )}
       </div>
