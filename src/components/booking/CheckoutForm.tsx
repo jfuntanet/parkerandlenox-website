@@ -687,13 +687,13 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           const label =
             !ready         ? t('completeYourData')
             : grandTotal === 0 ? t('confirmReservation')
-            : checkout     ? `Pagar ${formatPrice(grandTotal)}`
-            :               `Ir a pagar ${formatPrice(grandTotal)}`
+            : checkout     ? t('pay',    { price: formatPrice(grandTotal) })
+            :               t('payNow', { price: formatPrice(grandTotal) })
           const busy = submitting || paying
           const enabled = ready && !busy
           return (
             <button type="button" onClick={handleMainCTA} disabled={!enabled}
-              className="w-full mt-1 px-5 py-3.5 rounded-full font-mono text-sm tracking-[0.25em] uppercase transition-colors hoverable disabled:cursor-not-allowed"
+              className={`w-full mt-1 px-5 py-3.5 rounded-full font-mono text-sm tracking-[0.25em] uppercase transition-all duration-200 hoverable disabled:cursor-not-allowed ${enabled ? 'hover:opacity-85 hover:shadow-lg hover:-translate-y-0.5' : ''}`}
               style={{
                 background: enabled ? accent : 'transparent',
                 color:      enabled ? 'var(--color-black)' : 'rgba(160,120,74,0.4)',
@@ -705,7 +705,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         })()}
 
         <p className="font-mono text-[0.5rem] tracking-widest uppercase text-white/35 mt-1 leading-relaxed">
-          Los boletos llegan por email. La merch se recoge en el venue la noche de tu evento.
+          {t('ticketsByEmailHint')}
         </p>
       </aside>
     </div>
