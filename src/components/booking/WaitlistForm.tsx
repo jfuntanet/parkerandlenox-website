@@ -48,7 +48,7 @@ export function WaitlistForm({ slug, accent = 'var(--color-parker-bronze)' }: Pr
       <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-2" style={{ color: 'var(--color-lenox-red)' }}>
         {t('badge')}
       </p>
-      <h3 className="font-serif font-light leading-tight mb-2" style={{ fontSize: 'clamp(1.4rem, 2.2vw, 1.9rem)' }}>
+      <h3 className="font-serif font-light leading-tight mb-2 whitespace-nowrap" style={{ fontSize: 'clamp(1.1rem, 1.7vw, 1.55rem)' }}>
         {t('title')}
       </h3>
       <p className="font-body font-light leading-relaxed mb-5" style={{ color: 'rgba(237,232,220,0.6)', fontSize: '0.95rem' }}>
