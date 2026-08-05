@@ -41,7 +41,7 @@ export function ConcertCard({ event, showVenue = true }: Props) {
             className="absolute inset-0 w-full h-full object-contain"
           />
           {event.soldOut && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+            <div className="absolute inset-0 flex items-start justify-center pt-[22%] bg-black/60">
               <span className="font-serif italic text-2xl sm:text-3xl" style={{ color: 'var(--color-lenox-red)' }}>{t('cardSoldOut')}</span>
             </div>
           )}
@@ -68,15 +68,15 @@ export function ConcertCard({ event, showVenue = true }: Props) {
       </div>
 
       <div className="pt-2 sm:pt-4 flex flex-col gap-2 sm:gap-3">
-        <p className="font-serif text-base sm:text-xl text-center" style={{ color: accent }}>
-          {event.soldOut ? t('cardSoldOut') : event.price > 0 ? formatPrice(event.price) : t('freeEntry')}
-        </p>
         {!event.soldOut && (
-          <span className="w-full text-center px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-full font-mono text-[0.55rem] sm:text-[0.65rem] tracking-[0.25em] uppercase transition-opacity group-hover:opacity-80"
-            style={{ border: `1.5px solid ${accent}`, color: accent, backgroundColor: 'transparent' }}>
-            {event.price > 0 ? t('cardBuyTickets') : t('cardMoreInfo')}
-          </span>
+          <p className="font-serif text-base sm:text-xl text-center" style={{ color: accent }}>
+            {event.price > 0 ? formatPrice(event.price) : t('freeEntry')}
+          </p>
         )}
+        <span className="w-full text-center px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-full font-mono text-[0.55rem] sm:text-[0.65rem] tracking-[0.25em] uppercase transition-opacity group-hover:opacity-80"
+          style={{ border: `1.5px solid ${accent}`, color: accent, backgroundColor: 'transparent' }}>
+          {event.soldOut ? t('cardWaitlist') : event.price > 0 ? t('cardBuyTickets') : t('cardMoreInfo')}
+        </span>
       </div>
       </div>
     </Link>

@@ -50,7 +50,7 @@ export function ConcertCardHorizontal({ event, showVenue = true }: Props) {
             className="absolute inset-0 w-full h-full object-contain"
           />
           {event.soldOut && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+            <div className="absolute inset-0 flex items-start justify-center pt-6 bg-black/60">
               <span className="font-serif italic text-xl" style={{ color: 'var(--color-lenox-red)' }}>
                 {t('cardSoldOut')}
               </span>
@@ -79,17 +79,17 @@ export function ConcertCardHorizontal({ event, showVenue = true }: Props) {
         </h3>
 
         <div className="mt-auto pt-3 flex flex-col gap-2 items-start">
-          <p className="font-serif text-base" style={{ color: accent }}>
-            {event.soldOut ? t('cardSoldOut') : event.price > 0 ? formatPrice(event.price) : t('freeEntry')}
-          </p>
           {!event.soldOut && (
-            <span
-              className="px-3 py-1.5 rounded-full font-mono text-[0.5rem] tracking-[0.25em] uppercase whitespace-nowrap transition-opacity group-hover:opacity-80"
-              style={{ border: `1.5px solid ${accent}`, color: accent, backgroundColor: 'transparent' }}
-            >
-              {event.price > 0 ? t('cardBuyTickets') : t('cardMoreInfo')}
-            </span>
+            <p className="font-serif text-base" style={{ color: accent }}>
+              {event.price > 0 ? formatPrice(event.price) : t('freeEntry')}
+            </p>
           )}
+          <span
+            className="px-3 py-1.5 rounded-full font-mono text-[0.5rem] tracking-[0.25em] uppercase whitespace-nowrap transition-opacity group-hover:opacity-80"
+            style={{ border: `1.5px solid ${accent}`, color: accent, backgroundColor: 'transparent' }}
+          >
+            {event.soldOut ? t('cardWaitlist') : event.price > 0 ? t('cardBuyTickets') : t('cardMoreInfo')}
+          </span>
         </div>
       </div>
     </Link>
