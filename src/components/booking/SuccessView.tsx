@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { QRCodeSVG } from 'qrcode.react'
 import { pushEvent } from '@/lib/analytics'
 
@@ -41,6 +42,7 @@ const inputCls = 'w-full rounded-full border border-white/20 bg-black/40 px-5 py
 const accent = 'var(--color-parker-bronze)'
 
 export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: Props) {
+  const t = useTranslations('success')
   const [data, setData] = useState<OrderPayload | null>(null)
   const [err, setErr]   = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -88,7 +90,7 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
 
   // Fetch de la orden (con reintentos porque el webhook puede tardar 1-2s en marcar paid)
   useEffect(() => {
-    if (!paymentIntent && !orderId) { setErr('Falta el identificador de pago'); setLoading(false); return }
+    if (!paymentIntent && !orderId) { setErr(t('missingPaymentId')); setLoading(false); return }
     let cancelled = false
     let tries = 0
     async function attempt() {
@@ -134,11 +136,11 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
           setTimeout(attempt, 1500)
           return
         }
-        setErr(d.error || 'No se encontró la orden')
+        setErr(d.error || t('orderNotFound'))
         setLoading(false)
       } catch {
         if (tries < 5) { setTimeout(attempt, 1500); return }
-        setErr('Error de conexión'); setLoading(false)
+        setErr(t('connectionError')); setLoading(false)
       }
     }
     attempt()
@@ -159,7 +161,7 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
       if (token) parts.push('token=' + encodeURIComponent(token))
       if (hideTotal) parts.push('hideTotal=1')
       const res = await fetch('/api/download-tickets?' + parts.join('&'), { cache: 'no-store' })
-      if (!res.ok) { setSaveErr('No se pudo generar el PDF'); return }
+      if (!res.ok) { setSaveErr(t('pdfFailed')); return }
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -169,8 +171,8 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
         : `boletos-${data!.order.orderId.slice(0,8).toUpperCase()}.pdf`
       document.body.appendChild(a); a.click(); a.remove()
       URL.revokeObjectURL(url)
-      setSavedFlash(token ? 'Boleto descargado' : 'PDFs descargados')
-    } catch { setSaveErr('Error de conexión') }
+      setSavedFlash(token ? t('ticketDownloaded') : t('pdfsDownloaded'))
+    } catch { setSaveErr(t('connectionError')) }
     finally { if (token) setBusyToken(prev => prev === token ? null : prev); else setDownloadingAll(false); void key }
   }
 
@@ -179,8 +181,8 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
     if (!data) return
     setBusyToken(token); setSaveErr(null); setSavedFlash(null)
     try {
-      const t = data.tickets.find(x => x.token === token)
-      if (!t) return
+      const found = data.tickets.find(x => x.token === token)
+      if (!found) return
       const payload = [{
         token,
         name:  edits[token]?.name || '',
@@ -195,14 +197,14 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
         ),
       })
       const d = await res.json()
-      if (!res.ok || d.error) { setSaveErr(d.error || 'No se pudo enviar'); return }
-      setSavedFlash('Boleto enviado por correo')
+      if (!res.ok || d.error) { setSaveErr(d.error || t('sendFailed')); return }
+      setSavedFlash(t('ticketEmailed'))
       // Refetch para reflejar emailSent
       fetch('/api/order-by-pi?' + (orderId ? 'orderId=' + encodeURIComponent(orderId) : 'pi=' + encodeURIComponent(paymentIntent)), { cache: 'no-store' })
         .then(r => r.json())
         .then(d2 => { if (d2.order) setData(d2) })
         .catch(() => {})
-    } catch { setSaveErr('Error de conexión') }
+    } catch { setSaveErr(t('connectionError')) }
     finally { setBusyToken(prev => prev === token ? null : prev) }
   }
 
@@ -210,10 +212,10 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
   if (redirectStatus && redirectStatus !== 'succeeded') {
     return (
       <StatePage
-        eyebrow="Pago no completado"
-        title="Algo salió mal con el pago"
-        subtitle={`Estado: ${redirectStatus}. No se te cobró. Intenta de nuevo desde el evento.`}
-        cta={<Link href="/" className="pill-cta">Volver al inicio</Link>}
+        eyebrow={t('state.paymentIncompleteEyebrow')}
+        title={t('state.paymentIncompleteTitle')}
+        subtitle={t('state.paymentIncompleteSubtitle', { status: redirectStatus })}
+        cta={<Link href="/" className="pill-cta">{t('state.backHome')}</Link>}
       />
     )
   }
@@ -221,9 +223,9 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
   if (loading) {
     return (
       <StatePage
-        eyebrow="Procesando"
-        title="Confirmando tu pago…"
-        subtitle="Un momento — el webhook de Stripe suele tardar 1–2 segundos."
+        eyebrow={t('state.processingEyebrow')}
+        title={t('state.confirmingTitle')}
+        subtitle={t('state.confirmingSubtitle')}
         spinner
       />
     )
@@ -232,11 +234,11 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
   if (err || !data) {
     return (
       <StatePage
-        eyebrow="Error"
-        title="No pudimos encontrar tu orden"
-        subtitle={err || 'Si crees que es un error, escríbenos a hello@parkerandlenox.com con este código de pago.'}
+        eyebrow={t('state.errorEyebrow')}
+        title={t('state.orderNotFoundTitle')}
+        subtitle={err || t('state.orderNotFoundSubtitle')}
         code={paymentIntent || orderId}
-        cta={<Link href="/" className="pill-cta">Volver al inicio</Link>}
+        cta={<Link href="/" className="pill-cta">{t('state.backHome')}</Link>}
       />
     )
   }
@@ -251,13 +253,13 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
           <span className="font-serif block mb-2" style={{ color: accent, fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', lineHeight: 1 }}>✓</span>
           <h1 className="font-serif font-light leading-[1.05]"
             style={{ color: accent, fontSize: 'clamp(1.75rem, 3.5vw, 2.6rem)' }}>
-            {isFree ? 'Reservación confirmada' : 'Pago confirmado'}
+            {isFree ? t('reservationConfirmed') : t('paymentConfirmed')}
           </h1>
           <p className="font-serif text-base md:text-lg font-light text-cream leading-tight mt-2">
             {data.order.eventName}
           </p>
           <p className="font-mono text-xs tracking-widest uppercase text-white/50 mt-1.5">
-            Orden #{buyerCode}
+            {t('orderLabel')} #{buyerCode}
           </p>
         </div>
 
@@ -268,17 +270,19 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
             <span className="font-serif text-lg leading-none mt-0.5" style={{ color: accent }}>✉</span>
             <div className="flex flex-col gap-1 flex-1 min-w-0">
               <span className="font-mono text-xs tracking-[0.2em] uppercase" style={{ color: accent }}>
-                Ya te enviamos tus boletos
+                {t('ticketsSentBanner')}
               </span>
               <span className="font-body text-sm text-white/70">
-                Deberían estar llegando a <span style={{ color: accent }}>{data.order.buyerEmail}</span>. Aquí abajo también los tienes visibles y puedes descargarlos.
+                {t.rich('ticketsSentDetail', {
+                  email: () => <span style={{ color: accent }}>{data.order.buyerEmail}</span>,
+                }) as React.ReactNode}
               </span>
             </div>
           </div>
 
           <div className="relative">
             {/* Flecha izquierda */}
-            <button type="button" aria-label="Boleto anterior"
+            <button type="button" aria-label={t('ticketPrev')}
               onClick={() => scrollCarousel(-1)}
               disabled={!carouselCanLeft}
               className="hidden md:flex absolute left-0 top-[35%] -translate-y-1/2 -translate-x-4 z-10 items-center justify-center w-10 h-10 rounded-full border transition-opacity hoverable disabled:opacity-0 disabled:pointer-events-none"
@@ -286,7 +290,7 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
             </button>
             {/* Flecha derecha */}
-            <button type="button" aria-label="Siguiente boleto"
+            <button type="button" aria-label={t('ticketNext')}
               onClick={() => scrollCarousel(1)}
               disabled={!carouselCanRight}
               className="hidden md:flex absolute right-0 top-[35%] -translate-y-1/2 translate-x-4 z-10 items-center justify-center w-10 h-10 rounded-full border transition-opacity hoverable disabled:opacity-0 disabled:pointer-events-none"
@@ -297,26 +301,26 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
             <div ref={carouselRef}
               className="flex gap-5 md:gap-6 justify-center overflow-x-auto snap-x snap-mandatory pb-3 -mx-4 px-4 md:mx-0 md:px-1
                          [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              {data.tickets.map((t, i) => {
-                const e = edits[t.token] || { name: '', email: '' }
+              {data.tickets.map((tk, i) => {
+                const e = edits[tk.token] || { name: '', email: '' }
                 const isBuyer = i === 0
-                const displayName = e.name || t.guestName || (isBuyer ? data.order.buyerName : `Acompañante ${i}`)
+                const displayName = e.name || tk.guestName || (isBuyer ? data.order.buyerName : t('companionName', { n: i }))
                 return (
-                  <div key={t.token} className="snap-start shrink-0 w-[calc(100vw-4rem)] max-w-[300px] md:w-[300px] flex flex-col gap-3">
+                  <div key={tk.token} className="snap-start shrink-0 w-[calc(100vw-4rem)] max-w-[300px] md:w-[300px] flex flex-col gap-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <input type="text"
-                        placeholder={isBuyer ? 'Tu nombre' : `Nombre del acompañante ${i}`}
+                        placeholder={isBuyer ? t('yourName') : t('companionName', { n: i })}
                         value={e.name}
-                        onChange={ev => setField(t.token, 'name', ev.target.value)}
+                        onChange={ev => setField(tk.token, 'name', ev.target.value)}
                         className={inputCls + ' text-sm py-2'} />
                       <input type="email"
-                        placeholder={isBuyer ? 'Tu email' : 'email (opcional)'}
+                        placeholder={isBuyer ? t('yourEmail') : t('companionEmail')}
                         value={e.email}
-                        onChange={ev => setField(t.token, 'email', ev.target.value)}
+                        onChange={ev => setField(tk.token, 'email', ev.target.value)}
                         className={inputCls + ' text-sm py-2'} />
                     </div>
                     <TicketRender
-                      ticket={t}
+                      ticket={tk}
                       order={data.order}
                       buyerCode={buyerCode}
                       displayName={displayName}
@@ -327,33 +331,33 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
                     {/* Acciones por boleto */}
                     <div className="grid grid-cols-3 gap-1.5">
                       <button type="button"
-                        onClick={() => sendByEmail(t.token)}
-                        disabled={busyToken === t.token}
-                        title="Enviar por correo"
+                        onClick={() => sendByEmail(tk.token)}
+                        disabled={busyToken === tk.token}
+                        title={t('sendEmail')}
                         className="flex flex-col items-center gap-1 py-2 rounded-lg border transition-colors hoverable disabled:opacity-40 disabled:cursor-not-allowed"
                         style={{ borderColor: 'rgba(255,255,255,0.10)', color: accent }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                        <span className="font-mono text-[0.5rem] tracking-[0.15em] uppercase text-white/60">Correo</span>
+                        <span className="font-mono text-[0.5rem] tracking-[0.15em] uppercase text-white/60">{t('actionEmail')}</span>
                       </button>
-                      <button type="button" disabled title="Próximamente"
+                      <button type="button" disabled title={t('comingSoon')}
                         className="flex flex-col items-center gap-1 py-2 rounded-lg border opacity-40 cursor-not-allowed"
                         style={{ borderColor: 'rgba(255,255,255,0.10)', color: accent }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                        <span className="font-mono text-[0.5rem] tracking-[0.15em] uppercase text-white/60">WhatsApp</span>
+                        <span className="font-mono text-[0.5rem] tracking-[0.15em] uppercase text-white/60">{t('actionWhatsApp')}</span>
                       </button>
                       <button type="button"
-                        onClick={() => downloadPdf(t.token)}
-                        disabled={busyToken === t.token}
-                        title="Descargar PDF"
+                        onClick={() => downloadPdf(tk.token)}
+                        disabled={busyToken === tk.token}
+                        title={t('downloadPdf')}
                         className="flex flex-col items-center gap-1 py-2 rounded-lg border transition-colors hoverable disabled:opacity-40 disabled:cursor-not-allowed"
                         style={{ borderColor: 'rgba(255,255,255,0.10)', color: accent }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        <span className="font-mono text-[0.5rem] tracking-[0.15em] uppercase text-white/60">PDF</span>
+                        <span className="font-mono text-[0.5rem] tracking-[0.15em] uppercase text-white/60">{t('actionPdf')}</span>
                       </button>
                     </div>
-                    {t.emailSent && t.recipientEmail && (
+                    {tk.emailSent && tk.recipientEmail && (
                       <p className="font-mono text-[0.55rem] tracking-widest uppercase text-center" style={{ color: accent }}>
-                        ✓ enviado a {t.recipientEmail}
+                        ✓ {t('sentTo')} {tk.recipientEmail}
                       </p>
                     )}
                   </div>
@@ -371,13 +375,13 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
                 className="w-4 h-4 accent-current"
                 style={{ accentColor: accent }} />
               <span className="font-mono text-xs tracking-[0.2em] uppercase" style={{ color: hideTotal ? accent : 'rgba(237,232,220,0.55)' }}>
-                Ocultar total (regalo)
+                {t('hideTotalToggle')}
               </span>
             </label>
           </div>
           {hideTotal && (
             <p className="mt-2 text-center font-body text-xs" style={{ color: 'rgba(237,232,220,0.5)' }}>
-              Los PDFs descargados no mostrarán el precio. El correo automático ya salió con el total visible.
+              {t('hideTotalHint')}
             </p>
           )}
 
@@ -404,7 +408,7 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
                   border:     `2px solid ${downloadingAll ? 'rgba(160,120,74,0.3)' : accent}`,
                 }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                {downloadingAll ? 'Preparando…' : `Descargar todos (${data.tickets.length})`}
+                {downloadingAll ? t('preparing') : t('downloadAll', { n: data.tickets.length })}
               </button>
             )}
           </div>
@@ -413,7 +417,7 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
         {/* Navegación */}
         <div className="text-center mt-10">
           <Link href="/" className="font-mono text-[0.65rem] tracking-[0.3em] uppercase text-white/40 hover:text-cream transition-colors hoverable">
-            ← Volver al inicio
+            {t('backHomeLink')}
           </Link>
         </div>
       </div>
@@ -479,6 +483,7 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
   total: number
   hideTotal?: boolean
 }) {
+  const t = useTranslations('success')
   const time = order.eventTime ? order.eventTime.slice(0, 5) : ''
   let doorsTime = ''
   if (time) {
@@ -488,7 +493,7 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
   }
   const totalStr = order.totalAmount != null && order.totalAmount > 0
     ? `$${Number(order.totalAmount).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN`
-    : 'Entrada libre'
+    : t('freeEntry')
   const description = `${order.eventDate || ''} | ${order.eventName || ''}`
   const mono = 'font-mono uppercase'
 
@@ -500,7 +505,7 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/tickets/parker-lenox-logo.png" alt="Parker & Lenox" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
         <div className="absolute right-4 top-3 text-right">
-          <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.muted, fontWeight: 500 }}>Boleto {position}/{total}</div>
+          <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.muted, fontWeight: 500 }}>{t('ticketNumber', { position, total })}</div>
           <div className="font-mono mt-0.5" style={{ fontSize: '10px', color: T.ink, fontWeight: 500 }}>#{buyerCode}</div>
         </div>
       </div>
@@ -508,7 +513,7 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
       {/* MAIN */}
       <div className="px-5 pt-5 pb-4">
         <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '8px' }}>
-          Sesión
+          {t('sessionLabel')}
         </div>
         <h1 className="font-serif italic" style={{ fontSize: '22px', lineHeight: 1.05, letterSpacing: '-0.5px', color: T.ink, fontWeight: 500 }}>
           {order.eventName}
@@ -524,23 +529,23 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
         {/* Grid */}
         <div className="grid grid-cols-3">
           <div className="flex flex-col items-center text-center py-1">
-            <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>Fecha</div>
+            <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>{t('dateLabel')}</div>
             <div style={{ fontSize: '13px', color: T.ink, fontWeight: 500 }}>{order.eventDate}</div>
           </div>
           <div className="flex flex-col items-center text-center py-1" style={{ borderLeft: `1px solid ${T.line}`, borderRight: `1px solid ${T.line}` }}>
-            <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>Hora</div>
+            <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>{t('timeLabel')}</div>
             <div style={{ fontSize: '13px', color: T.ink, fontWeight: 500 }}>{time || '—'}</div>
-            {doorsTime && <div className="italic" style={{ fontSize: '9.5px', color: T.muted, marginTop: '2px' }}>Puertas {doorsTime}</div>}
+            {doorsTime && <div className="italic" style={{ fontSize: '9.5px', color: T.muted, marginTop: '2px' }}>{t('doorsLabel')} {doorsTime}</div>}
           </div>
           <div className="flex flex-col items-center text-center py-1">
-            <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>Lugares</div>
+            <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>{t('spotsLabel')}</div>
             <div style={{ fontSize: '13px', color: T.ink, fontWeight: 500 }}>1</div>
           </div>
         </div>
 
         {/* Venue */}
         <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: `1px solid ${T.line}` }}>
-          <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>Lugar</div>
+          <div className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500, marginBottom: '4px' }}>{t('venueLabel')}</div>
           <div style={{ fontSize: '12.5px', color: T.ink, fontWeight: 500 }}>{order.venue}</div>
           {order.venueAddress && (
             <div style={{ fontSize: '11px', color: T.muted, marginTop: '2px', lineHeight: 1.3 }}>{order.venueAddress}</div>
@@ -565,12 +570,12 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
             {displayName}
           </div>
           <div className="flex gap-1.5 items-baseline" style={{ marginBottom: '6px' }}>
-            <span className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500 }}>Orden</span>
+            <span className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500 }}>{t('orderCol')}</span>
             <span className="font-mono" style={{ fontSize: '10px', color: T.ink, fontWeight: 500 }}>#{buyerCode}</span>
           </div>
           {!hideTotal && (
             <div className="flex justify-between items-baseline" style={{ marginTop: '8px', paddingTop: '8px', borderTop: `1px dashed ${T.line}` }}>
-              <span className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500 }}>Total</span>
+              <span className={mono} style={{ fontSize: '8.5px', letterSpacing: '1.4px', color: T.accent, fontWeight: 500 }}>{t('totalCol')}</span>
               <span className="font-serif italic" style={{ fontSize: '18px', color: T.accent, fontWeight: 600 }}>{totalStr}</span>
             </div>
           )}
@@ -581,7 +586,7 @@ function TicketRender({ ticket, order, buyerCode, displayName, position, total, 
       <div style={{ borderTop: `1px solid ${T.line}`, background: T.headerBg }}>
         <div className={`px-5 pt-2 pb-2.5 ${mono} text-center`}
           style={{ fontSize: '8px', letterSpacing: '1.3px', color: T.muted, lineHeight: 1.5 }}>
-          Válido para un solo ingreso · No lo compartas
+          {t('ticketFooter')}
         </div>
       </div>
     </div>

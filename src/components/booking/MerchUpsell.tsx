@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { formatPrice } from '@/lib/format'
 
 export interface MerchProductVariant {
@@ -43,6 +44,8 @@ interface Props {
 }
 
 export function MerchUpsell({ cart, onChange, accent }: Props) {
+  const tFlow = useTranslations('checkoutFlow.step3')
+  const tMerch = useTranslations('merch')
   const [products, setProducts] = useState<MerchProduct[] | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
@@ -53,11 +56,11 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
       .then(d => {
         if (!alive) return
         if (Array.isArray(d)) setProducts(d)
-        else setErr(d?.error || 'No se pudo cargar el merch')
+        else setErr(d?.error || tFlow('merchLoadError'))
       })
-      .catch(() => alive && setErr('No se pudo cargar el merch'))
+      .catch(() => alive && setErr(tFlow('merchLoadError')))
     return () => { alive = false }
-  }, [])
+  }, [tFlow])
 
   function setQty(pid: string, qty: number) {
     const next = new Map(cart)
@@ -76,14 +79,14 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
   if (!products) {
     return (
       <p className="font-mono text-[0.6rem] tracking-widest uppercase text-center py-8 text-white/40">
-        Cargando merch…
+        {tFlow('merchLoading')}
       </p>
     )
   }
   if (products.length === 0) {
     return (
       <p className="font-body text-sm text-center py-8" style={{ color: 'rgba(237,232,220,0.5)' }}>
-        No hay merch disponible en este momento.
+        {tFlow('merchNone')}
       </p>
     )
   }
@@ -111,15 +114,15 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
                   <button type="button" disabled={soldOut} onClick={() => setQty(p.id, 1)}
                     className="w-full py-2.5 md:py-2 rounded-full font-mono text-sm md:text-[0.6rem] tracking-[0.25em] uppercase border transition-colors hoverable disabled:opacity-30"
                     style={{ borderColor: soldOut ? 'rgba(160,120,74,0.25)' : accent, color: soldOut ? 'rgba(160,120,74,0.4)' : accent }}>
-                    Agregar
+                    {tMerch('add')}
                   </button>
                 ) : (
                   <div className="flex items-center justify-center gap-3">
-                    <button type="button" aria-label="Menos" onClick={() => setQty(p.id, qty - 1)}
+                    <button type="button" aria-label={tMerch('decrease')} onClick={() => setQty(p.id, qty - 1)}
                       className="w-8 h-8 rounded-full flex items-center justify-center font-serif text-lg leading-none hover:opacity-80 transition-opacity hoverable"
                       style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
                     <span className="font-serif text-xl text-cream min-w-[2ch] text-center leading-none">{qty}</span>
-                    <button type="button" aria-label="Más" disabled={qty >= maxQty} onClick={() => setQty(p.id, qty + 1)}
+                    <button type="button" aria-label={tMerch('increase')} disabled={qty >= maxQty} onClick={() => setQty(p.id, qty + 1)}
                       className="w-8 h-8 rounded-full flex items-center justify-center font-serif text-lg leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
                       style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
                   </div>
@@ -147,6 +150,7 @@ export function cartSubtotal(cart: CartMap, products: MerchProduct[] | null): nu
 // Imagen del producto con fallback al título si la URL está muerta o no existe.
 // Necesario mientras 3 productos apuntan a URLs viejas de wp-content que dan 404.
 function MerchImage({ product, soldOut }: { product: MerchProduct; soldOut: boolean }) {
+  const tMerch = useTranslations('merch')
   const [failed, setFailed] = useState(false)
   const showImg = product.imageUrl && !failed
   return (
@@ -164,7 +168,7 @@ function MerchImage({ product, soldOut }: { product: MerchProduct; soldOut: bool
       )}
       {soldOut && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-          <span className="font-mono text-[0.65rem] tracking-widest uppercase text-white/70">Agotado</span>
+          <span className="font-mono text-[0.65rem] tracking-widest uppercase text-white/70">{tMerch('soldOut')}</span>
         </div>
       )}
     </div>

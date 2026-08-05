@@ -65,6 +65,8 @@ interface StepCardProps {
   children: React.ReactNode
 }
 function StepCard({ step, logicalId, title, isOpen, isDone, isLocked, optional, summary, onOpen, accent, children }: StepCardProps) {
+  const tEv = useTranslations('event')
+  const tOpt = useTranslations('checkoutFlow')
   const canClick = !isOpen && !isLocked
   return (
     <section id={`step-${logicalId}`} className="rounded-xl border transition-colors overflow-hidden scroll-mt-24"
@@ -90,7 +92,7 @@ function StepCard({ step, logicalId, title, isOpen, isDone, isLocked, optional, 
             <span>{title}</span>
             {optional && (
               <span className="font-mono text-[0.7rem] tracking-[0.25em] uppercase text-white/55 border border-white/20 rounded-full px-2.5 py-0.5 leading-none">
-                opcional
+                {tOpt('optional').replace(/^\(|\)$/g, '')}
               </span>
             )}
           </p>
@@ -102,10 +104,10 @@ function StepCard({ step, logicalId, title, isOpen, isDone, isLocked, optional, 
         </div>
         {/* Estado a la derecha */}
         {isDone && !isOpen && (
-          <span className="font-mono text-xs tracking-[0.2em] uppercase text-white/55 flex-shrink-0">Editar</span>
+          <span className="font-mono text-xs tracking-[0.2em] uppercase text-white/55 flex-shrink-0">{tEv('editStep')}</span>
         )}
         {isLocked && (
-          <span className="font-mono text-xs tracking-[0.2em] uppercase text-white/40 flex-shrink-0">Pendiente</span>
+          <span className="font-mono text-xs tracking-[0.2em] uppercase text-white/40 flex-shrink-0">{tEv('pendingStep')}</span>
         )}
       </button>
 
@@ -121,6 +123,8 @@ function StepCard({ step, logicalId, title, isOpen, isDone, isLocked, optional, 
 
 export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1, mode = 'full' }: Props) {
   const t = useTranslations('event')
+  const tFlow = useTranslations('checkoutFlow')
+  const tMerch = useTranslations('merch')
   const router = useRouter()
   const storageKey = 'plx-checkout-' + slug
 
@@ -408,9 +412,9 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
   const summary1 = `${customerName || '—'} · ${customerEmail || '—'}`
   const merchCount = Array.from(merchCart.values()).reduce((s, q) => s + q, 0)
   const summary3Parts: string[] = []
-  if (customerNotes.trim()) summary3Parts.push('Con nota')
-  if (merchCount > 0) summary3Parts.push(`${merchCount} pieza${merchCount > 1 ? 's' : ''} de merch`)
-  const summary3 = summary3Parts.length ? summary3Parts.join(' · ') : 'Sin agregados'
+  if (customerNotes.trim()) summary3Parts.push(t('withNote'))
+  if (merchCount > 0) summary3Parts.push(merchCount === 1 ? t('merchPieceOne', { n: 1 }) : t('merchPieceMany', { n: merchCount }))
+  const summary3 = summary3Parts.length ? summary3Parts.join(' · ') : t('noExtras')
 
   const summaryLines: { id: string; title: string; image: string | null; qty: number; unit: number; sub: number }[] =
     merchProducts && merchProducts.length
@@ -447,7 +451,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
       <div className="lg:col-span-8 flex flex-col gap-4">
         <button type="button" onClick={() => router.push('/cartelera/' + slug)}
           className="self-start font-mono text-sm tracking-[0.2em] uppercase text-white/60 hover:text-cream transition-colors hoverable mb-3">
-          ← Volver al evento
+          {tFlow('backToEvent')}
         </button>
 
         <section className="rounded-xl border border-white/[0.10] p-6 md:p-8 flex flex-col gap-8"
@@ -456,20 +460,20 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           {/* Datos del comprador */}
           <div>
             <p className="font-mono text-sm tracking-[0.25em] uppercase mb-4" style={{ color: accent }}>
-              Datos del comprador
+              {tFlow('buyerData')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input type="text" required placeholder="Tu nombre *"
+              <input type="text" required placeholder={tFlow('yourNameRequired')}
                 value={customerName}
                 onChange={e => { setCustomerName(e.target.value); invalidateCheckout() }}
                 className={inputCls} />
-              <input type="email" required placeholder="Tu email *"
+              <input type="email" required placeholder={tFlow('yourEmailRequired')}
                 value={customerEmail}
                 onChange={e => { setCustomerEmail(e.target.value); invalidateCheckout() }}
                 className={inputCls} />
             </div>
             <p className="font-body text-sm leading-relaxed text-white/55 mt-3 px-1">
-              Recibirás tus boletos en este correo.
+              {tFlow('receiveTicketsHint')}
             </p>
           </div>
 
@@ -478,15 +482,15 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           {/* Requerimientos especiales */}
           <div>
             <p className="font-mono text-sm tracking-[0.25em] uppercase mb-4" style={{ color: accent }}>
-              Requerimientos especiales <span className="font-body normal-case tracking-normal text-white/40 text-xs ml-2">(opcional)</span>
+              {tFlow('specialRequirements')} <span className="font-body normal-case tracking-normal text-white/40 text-xs ml-2">{tFlow('optional')}</span>
             </p>
-            <textarea placeholder="Silla especial, alergias, celebras algo, etc."
+            <textarea placeholder={tFlow('specialRequirementsPlaceholder')}
               value={customerNotes}
               onChange={e => { setCustomerNotes(e.target.value); invalidateCheckout() }}
               rows={3}
               className="w-full rounded-2xl border border-white/20 bg-black/40 px-5 py-3 font-body text-base text-cream placeholder:text-white/40 focus:border-white/60 focus:outline-none resize-none" />
             <p className="font-body text-base md:text-sm leading-relaxed text-white/60 mt-3 px-1">
-              El staff del venue lo verá al preparar tu reserva.
+              {tFlow('staffWillSee')}
             </p>
           </div>
 
@@ -496,10 +500,10 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           <div>
             <div className="text-center pb-4">
               <p className="font-mono text-sm tracking-[0.25em] uppercase mb-3" style={{ color: accent }}>
-                Colección oficial
+                {tFlow('officialCollection')}
               </p>
               <p className="font-body text-base md:text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'rgba(237,232,220,0.7)' }}>
-                Nuestra merch solo está a la venta para quienes asisten a los conciertos. Se recoge en el venue la noche del evento.
+                {tFlow('merchDescription')}
               </p>
             </div>
             <MerchUpsellWrapper cart={merchCart}
@@ -513,7 +517,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
       {/* SIDEBAR — resumen sticky */}
       <aside className="lg:col-span-4 lg:sticky lg:top-24 self-start rounded-xl border border-white/[0.10] p-6 flex flex-col gap-5" style={{ background: '#1a1a1a' }}>
         <p className="font-mono text-sm tracking-[0.35em] uppercase" style={{ color: accent }}>
-          Resumen de compra
+          {tFlow('orderSummary')}
         </p>
 
         {/* Header del evento — póster grande + venue/título/fecha */}
@@ -546,14 +550,14 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         {/* Boletos: selector de cantidad + subtotal */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <button type="button" aria-label="Menos" disabled={quantity <= 1}
+            <button type="button" aria-label={tMerch('decrease')} disabled={quantity <= 1}
               onClick={() => { setQuantity(q => Math.max(1, q - 1)); invalidateCheckout() }}
               className="w-7 h-7 rounded-full flex items-center justify-center font-serif text-base leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
               style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
             <span className="font-mono text-sm tracking-widest uppercase text-white min-w-[6.5ch] text-center">
-              {quantity} boleto{quantity > 1 ? 's' : ''}
+              {quantity === 1 ? tFlow('ticketOne') : tFlow('ticketMany', { n: quantity })}
             </span>
-            <button type="button" aria-label="Más" disabled={quantity >= 10}
+            <button type="button" aria-label={tMerch('increase')} disabled={quantity >= 10}
               onClick={() => { setQuantity(q => Math.min(10, q + 1)); invalidateCheckout() }}
               className="w-7 h-7 rounded-full flex items-center justify-center font-serif text-base leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
               style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
@@ -584,11 +588,11 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
                     <div className="min-w-0 flex-1 flex flex-col gap-1.5">
                       <p className="font-body text-sm text-cream leading-tight line-clamp-2">{l.title}</p>
                       <div className="flex items-center gap-2">
-                        <button type="button" aria-label="Quitar uno" onClick={() => setQty(l.qty - 1)}
+                        <button type="button" aria-label={tFlow('removeOne')} onClick={() => setQty(l.qty - 1)}
                           className="w-6 h-6 rounded-full flex items-center justify-center font-serif text-sm leading-none hover:opacity-80 transition-opacity hoverable"
                           style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
                         <span className="font-mono text-xs text-white min-w-[1.5ch] text-center">{l.qty}</span>
-                        <button type="button" aria-label="Agregar uno" disabled={l.qty >= maxQty} onClick={() => setQty(l.qty + 1)}
+                        <button type="button" aria-label={tFlow('addOne')} disabled={l.qty >= maxQty} onClick={() => setQty(l.qty + 1)}
                           className="w-6 h-6 rounded-full flex items-center justify-center font-serif text-sm leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
                           style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
                         <span className="font-mono text-[0.65rem] tracking-widest uppercase text-white/40 ml-1">
@@ -609,7 +613,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
             <div className="h-px bg-white/[0.06]" />
             <div className="flex items-baseline justify-between gap-3">
               <p className="font-mono text-xs tracking-[0.25em] uppercase" style={{ color: accent }}>
-                Descuento
+                {tFlow('discount')}
                 {couponApplied && <span className="ml-2 font-body normal-case tracking-normal opacity-70">({couponApplied.code})</span>}
               </p>
               <p className="font-body text-base flex-shrink-0" style={{ color: accent }}>− {formatPrice(discount)}</p>
@@ -619,7 +623,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
 
         <div className="h-px bg-white/[0.15] mt-2" />
         <div className="flex items-baseline justify-between gap-3 pt-1">
-          <p className="font-mono text-sm tracking-[0.3em] uppercase text-white/70">Total</p>
+          <p className="font-mono text-sm tracking-[0.3em] uppercase text-white/70">{tFlow('total')}</p>
           <p className="font-serif text-3xl font-light" style={{ color: accent }}>
             {formatPrice(grandTotal)}
             <span className="font-mono text-[0.55rem] ml-1.5 tracking-widest align-middle text-white/50">MXN</span>
@@ -632,12 +636,12 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
             <input type="text" value={couponCode}
               onChange={e => { setCouponCode(e.target.value); setCouponError(null) }}
               disabled={!!couponApplied}
-              placeholder="Código de descuento (opcional)"
+              placeholder={tFlow('couponInputPlaceholder')}
               className="w-full rounded-full border border-white/20 bg-black/40 px-4 py-2.5 pr-20 font-body text-sm text-cream placeholder:text-white/40 focus:border-white/60 focus:outline-none disabled:opacity-50" />
             {couponApplied ? (
               <button type="button" onClick={removeCoupon}
                 className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[0.6rem] tracking-widest uppercase text-white/60 hover:text-cream hoverable">
-                Quitar ×
+                {tFlow('removeCoupon')}
               </button>
             ) : (
               <button type="button" onClick={applyCoupon} disabled={!couponCode.trim() || couponLoading}
@@ -663,7 +667,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         {checkout && grandTotal > 0 && (
           <div className="pt-2">
             <p className="font-mono text-sm tracking-[0.25em] uppercase mb-3" style={{ color: accent }}>
-              Método de pago
+              {tFlow('paymentMethod')}
             </p>
             <div className="pt-1">
               <PayInnerElement returnUrl={returnUrl} payFnRef={payFnRef} onErr={setSubmitError} />

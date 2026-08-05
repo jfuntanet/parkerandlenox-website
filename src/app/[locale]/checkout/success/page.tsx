@@ -1,7 +1,13 @@
-export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Boletos confirmados — Parker & Lenox' }
-
+import { getTranslations } from 'next-intl/server'
 import { SuccessView } from '@/components/booking/SuccessView'
+
+export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'success' })
+  return { title: t('metaTitle') }
+}
 
 interface Props {
   searchParams: Promise<{ payment_intent?: string; redirect_status?: string; order_id?: string; free?: string }>
