@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { getEventDetail }                     from '@/lib/api'
 import { CheckoutForm }                       from '@/components/booking/CheckoutForm'
+import { WaitlistForm }                       from '@/components/booking/WaitlistForm'
 import { ViewItemEvent }                      from '@/components/analytics/ViewItemEvent'
 import { formatDateShort, formatTime }        from '@/lib/format'
 
@@ -130,6 +131,7 @@ function EventDetailInner({ slug, detail }: { slug: string; detail: NonNullable<
 
   const todayCdmx = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Mexico_City' })
   const isPast = event.date < todayCdmx
+  const isSoldOut = salesActive && ticketTypes.length > 0 && ticketTypes.every(tk => tk.available <= 0)
 
   return (
     <div className="relative min-h-screen pt-24 pb-16">
@@ -192,6 +194,8 @@ function EventDetailInner({ slug, detail }: { slug: string; detail: NonNullable<
                     {t('viewUpcoming')}
                   </Link>
                 </div>
+              ) : isSoldOut ? (
+                <WaitlistForm slug={slug} accent={accent} />
               ) : salesActive ? (
                 <CheckoutForm slug={slug} event={event} ticketTypes={ticketTypes} accent={accent} initialQty={1} mode="form-only" />
               ) : (

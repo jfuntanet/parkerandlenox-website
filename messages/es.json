@@ -112,8 +112,14 @@
     }
   },
   "menu": {
-    "cocina": { "title": "Cocina", "eyebrow": "De la cocina" },
-    "cocteles": { "title": "Coctelería", "eyebrow": "Barra de autor" },
+    "cocina": {
+      "title": "Cocina",
+      "eyebrow": "De la cocina"
+    },
+    "cocteles": {
+      "title": "Coctelería",
+      "eyebrow": "Barra de autor"
+    },
     "loading": "Cargando menú… si no aparece pronto, refresca la página."
   },
   "merch": {
@@ -326,5 +332,19 @@
     "aria": "Cambiar idioma",
     "es": "ES",
     "en": "EN"
+  },
+  "waitlist": {
+    "badge": "Sold out",
+    "title": "¿No te lo quieres perder?",
+    "subtitle": "Déjanos tu correo y te avisamos si se liberan lugares para este evento.",
+    "namePlaceholder": "Tu nombre (opcional)",
+    "emailPlaceholder": "Tu email",
+    "newsletterOptin": "También suscríbeme al newsletter para enterarme antes de los próximos eventos",
+    "cta": "Avísame",
+    "submitting": "Enviando…",
+    "successTitle": "Estás en la lista",
+    "successHint": "Te avisaremos por correo si se libera un lugar",
+    "alreadyInList": "Ya estás en la lista para este evento",
+    "error": "No pudimos guardarte, intenta de nuevo"
   }
 }
