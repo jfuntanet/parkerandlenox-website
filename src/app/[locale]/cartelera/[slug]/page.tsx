@@ -1,24 +1,28 @@
-export const dynamic = 'force-dynamic'
-
 import { notFound } from 'next/navigation'
-import Link         from 'next/link'
-import Image        from 'next/image'
+import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { getEventDetail }                     from '@/lib/api'
 import { CheckoutForm }                       from '@/components/booking/CheckoutForm'
 import { ViewItemEvent }                      from '@/components/analytics/ViewItemEvent'
 import { formatDateShort, formatTime }        from '@/lib/format'
 
-interface Props { params: Promise<{ slug: string }> }
+export const dynamic = 'force-dynamic'
+
+interface Props { params: Promise<{ slug: string; locale: string }> }
 
 export async function generateMetadata({ params }: Props) {
-  const { slug } = await params
-  const detail   = await getEventDetail(slug).catch(() => null)
+  const { slug, locale } = await params
+  const detail = await getEventDetail(slug).catch(() => null)
+  const t = await getTranslations({ locale, namespace: 'event' })
 
-  const title = detail ? `${detail.event.title} — Parker & Lenox` : 'Evento — Parker & Lenox'
+  const eventLabel = locale === 'es' ? 'Evento' : 'Event'
+  const title = detail ? `${detail.event.title} — Parker & Lenox` : `${eventLabel} — Parker & Lenox`
   const description = detail
-    ? `${detail.event.title} en ${detail.event.venue}. ${formatDateShort(detail.event.date)}${detail.event.time && detail.ticketTypes.length <= 1 ? ` · ${formatTime(detail.event.time)}` : ''} · Parker & Lenox, CDMX.`
-    : 'Evento en Parker & Lenox — jazz en vivo y vinyl bar en la Ciudad de México.'
-  const canonicalPath = `/cartelera/${slug}`
+    ? `${detail.event.title} ${t('metaEventVenuePreposition')} ${detail.event.venue}. ${formatDateShort(detail.event.date)}${detail.event.time && detail.ticketTypes.length <= 1 ? ` · ${formatTime(detail.event.time)}` : ''} · Parker & Lenox, ${locale === 'es' ? 'CDMX' : 'Mexico City'}.`
+    : t('metaDescriptionFallback')
+  const canonicalPath = locale === 'es' ? `/cartelera/${slug}` : `/${locale}/cartelera/${slug}`
   const image = detail?.event.imageUrl || '/og-plx.jpg'
 
   return {
@@ -32,7 +36,7 @@ export async function generateMetadata({ params }: Props) {
       description,
       images: [image],
       siteName: 'Parker & Lenox',
-      locale: 'es_MX',
+      locale: locale === 'en' ? 'en_US' : 'es_MX',
     },
     twitter: {
       card: 'summary_large_image',
@@ -50,19 +54,20 @@ function venueAccent(venueName: string): string {
 
 export default async function EventDetailPage({ params }: Props) {
   const { slug } = await params
-
   let detail
   try {
     detail = await getEventDetail(slug)
   } catch {
     notFound()
   }
+  return <EventDetailInner slug={slug} detail={detail} />
+}
 
+function EventDetailInner({ slug, detail }: { slug: string; detail: NonNullable<Awaited<ReturnType<typeof getEventDetail>>> }) {
+  const t = useTranslations('event')
   const { event, ticketTypes, salesActive } = detail
   const accent = venueAccent(event.venue)
 
-  // ── JSON-LD MusicEvent para SEO / rich snippets ──
-  // event.date suele ser YYYY-MM-DD; event.time HH:MM. CDMX = UTC-6 (sin DST desde 2023).
   const startDate = event.time ? `${event.date}T${event.time}:00-06:00` : event.date
   const eventJsonLd = {
     '@context': 'https://schema.org',
@@ -75,7 +80,7 @@ export default async function EventDetailPage({ params }: Props) {
     ...(event.imageUrl ? { image: event.imageUrl } : {}),
     location: {
       '@type': 'MusicVenue',
-      name: `Parker & Lenox — Sala ${event.venue}`,
+      name: `Parker & Lenox — ${event.venue}`,
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Calle Gral. Prim 100',
@@ -96,12 +101,12 @@ export default async function EventDetailPage({ params }: Props) {
     },
     ...(salesActive && ticketTypes.length > 0
       ? {
-          offers: ticketTypes.map(t => ({
+          offers: ticketTypes.map(tk => ({
             '@type': 'Offer',
-            name: t.name,
-            price: String(t.price),
+            name: tk.name,
+            price: String(tk.price),
             priceCurrency: 'MXN',
-            availability: t.available > 0
+            availability: tk.available > 0
               ? 'https://schema.org/InStock'
               : 'https://schema.org/SoldOut',
             url: `https://parkerandlenox.com/cartelera/${slug}`,
@@ -110,7 +115,7 @@ export default async function EventDetailPage({ params }: Props) {
       : {
           offers: {
             '@type': 'Offer',
-            name: 'Entrada libre',
+            name: t('freeEntry'),
             price: '0',
             priceCurrency: 'MXN',
             availability: 'https://schema.org/InStock',
@@ -119,12 +124,10 @@ export default async function EventDetailPage({ params }: Props) {
         }),
   }
 
-  // Precio mínimo para tracking (0 si es gratis/no hay ticket types)
   const minPrice = salesActive && ticketTypes.length > 0
-    ? Math.min(...ticketTypes.map(t => t.price))
+    ? Math.min(...ticketTypes.map(tk => tk.price))
     : 0
 
-  // Detectar si el evento ya pasó (comparar contra HOY en CDMX)
   const todayCdmx = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Mexico_City' })
   const isPast = event.date < todayCdmx
 
@@ -137,11 +140,9 @@ export default async function EventDetailPage({ params }: Props) {
       />
       <div className="max-w-[900px] mx-auto px-4 md:px-6">
 
-        {/* Card principal con grid 2 columnas [imagen | compra], y descripción abajo (span 2) */}
         <div className="rounded-xl overflow-hidden border border-white/[0.10]" style={{ background: '#1a1a1a', boxShadow: '0 16px 48px rgba(0,0,0,0.55)' }}>
 
           <div className="grid md:grid-cols-2">
-            {/* IMAGEN — cap de altura en mobile para que el botón "Comprar" quepa en la primer pantalla */}
             <div className="relative h-[38vh] md:h-auto md:aspect-[4/5] bg-black overflow-hidden">
               {event.imageUrl ? (
                 <>
@@ -156,7 +157,6 @@ export default async function EventDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* COMPRA */}
             <div className="p-6 md:p-8 flex flex-col">
               <div className="mb-2 md:mb-6">
                 <div className="flex items-center gap-3 mb-1.5 md:mb-2">
@@ -171,7 +171,7 @@ export default async function EventDetailPage({ params }: Props) {
                 <p className="font-mono text-[0.6rem] md:text-[0.65rem] tracking-[0.25em] uppercase text-white/60">
                   {isPast && (
                     <span className="mr-2 px-2 py-0.5 rounded-sm border border-white/20 text-white/50">
-                      Ya pasó
+                      {t('pastBadge')}
                     </span>
                   )}
                   {formatDateShort(event.date)}{event.time && ticketTypes.length <= 1 ? ` · ${formatTime(event.time)}` : ''}
@@ -181,15 +181,15 @@ export default async function EventDetailPage({ params }: Props) {
               {isPast ? (
                 <div className="py-8 flex flex-col items-start gap-4">
                   <p className="font-serif text-2xl md:text-3xl font-light leading-tight" style={{ color: accent }}>
-                    Este concierto ya pasó.
+                    {t('pastTitle')}
                   </p>
                   <p className="font-body text-sm text-white/60 leading-relaxed">
-                    Gracias a quienes nos acompañaron. Consulta la cartelera próxima.
+                    {t('pastMessage')}
                   </p>
                   <Link href="/#cartelera"
                     className="mt-2 px-5 py-2.5 rounded-full font-mono text-[0.7rem] tracking-[0.3em] uppercase transition-all duration-300 hoverable inline-flex items-center gap-2"
                     style={{ background: 'transparent', color: accent, border: `2px solid ${accent}` }}>
-                    Ver próximos conciertos →
+                    {t('viewUpcoming')}
                   </Link>
                 </div>
               ) : salesActive ? (
@@ -197,23 +197,22 @@ export default async function EventDetailPage({ params }: Props) {
               ) : (
                 <div className="py-8 flex flex-col items-start gap-2">
                   <p className="font-serif text-3xl md:text-4xl font-light" style={{ color: accent }}>
-                    Entrada libre
+                    {t('freeEntry')}
                   </p>
                   <p className="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-white/50">
-                    Sin venta en línea · llega y disfruta
+                    {t('freeEntryHint')}
                   </p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* SECCIÓN INFERIOR: descripción + redes (span 2) */}
           {(event.description || (event.social && (event.social.instagram || event.social.spotify || event.social.tiktok || event.social.youtube))) && (
             <div className="px-12 sm:px-16 md:px-20 py-6 md:py-8 border-t border-white/[0.08]" style={{ background: 'linear-gradient(180deg, #161616 0%, #121212 100%)' }}>
               {event.description && (
                 <>
                   <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-4" style={{ color: accent }}>
-                    Sobre el evento
+                    {t('aboutEvent')}
                   </p>
                   <p className="font-body text-base leading-relaxed whitespace-pre-line" style={{ color: 'rgba(237,232,220,0.75)' }}>
                     {event.description}
@@ -224,7 +223,7 @@ export default async function EventDetailPage({ params }: Props) {
               {event.social && (event.social.instagram || event.social.spotify || event.social.tiktok || event.social.youtube) && (
                 <div className="mt-8 pt-6 border-t border-white/[0.06]">
                   <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-4 text-center" style={{ color: accent }}>
-                    Conoce más del artista
+                    {t('aboutArtist')}
                   </p>
                   <div className="flex flex-wrap justify-center gap-6">
                     {event.social.instagram && (
@@ -264,7 +263,7 @@ export default async function EventDetailPage({ params }: Props) {
 
         <div className="mt-8">
           <Link href="/cartelera" className="font-mono text-[0.6rem] tracking-widest uppercase text-white/30 hover:text-cream transition-colors hoverable">
-            ← Cartelera
+            {t('backToLineup')}
           </Link>
         </div>
       </div>

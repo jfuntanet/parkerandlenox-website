@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { MerchUpsell, cartSubtotal, type MerchProduct, type CartMap } from './MerchUpsell'
@@ -119,6 +120,7 @@ function StepCard({ step, logicalId, title, isOpen, isDone, isLocked, optional, 
 }
 
 export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1, mode = 'full' }: Props) {
+  const t = useTranslations('event')
   const router = useRouter()
   const storageKey = 'plx-checkout-' + slug
 
@@ -235,7 +237,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
       })
       const data = await res.json()
       if (!res.ok || data.valid === false || data.error) {
-        setCouponError(data.error || 'Código inválido'); setCouponApplied(null)
+        setCouponError(data.error || t('couponInvalid')); setCouponApplied(null)
       } else {
         setCouponApplied({
           code: data.code || couponCode.trim().toUpperCase(),
@@ -244,7 +246,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         })
         invalidateCheckout()
       }
-    } catch { setCouponError('Error al validar el código') }
+    } catch { setCouponError(t('couponValidateError')) }
     finally { setCouponLoading(false) }
   }
   function removeCoupon() { setCouponApplied(null); setCouponError(null); setCouponCode(''); invalidateCheckout() }
@@ -284,7 +286,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         }),
       })
       const data = await res.json()
-      if (!res.ok || data.error) { setSubmitError(data.error || 'No se pudo iniciar el pago'); return }
+      if (!res.ok || data.error) { setSubmitError(data.error || t('paymentStartError')); return }
       // Reserva gratis (jams, cortesías al 100%, etc.): el core ya confirmó, generó tokens y mandó emails.
       // No hay clientSecret; brincamos directo a la pantalla de éxito.
       if (data.orderId && !data.clientSecret) {
@@ -293,7 +295,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         return
       }
       setCheckout({ clientSecret: data.clientSecret, publishableKey: data.publishableKey })
-    } catch { setSubmitError('Error de conexión, intenta de nuevo') }
+    } catch { setSubmitError(t('connectionError')) }
     finally { setSubmitting(false) }
   }
 
@@ -363,7 +365,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
 
         {ticketTypes.length > 1 && (
           <fieldset className="border-0 p-0 m-0">
-            <legend className="sr-only">Tipo de boleto</legend>
+            <legend className="sr-only">{t('ticketTypeLegend')}</legend>
             {ticketTypes.map(tt => {
               const isSoldOut = (tt.available ?? 1) <= 0
               return (
@@ -372,7 +374,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
                     <input type="radio" checked={ticketTypeId===tt.id} onChange={()=>!isSoldOut && setTicketTypeId(tt.id)} disabled={isSoldOut} style={{accentColor: accent}} />
                     <span className={`font-body text-base ${isSoldOut ? 'line-through text-cream/50' : 'text-cream'}`}>{tt.name}</span>
                     {isSoldOut && (
-                      <span className="font-mono text-[0.65rem] tracking-widest uppercase font-bold" style={{ color: 'var(--color-lenox-red)' }}>SOLD OUT</span>
+                      <span className="font-mono text-[0.65rem] tracking-widest uppercase font-bold" style={{ color: 'var(--color-lenox-red)' }}>{t('soldOut')}</span>
                     )}
                   </div>
                   <span className={`font-mono text-sm ${isSoldOut ? 'line-through opacity-50' : ''}`} style={{color: accent}}>{formatPrice(tt.price)}</span>
@@ -389,7 +391,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
             color:  'var(--color-parker-bronze)',
             border: '2px solid var(--color-parker-bronze)',
           }}>
-          <span>Comprar {quantity} boleto{quantity>1?'s':''}</span>
+          <span>{quantity === 1 ? t('buyTicketOne') : t('buyTicketMany', { qty: quantity })}</span>
           <span className="font-serif text-base tracking-normal normal-case opacity-90">
             {formatPrice(ticketsSubtotal)} <span className="font-mono text-[0.55rem] tracking-widest opacity-70">MXN</span>
           </span>
@@ -641,7 +643,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
               <button type="button" onClick={applyCoupon} disabled={!couponCode.trim() || couponLoading}
                 className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[0.6rem] tracking-widest uppercase hover:opacity-70 disabled:opacity-30 hoverable"
                 style={{ color: accent }}>
-                {couponLoading ? '...' : 'Aplicar'}
+                {couponLoading ? '...' : t('applyCoupon')}
               </button>
             )}
           </div>
@@ -679,8 +681,8 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         {(() => {
           const ready = canFinishStep1
           const label =
-            !ready         ? 'Completa tus datos'
-            : grandTotal === 0 ? 'Confirmar reserva'
+            !ready         ? t('completeYourData')
+            : grandTotal === 0 ? t('confirmReservation')
             : checkout     ? `Pagar ${formatPrice(grandTotal)}`
             :               `Ir a pagar ${formatPrice(grandTotal)}`
           const busy = submitting || paying
@@ -693,7 +695,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
                 color:      enabled ? 'var(--color-black)' : 'rgba(160,120,74,0.4)',
                 border:     `2px solid ${enabled ? accent : 'rgba(160,120,74,0.25)'}`,
               }}>
-              {busy ? 'Procesando…' : label}
+              {busy ? t('processing') : label}
             </button>
           )
         })()}
@@ -729,7 +731,7 @@ function PayInnerElement({ returnUrl, payFnRef, onErr }: {
       if (!stripe || !elements) { onErr('Stripe no listo, intenta de nuevo'); return }
       onErr(null)
       const { error } = await stripe.confirmPayment({ elements, confirmParams: { return_url: returnUrl } })
-      if (error) onErr(error.message || 'No se pudo procesar el pago')
+      if (error) onErr(error.message || 'Could not process the payment')
     }
     return () => { payFnRef.current = null }
   }, [stripe, elements, returnUrl, payFnRef, onErr])
