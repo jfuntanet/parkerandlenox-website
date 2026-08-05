@@ -112,8 +112,13 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
               <div className="mt-auto">
                 {qty === 0 ? (
                   <button type="button" disabled={soldOut} onClick={() => setQty(p.id, 1)}
-                    className="w-full py-2.5 md:py-2 rounded-full font-mono text-sm md:text-[0.6rem] tracking-[0.25em] uppercase border transition-colors hoverable disabled:opacity-30"
-                    style={{ borderColor: soldOut ? 'rgba(160,120,74,0.25)' : accent, color: soldOut ? 'rgba(160,120,74,0.4)' : accent }}>
+                    className={`w-full py-2.5 md:py-2 rounded-full font-mono text-sm md:text-[0.6rem] tracking-[0.25em] uppercase border transition-all duration-200 hoverable disabled:opacity-30 disabled:cursor-not-allowed ${soldOut ? '' : 'hover:-translate-y-0.5 hover:shadow-md'}`}
+                    style={{
+                      borderColor: soldOut ? 'rgba(160,120,74,0.25)' : accent,
+                      color:       soldOut ? 'rgba(160,120,74,0.4)'  : accent,
+                    }}
+                    onMouseEnter={e => { if (!soldOut) { e.currentTarget.style.background = accent; e.currentTarget.style.color = 'var(--color-black)' } }}
+                    onMouseLeave={e => { if (!soldOut) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = accent } }}>
                     {tMerch('add')}
                   </button>
                 ) : (

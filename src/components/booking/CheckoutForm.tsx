@@ -389,7 +389,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         )}
 
         <button type="submit"
-          className="w-full mt-0 md:mt-2 px-5 py-2.5 rounded-full font-mono text-[0.7rem] tracking-[0.3em] uppercase transition-all duration-300 hoverable flex items-center justify-center gap-3"
+          className="w-full mt-0 md:mt-2 px-5 py-2.5 rounded-full font-mono text-[0.7rem] tracking-[0.3em] uppercase transition-all duration-200 hoverable flex items-center justify-center gap-3 hover:bg-[color:var(--color-parker-bronze)] hover:text-[color:var(--color-black)] hover:-translate-y-0.5 hover:shadow-lg"
           style={{
             background: 'transparent',
             color:  'var(--color-parker-bronze)',
