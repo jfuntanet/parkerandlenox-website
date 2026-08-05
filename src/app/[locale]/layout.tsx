@@ -43,9 +43,15 @@ const DESCRIPTIONS = {
   en: 'Two rooms. One night. Live jazz and vinyl bar in Mexico City.',
 } as const
 
+const OG_IMAGE_ALT = {
+  es: 'Parker & Lenox — Speakeasy en la Juárez, CDMX',
+  en: 'Parker & Lenox — Speakeasy in Juárez, Mexico City',
+} as const
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const desc = DESCRIPTIONS[locale as 'es' | 'en'] ?? DESCRIPTIONS.es
+  const ogAlt = OG_IMAGE_ALT[locale as 'es' | 'en'] ?? OG_IMAGE_ALT.es
   return {
     metadataBase: new URL(SITE_URL),
     title: {
@@ -75,7 +81,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
           url: OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: 'Parker & Lenox — Speakeasy en la Juárez, CDMX',
+          alt: ogAlt,
         },
       ],
     },

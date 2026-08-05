@@ -5,7 +5,22 @@
     "cocteles": "Coctelería",
     "faqs": "FAQs",
     "prensa": "Reseñas y Reconocimientos",
-    "musicos": "Para Músicos"
+    "musicos": "Para Músicos",
+    "menuOpen": "Abrir menú",
+    "menuClose": "Cerrar menú"
+  },
+  "footer": {
+    "cityLine": "06600 Ciudad de México",
+    "viewMap": "Ver mapa →",
+    "contact": "Contacto",
+    "hoursDays": "Martes a sábado",
+    "followUs": "Síguenos",
+    "privacy": "Aviso de privacidad",
+    "policies": "Políticas de compra",
+    "tagline": "Ciudad de México · Speakeasy · HiFi"
+  },
+  "site": {
+    "ogImageAlt": "Parker & Lenox — Speakeasy en la Juárez, CDMX"
   },
   "home": {
     "parker": {

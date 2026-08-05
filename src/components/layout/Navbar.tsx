@@ -40,7 +40,7 @@ export function Navbar() {
           <LanguageSwitcher />
           <button
             type="button"
-            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            aria-label={open ? t('menuClose') : t('menuOpen')}
             aria-expanded={open}
             onClick={() => setOpen(o => !o)}
             className="w-10 h-10 flex flex-col items-center justify-center gap-[6px] hoverable"

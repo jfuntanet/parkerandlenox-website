@@ -5,7 +5,22 @@
     "cocteles": "Cocktails",
     "faqs": "FAQs",
     "prensa": "Press & Reviews",
-    "musicos": "For Musicians"
+    "musicos": "For Musicians",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
+  },
+  "footer": {
+    "cityLine": "06600 Mexico City",
+    "viewMap": "View on map →",
+    "contact": "Contact",
+    "hoursDays": "Tuesday to Saturday",
+    "followUs": "Follow us",
+    "privacy": "Privacy Notice",
+    "policies": "Purchase Policy",
+    "tagline": "Mexico City · Speakeasy · HiFi"
+  },
+  "site": {
+    "ogImageAlt": "Parker & Lenox — Speakeasy in Juárez, Mexico City"
   },
   "home": {
     "parker": {

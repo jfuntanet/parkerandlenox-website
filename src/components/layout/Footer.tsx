@@ -1,10 +1,15 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
+
 const MAPS_URL = 'https://maps.google.com/?q=Calle+Gral.+Prim+100,+Ju%C3%A1rez,+Cuauht%C3%A9moc,+06600+Ciudad+de+M%C3%A9xico'
 
 export function Footer() {
+  const t = useTranslations('footer')
   return (
     <footer className="px-8 md:px-16 pt-16 pb-10 border-t border-white/[0.08]">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6">
-        {/* 1. Marca + dirección */}
         <div className="flex flex-col gap-4">
           <div className="font-serif text-2xl text-cream">
             Parker <span className="italic" style={{ color: 'var(--color-parker-bronze)' }}>&</span> Lenox
@@ -12,17 +17,16 @@ export function Footer() {
           <p className="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-white/50 leading-loose">
             Calle Gral. Prim 100<br/>
             Juárez, Cuauhtémoc<br/>
-            06600 Ciudad de México
+            {t('cityLine')}
           </p>
           <a href={MAPS_URL} target="_blank" rel="noopener noreferrer"
              className="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-white/40 hover:text-cream transition-colors hoverable w-fit">
-            Ver mapa →
+            {t('viewMap')}
           </a>
         </div>
 
-        {/* 2. Contacto */}
         <div className="flex flex-col gap-3">
-          <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-2" style={{ color: 'var(--color-parker-bronze)' }}>Contacto</p>
+          <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-2" style={{ color: 'var(--color-parker-bronze)' }}>{t('contact')}</p>
           <a href="https://wa.me/525521835107" target="_blank" rel="noopener noreferrer"
              className="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-white/70 hover:text-cream transition-colors hoverable">
             WhatsApp +52 55 2183 5107
@@ -32,14 +36,13 @@ export function Footer() {
             hello@parkerandlenox.com
           </a>
           <p className="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-white/40 mt-2 leading-loose">
-            Martes a sábado<br/>
+            {t('hoursDays')}<br/>
             18:00 — 2:00 hrs
           </p>
         </div>
 
-{/* 4. Social */}
         <div className="flex flex-col gap-3">
-          <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-2" style={{ color: 'var(--color-parker-bronze)' }}>Síguenos</p>
+          <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase mb-2" style={{ color: 'var(--color-parker-bronze)' }}>{t('followUs')}</p>
           <div className="flex items-center gap-5">
             <a href="https://instagram.com/parkerandlenox/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
                className="opacity-60 hover:opacity-100 transition-opacity hoverable" style={{ color: 'rgba(237,232,220,0.8)' }}>
@@ -62,16 +65,16 @@ export function Footer() {
           © {new Date().getFullYear()} Parker & Lenox
         </p>
         <div className="flex items-center gap-5 flex-wrap">
-          <a href="/aviso-de-privacidad"
+          <Link href="/aviso-de-privacidad"
              className="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-white/40 hover:text-cream transition-colors hoverable">
-            Aviso de privacidad
-          </a>
-          <a href="/politicas-de-compra"
+            {t('privacy')}
+          </Link>
+          <Link href="/politicas-de-compra"
              className="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-white/40 hover:text-cream transition-colors hoverable">
-            Políticas de compra
-          </a>
+            {t('policies')}
+          </Link>
           <p className="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-white/25">
-            Ciudad de México · Speakeasy · HiFi
+            {t('tagline')}
           </p>
         </div>
       </div>
