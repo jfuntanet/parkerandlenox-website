@@ -78,10 +78,9 @@ export function SalaSelector() {
         style={{ background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(30,51,40,0.35), transparent 70%), var(--color-black)' }}
       >
         <h2
-          className="absolute top-[38%] -translate-y-1/2 font-serif font-bold leading-none text-right text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)]"
+          className="absolute top-[38%] -translate-y-1/2 font-serif font-bold leading-none text-right text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)] right-[calc(50%+40px)] md:right-[calc(50%+70px)]"
           style={{
             color: parkerColor,
-            right: 'calc(50% + 40px)',
           }}
         >
           Parker
@@ -127,10 +126,9 @@ export function SalaSelector() {
         </div>
 
         <h2
-          className="absolute top-[38%] -translate-y-1/2 font-serif italic font-bold leading-none text-left text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)]"
+          className="absolute top-[38%] -translate-y-1/2 font-serif italic font-bold leading-none text-left text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)] left-[calc(50%+40px)] md:left-[calc(50%+70px)]"
           style={{
             color: lenoxColor,
-            left: 'calc(50% + 40px)',
           }}
         >
           Lenox
