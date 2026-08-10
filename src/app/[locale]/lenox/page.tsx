@@ -76,14 +76,22 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
 
       <div className="relative z-10 px-6 sm:px-12 md:px-20">
         <section className="max-w-3xl mx-auto text-center mb-20">
-          <p className="font-mono text-[0.6rem] tracking-[0.5em] uppercase mb-5"
-            style={{ color: 'var(--color-lenox-red)' }}>
-            {t('eyebrow')}
-          </p>
-          <h1 className="font-serif font-light text-cream leading-[1.03]"
-            style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)' }}>
-            {t('h1')}
+          {/* Mismo wordmark que el hero con el monograma deslizado hasta Lenox:
+              serif itálica en rojo, con el eyebrow Hi-Fi al lado. */}
+          <h1 className="flex flex-wrap items-baseline justify-center gap-x-6 gap-y-1">
+            <span className="font-serif italic font-bold leading-none text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)]"
+              style={{ color: 'var(--color-lenox-red)' }}>
+              {t('h1')}
+            </span>
+            <span className="font-mono uppercase tracking-[0.5em] text-[0.6rem] md:text-[1.05rem]"
+              style={{ color: 'var(--color-lenox-red)' }}>
+              {t('hifi')}
+            </span>
           </h1>
+          <p className="mt-7 font-serif font-light text-cream leading-snug"
+            style={{ fontSize: 'clamp(1.35rem, 2.2vw, 1.9rem)' }}>
+            {t('subtitle')}
+          </p>
           <div className="mt-6 mx-auto h-px w-16"
             style={{ background: 'var(--color-lenox-red)', opacity: 0.5 }} />
           <p className="mt-8 font-body font-light leading-relaxed"

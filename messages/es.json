@@ -68,10 +68,11 @@
     }
   },
   "lenox": {
+    "h1": "Lenox",
+    "hifi": "Hi-Fi",
+    "subtitle": "El listening bar de Parker & Lenox.",
     "metaTitle": "Lenox — Listening bar de vinilos en la CDMX | Parker & Lenox",
     "metaDescription": "Listening bar con selectores de vinilo, equipo hi-fi y coctelería de autor en la colonia Juárez. Sin boleto ni reservación, de martes a sábado desde las 6 p.m.",
-    "eyebrow": "La sala de enfrente",
-    "h1": "Lenox, el listening bar.",
     "intro": "Lenox es la primera de las dos salas de Parker & Lenox: un listening bar en la colonia Juárez donde la música se escucha en equipo hi-fi y la elige alguien, disco por disco. Aquí no hay escenario ni boletos —los conciertos pasan adentro, en Parker—; en Lenox la noche la lleva el vinilo.",
     "entrar": {
       "title": "Cómo entrar",
