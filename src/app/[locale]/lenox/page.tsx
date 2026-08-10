@@ -86,25 +86,23 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
           </h1>
           <div className="mt-6 mx-auto h-px w-16"
             style={{ background: 'var(--color-lenox-red)', opacity: 0.5 }} />
-          <p className="mt-7 font-body font-light leading-relaxed"
-            style={{ fontSize: 'clamp(0.98rem, 1.15vw, 1.12rem)', color: 'rgba(237,232,220,0.7)' }}>
+          <p className="mt-8 font-body font-light leading-relaxed"
+            style={{ fontSize: 'clamp(1.08rem, 1.45vw, 1.32rem)', color: 'rgba(237,232,220,0.72)' }}>
             {t('intro')}
           </p>
         </section>
 
         <section className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-16">
             {SECTIONS.map(k => (
               <div key={k}>
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="w-6 h-px" style={{ background: 'var(--color-parker-bronze)' }} />
-                  <h2 className="font-mono uppercase tracking-[0.35em]"
-                    style={{ color: 'var(--color-parker-bronze)', fontSize: 'clamp(0.65rem, 0.75vw, 0.75rem)' }}>
-                    {t(`${k}.title`)}
-                  </h2>
-                </div>
+                <div className="h-px w-8 mb-5" style={{ background: 'var(--color-parker-bronze)', opacity: 0.6 }} />
+                <h2 className="font-serif font-light text-cream leading-snug mb-4"
+                  style={{ fontSize: 'clamp(1.4rem, 2.1vw, 1.85rem)' }}>
+                  {t(`${k}.title`)}
+                </h2>
                 <p className="font-body font-light leading-relaxed"
-                  style={{ fontSize: 'clamp(0.92rem, 1vw, 1.02rem)', color: 'rgba(237,232,220,0.68)' }}>
+                  style={{ fontSize: 'clamp(1rem, 1.15vw, 1.12rem)', color: 'rgba(237,232,220,0.68)' }}>
                   {t(`${k}.body`)}
                 </p>
               </div>
@@ -115,8 +113,8 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
         <section className="mt-24 max-w-2xl mx-auto text-center">
           <div className="h-px w-24 mx-auto mb-8"
             style={{ background: 'linear-gradient(to right, transparent, rgba(160,120,74,0.4), transparent)' }} />
-          <p className="font-serif font-light text-cream mb-6"
-            style={{ fontSize: 'clamp(1.15rem, 1.8vw, 1.55rem)' }}>
+          <p className="font-serif font-light text-cream mb-7"
+            style={{ fontSize: 'clamp(1.3rem, 2vw, 1.75rem)' }}>
             {t('cta.title')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
