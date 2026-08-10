@@ -58,8 +58,6 @@ const nextConfig = {
       { source: '/cierre-diario/',    destination: '/', permanent: true },
       { source: '/conciertos2',       destination: '/#cartelera', permanent: true },
       { source: '/conciertos2/',      destination: '/#cartelera', permanent: true },
-      { source: '/survey-customer',   destination: '/', permanent: true },
-      { source: '/survey-customer/',  destination: '/', permanent: true },
     ]
   },
 }
