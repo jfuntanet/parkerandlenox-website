@@ -13,15 +13,15 @@ const nextConfig = {
   async redirects() {
     return [
       // ─── Boletos (WP) → Cartelera (Next) — CRÍTICO para links compartidos ───
-      { source: '/boletos',         destination: '/#cartelera',       permanent: true },
-      { source: '/boletos/',        destination: '/#cartelera',       permanent: true },
+      { source: '/boletos',         destination: '/cartelera',       permanent: true },
+      { source: '/boletos/',        destination: '/cartelera',       permanent: true },
       { source: '/boletos/:slug',   destination: '/cartelera/:slug',  permanent: true },
       { source: '/boletos/:slug/',  destination: '/cartelera/:slug',  permanent: true },
 
       // ─── /eventos/* (WP legacy) → cartelera ───
-      { source: '/eventos',           destination: '/#cartelera', permanent: true },
-      { source: '/eventos/',          destination: '/#cartelera', permanent: true },
-      { source: '/eventos/:path*',    destination: '/#cartelera', permanent: true },
+      { source: '/eventos',           destination: '/cartelera', permanent: true },
+      { source: '/eventos/',          destination: '/cartelera', permanent: true },
+      { source: '/eventos/:path*',    destination: '/cartelera', permanent: true },
 
       // ─── WooCommerce muerto ───
       { source: '/carrito',            destination: '/', permanent: true },
@@ -56,8 +56,8 @@ const nextConfig = {
       // ─── Internos/admin del WP que no aplican en el nuevo ───
       { source: '/cierre-diario',     destination: '/', permanent: true },
       { source: '/cierre-diario/',    destination: '/', permanent: true },
-      { source: '/conciertos2',       destination: '/#cartelera', permanent: true },
-      { source: '/conciertos2/',      destination: '/#cartelera', permanent: true },
+      { source: '/conciertos2',       destination: '/cartelera', permanent: true },
+      { source: '/conciertos2/',      destination: '/cartelera', permanent: true },
     ]
   },
 }

@@ -11,7 +11,7 @@ export function Navbar() {
   const t = useTranslations('nav')
 
   const LINKS = [
-    { href: '/#cartelera', label: t('cartelera') },
+    { href: '/cartelera',  label: t('cartelera') },
     { href: '/cocina',     label: t('cocina') },
     { href: '/cocteles',   label: t('cocteles') },
     { href: '/faqs',       label: t('faqs') },

@@ -1,4 +1,11 @@
-export const metadata = { title: 'Para músicos — Parker & Lenox' }
+export const metadata = {
+  title: 'Para músicos — Parker & Lenox',
+  description: 'Postula tu proyecto para tocar en Parker & Lenox. Programamos jazz, blues, soul, funk y latin jazz de martes a sábado en la CDMX.',
+  alternates: {
+    canonical: '/musicos',
+    languages: { es: '/musicos', en: '/en/musicos', 'x-default': '/musicos' },
+  },
+}
 
 import { MusicoForm } from '@/components/booking/MusicoForm'
 

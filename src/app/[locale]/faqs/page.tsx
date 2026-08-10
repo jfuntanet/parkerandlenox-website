@@ -1,10 +1,23 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { useTranslations } from 'next-intl'
 
+const DESCRIPTIONS = {
+  es: 'Horarios, cómo llegar, boletos, reservaciones y qué esperar de cada sala. Todo lo que preguntan antes de venir a Parker & Lenox, en la colonia Juárez.',
+  en: 'Hours, how to get here, tickets, reservations and what to expect from each room. Everything people ask before visiting Parker & Lenox in Mexico City.',
+} as const
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'faqs' })
-  return { title: `${t('title').replace(/\.$/, '')} — Parker & Lenox` }
+  const path = locale === 'es' ? '/faqs' : `/${locale}/faqs`
+  return {
+    title: `${t('title').replace(/\.$/, '')} — Parker & Lenox`,
+    description: DESCRIPTIONS[locale as 'es' | 'en'] ?? DESCRIPTIONS.es,
+    alternates: {
+      canonical: path,
+      languages: { es: '/faqs', en: '/en/faqs', 'x-default': '/faqs' },
+    },
+  }
 }
 
 interface Faq { q: string; a: string }
@@ -78,8 +91,24 @@ function FaqsInner({ paramsPromise }: { paramsPromise: Promise<{ locale: string 
     },
   ]
 
+  // FAQPage: las respuestas ya están en el DOM, esto sólo las declara para
+  // que Google pueda mostrarlas como rich result.
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [...HERO_FAQS, ...SECTIONS.flatMap(s => s.faqs)].map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
+
   return (
     <div className="relative min-h-screen pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="fixed inset-0 pointer-events-none z-0"
         style={{ background: 'radial-gradient(ellipse at 25% 10%, rgba(160,120,74,0.10) 0%, transparent 55%)' }} />
 

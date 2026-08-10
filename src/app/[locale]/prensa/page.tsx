@@ -12,7 +12,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: `${nav('prensa')} — Parker & Lenox`,
     description: t('title'),
-    alternates: { canonical: locale === 'es' ? '/prensa' : `/${locale}/prensa` },
+    alternates: {
+      canonical: locale === 'es' ? '/prensa' : `/${locale}/prensa`,
+      languages: { es: '/prensa', en: '/en/prensa', 'x-default': '/prensa' },
+    },
     openGraph: {
       title: `${nav('prensa')} — Parker & Lenox`,
       description: t('title'),

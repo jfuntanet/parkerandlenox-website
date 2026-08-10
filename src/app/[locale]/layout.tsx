@@ -38,9 +38,16 @@ const spaceMono = Space_Mono({
 const SITE_URL = 'https://parkerandlenox.com'
 const OG_IMAGE = '/og-plx.jpg'
 
+// Título por defecto de la home: incluye la intención de búsqueda ("jazz", "CDMX"),
+// no sólo la marca — el 96% de nuestros clics eran de marca porque el título no decía qué somos.
+const TITLES = {
+  es: 'Parker & Lenox — Jazz en vivo y coctelería en la CDMX',
+  en: 'Parker & Lenox — Live Jazz & Cocktail Bar in Mexico City',
+} as const
+
 const DESCRIPTIONS = {
-  es: 'Dos salas. Una misma noche. Jazz en vivo y vinyl bar en la Ciudad de México.',
-  en: 'Two rooms. One night. Live jazz and vinyl bar in Mexico City.',
+  es: 'Speakeasy en la colonia Juárez: jazz en vivo de martes a sábado en Parker y vinyl bar HiFi en Lenox. Consulta la cartelera y compra boletos.',
+  en: 'A speakeasy in Colonia Juárez, Mexico City: live jazz Tuesday to Saturday at Parker and a HiFi vinyl bar at Lenox. See the line-up and get tickets.',
 } as const
 
 const OG_IMAGE_ALT = {
@@ -52,10 +59,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   const desc = DESCRIPTIONS[locale as 'es' | 'en'] ?? DESCRIPTIONS.es
   const ogAlt = OG_IMAGE_ALT[locale as 'es' | 'en'] ?? OG_IMAGE_ALT.es
+  const title = TITLES[locale as 'es' | 'en'] ?? TITLES.es
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: 'Parker & Lenox',
+      default: title,
       template: '%s',
     },
     description: desc,
@@ -74,7 +82,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       locale: locale === 'en' ? 'en_US' : 'es_MX',
       url: locale === 'es' ? SITE_URL : `${SITE_URL}/${locale}`,
       siteName: 'Parker & Lenox',
-      title: 'Parker & Lenox',
+      title,
       description: desc,
       images: [
         {
@@ -87,7 +95,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Parker & Lenox',
+      title,
       description: desc,
       images: [OG_IMAGE],
     },

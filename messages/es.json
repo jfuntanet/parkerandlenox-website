@@ -39,6 +39,14 @@
     },
     "mantra": "Un lugar. Dos experiencias."
   },
+  "cartelera": {
+    "metaTitle": "Cartelera — Jazz en vivo en CDMX | Parker & Lenox",
+    "metaDescription": "Conciertos de jazz, blues, soul y latin jazz de martes a sábado en la colonia Juárez. Fechas, horarios y boletos de Parker & Lenox, Ciudad de México.",
+    "eyebrow": "Cartelera",
+    "h1": "Jazz en vivo, todas las noches que abrimos.",
+    "intro": "Parker programa música en vivo de martes a sábado: jazz, blues, soul, funk y latin jazz, en una sala de aforo corto donde se escucha de cerca. Lenox abre desde las seis de la tarde con selectores de vinilo y coctelería.",
+    "intro2": "Aquí está la agenda completa, mes por mes. Cada noche tiene su propia ficha con horario, precio y boletos. Estamos en Gral. Prim 100, colonia Juárez, CDMX."
+  },
   "newsletter": {
     "eyebrow": "Newsletter",
     "titlePart1": "Suscríbete y entérate primero",
