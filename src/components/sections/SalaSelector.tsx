@@ -78,7 +78,7 @@ export function SalaSelector() {
         style={{ background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(30,51,40,0.35), transparent 70%), var(--color-black)' }}
       >
         <h2
-          className="absolute top-[38%] -translate-y-1/2 font-serif font-bold leading-none text-right text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)] right-[calc(50%+40px)] md:right-[calc(50%+70px)]"
+          className="absolute top-[38%] -translate-y-1/2 font-serif font-bold leading-none text-right text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)] right-[calc(50%+30px)] md:right-[calc(50%+70px)]"
           style={{
             color: parkerColor,
           }}
@@ -126,7 +126,7 @@ export function SalaSelector() {
         </div>
 
         <h2
-          className="absolute top-[38%] -translate-y-1/2 font-serif italic font-bold leading-none text-left text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)] left-[calc(50%+40px)] md:left-[calc(50%+70px)]"
+          className="absolute top-[38%] -translate-y-1/2 font-serif italic font-bold leading-none text-left text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)] left-[calc(50%+30px)] md:left-[calc(50%+70px)]"
           style={{
             color: lenoxColor,
           }}
@@ -162,7 +162,7 @@ export function SalaSelector() {
           style={{ background: 'linear-gradient(to bottom, transparent, rgba(160,120,74,0.4) 15%, rgba(160,120,74,0.4) 85%, transparent)' }}
         />
         <div
-          className="absolute top-[38%] md:top-[38%] -translate-y-1/2 z-10 flex items-center justify-center rounded-full transition-transform duration-300 w-12 h-12 md:w-24 md:h-24"
+          className="absolute top-[calc(38%+8px)] md:top-[calc(38%+19px)] -translate-y-1/2 z-10 flex items-center justify-center rounded-full transition-transform duration-300 w-12 h-12 md:w-24 md:h-24"
           style={{
             background: 'var(--color-black)',
             boxShadow: '0 0 40px rgba(160,120,74,0.15)',
@@ -171,7 +171,7 @@ export function SalaSelector() {
           <img src="/parker-lenox-ring.webp" alt="Parker & Lenox" className="w-full h-full pointer-events-none" draggable={false} />
         </div>
         <p
-          className="absolute font-mono text-[0.55rem] md:text-[0.825rem] tracking-[0.3em] uppercase whitespace-nowrap opacity-40 top-[calc(38%+40px)] md:top-[calc(38%+70px)]"
+          className="absolute font-mono text-[0.55rem] md:text-[0.825rem] tracking-[0.3em] uppercase whitespace-nowrap opacity-40 top-[calc(38%+48px)] md:top-[calc(38%+89px)]"
           style={{ color: 'var(--color-parker-bronze)' }}
         >
           {t('divider.hint')}
