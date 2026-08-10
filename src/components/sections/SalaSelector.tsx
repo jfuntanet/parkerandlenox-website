@@ -87,7 +87,7 @@ export function SalaSelector() {
         </h2>
 
         <div
-          className="absolute top-[38%] -translate-y-1/2 max-w-[28ch] md:max-w-[36ch] text-left"
+          className="absolute top-[38%] -translate-y-1/2 max-w-[28ch] md:max-w-[52ch] text-left"
           style={{ left: '50%', paddingLeft: '5px' }}
         >
           <p className="font-mono text-[0.6rem] md:text-[1.05rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-parker-bronze)' }}>
@@ -111,7 +111,7 @@ export function SalaSelector() {
         }}
       >
         <div
-          className="absolute top-[38%] -translate-y-1/2 max-w-[28ch] md:max-w-[36ch] text-right"
+          className="absolute top-[38%] -translate-y-1/2 max-w-[28ch] md:max-w-[52ch] text-right"
           style={{ right: '50%', paddingRight: '5px' }}
         >
           <p className="font-mono text-[0.6rem] md:text-[1.05rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-lenox-red)' }}>
