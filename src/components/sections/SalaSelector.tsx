@@ -80,7 +80,7 @@ export function SalaSelector() {
         <h2
           className="absolute top-[38%] -translate-y-1/2 font-serif font-bold leading-none text-right"
           style={{
-            fontSize: 'clamp(3rem,8.5vw,6rem)',
+            fontSize: 'clamp(4.5rem,12.75vw,9rem)',
             color: parkerColor,
             right: 'calc(50% + 40px)',
           }}
@@ -92,13 +92,13 @@ export function SalaSelector() {
           className="absolute top-[38%] -translate-y-1/2 max-w-[28ch] md:max-w-[36ch] text-left"
           style={{ left: '50%', paddingLeft: '5px' }}
         >
-          <p className="font-mono text-[0.6rem] md:text-[0.7rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-parker-bronze)' }}>
+          <p className="font-mono text-[0.9rem] md:text-[1.05rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-parker-bronze)' }}>
             {t('parker.eyebrow')}
           </p>
-          <p className="font-body font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.55rem)', color: 'rgba(237,232,220,0.75)' }}>
+          <p className="font-body font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.575rem, 2.25vw, 2.325rem)', color: 'rgba(237,232,220,0.75)' }}>
             {t('parker.description')}
           </p>
-          <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1rem, 1.35vw, 1.4rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
+          <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1.5rem, 2.025vw, 2.1rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
             {t('parker.tagline')}
           </p>
         </div>
@@ -116,13 +116,13 @@ export function SalaSelector() {
           className="absolute top-[38%] -translate-y-1/2 max-w-[28ch] md:max-w-[36ch] text-right"
           style={{ right: '50%', paddingRight: '5px' }}
         >
-          <p className="font-mono text-[0.6rem] md:text-[0.7rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-lenox-red)' }}>
+          <p className="font-mono text-[0.9rem] md:text-[1.05rem] tracking-[0.5em] uppercase mb-4" style={{ color: 'var(--color-lenox-red)' }}>
             {t('lenox.eyebrow')}
           </p>
-          <p className="font-body font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.55rem)', color: 'rgba(237,232,220,0.75)' }}>
+          <p className="font-body font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.575rem, 2.25vw, 2.325rem)', color: 'rgba(237,232,220,0.75)' }}>
             {t('lenox.description')}
           </p>
-          <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1rem, 1.35vw, 1.4rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
+          <p className="font-body italic" style={{ color: 'rgba(237,232,220,0.65)', fontSize: 'clamp(1.5rem, 2.025vw, 2.1rem)', fontWeight: 300, letterSpacing: '0.02em' }}>
             {t('lenox.tagline')}
           </p>
         </div>
@@ -130,7 +130,7 @@ export function SalaSelector() {
         <h2
           className="absolute top-[38%] -translate-y-1/2 font-serif italic font-bold leading-none text-left"
           style={{
-            fontSize: 'clamp(3rem,8.5vw,6rem)',
+            fontSize: 'clamp(4.5rem,12.75vw,9rem)',
             color: lenoxColor,
             left: 'calc(50% + 40px)',
           }}
@@ -175,7 +175,7 @@ export function SalaSelector() {
           <img src="/parker-lenox-ring.webp" alt="Parker & Lenox" className="w-full h-full pointer-events-none" draggable={false} />
         </div>
         <p
-          className="absolute font-mono text-[0.55rem] tracking-[0.3em] uppercase whitespace-nowrap opacity-40 top-[calc(38%+40px)] md:top-[calc(39%+55px)]"
+          className="absolute font-mono text-[0.825rem] tracking-[0.3em] uppercase whitespace-nowrap opacity-40 top-[calc(38%+40px)] md:top-[calc(39%+55px)]"
           style={{ color: 'var(--color-parker-bronze)' }}
         >
           {t('divider.hint')}
@@ -184,7 +184,7 @@ export function SalaSelector() {
 
 {/* Frase inferior — mantra */}
       <div className="absolute bottom-[10%] left-0 right-0 z-30 pointer-events-none text-center px-6">
-        <p className="font-mono uppercase text-white/60" style={{ fontSize: 'clamp(0.55rem, 1vw, 0.7rem)', letterSpacing: '0.4em' }}>
+        <p className="font-mono uppercase text-white/60" style={{ fontSize: 'clamp(0.825rem, 1.5vw, 1.05rem)', letterSpacing: '0.4em' }}>
           {t('mantra')}
         </p>
       </div>
