@@ -7,7 +7,8 @@
     "prensa": "Reseñas y Reconocimientos",
     "musicos": "Para Músicos",
     "menuOpen": "Abrir menú",
-    "menuClose": "Cerrar menú"
+    "menuClose": "Cerrar menú",
+    "lenox": "Lenox"
   },
   "footer": {
     "cityLine": "06600 Ciudad de México",
@@ -46,6 +47,53 @@
     "h1": "Jazz en vivo, todas las noches que abrimos.",
     "intro": "Parker programa música en vivo de martes a sábado: jazz, blues, soul, funk y latin jazz, en una sala de aforo corto donde se escucha de cerca. Lenox abre desde las seis de la tarde con selectores de vinilo y coctelería.",
     "intro2": "Aquí está la agenda completa, mes por mes. Cada noche tiene su propia ficha con horario, precio y boletos. Estamos en Gral. Prim 100, colonia Juárez, CDMX."
+  },
+  "about": {
+    "eyebrow": "El lugar",
+    "title": "Un club de jazz y un listening bar, detrás de la misma puerta.",
+    "salas": {
+      "title": "Dos salas",
+      "body": "Lenox es la sala de enfrente: listening bar, sin boleto ni reservación, con selectores de vinilo y coctelería de autor. Se entra por orden de llegada. Parker es el club de adentro, donde suceden los conciertos: aforo corto y el escenario a unos pasos.",
+      "cta": "Conoce Lenox"
+    },
+    "programa": {
+      "title": "La programación",
+      "body": "Música en vivo de martes a sábado: jazz, blues, soul, funk y latin jazz, con proyectos mexicanos e internacionales. Los martes son de jam y la entrada es libre. Algunos sábados el mismo artista toca dos veces, a las 19:30 y a las 22:30.",
+      "cta": "Ver la cartelera"
+    },
+    "llegar": {
+      "title": "Horarios y cómo llegar",
+      "body": "General Prim 100, esquina con Milán 14, colonia Juárez, a una cuadra de Paseo de la Reforma. Lenox abre desde las 6:00 p.m. y Parker a las 9:00 p.m., de martes a sábado; domingos y lunes cerramos. No tenemos estacionamiento propio: hay parquímetros y pensiones a menos de dos cuadras.",
+      "cta": "Preguntas frecuentes"
+    }
+  },
+  "lenox": {
+    "metaTitle": "Lenox — Listening bar de vinilos en la CDMX | Parker & Lenox",
+    "metaDescription": "Listening bar con selectores de vinilo, equipo hi-fi y coctelería de autor en la colonia Juárez. Sin boleto ni reservación, de martes a sábado desde las 6 p.m.",
+    "eyebrow": "La sala de enfrente",
+    "h1": "Lenox, el listening bar.",
+    "intro": "Lenox es la primera de las dos salas de Parker & Lenox: un listening bar en la colonia Juárez donde la música se escucha en equipo hi-fi y la elige alguien, disco por disco. Aquí no hay escenario ni boletos —los conciertos pasan adentro, en Parker—; en Lenox la noche la lleva el vinilo.",
+    "entrar": {
+      "title": "Cómo entrar",
+      "body": "No se necesita boleto ni reservación. Se entra por orden de llegada, sujeto a disponibilidad, y si está lleno te anotamos en lista de espera. Abrimos de martes a sábado desde las 6:00 p.m.; domingos y lunes cerramos."
+    },
+    "suena": {
+      "title": "Qué suena",
+      "body": "Selectores de vinilo toda la noche, en un equipo armado para escuchar. Jazz sobre todo, y lo que lo rodea: soul, funk y lo que el selector traiga esa noche."
+    },
+    "barra": {
+      "title": "La barra y la cocina",
+      "body": "La coctelería de autor y la carta de cocina de la casa se piden también en Lenox. Es la misma cocina que atiende al club de adentro."
+    },
+    "donde": {
+      "title": "Dónde estamos",
+      "body": "General Prim 100, esquina con Milán 14, colonia Juárez, a una cuadra de Paseo de la Reforma. No contamos con estacionamiento propio, pero hay parquímetros y pensiones a menos de dos cuadras."
+    },
+    "cta": {
+      "title": "Si lo que buscas es concierto, eso pasa en Parker.",
+      "cartelera": "Ver la cartelera",
+      "cocteles": "La carta de coctelería"
+    }
   },
   "newsletter": {
     "eyebrow": "Newsletter",

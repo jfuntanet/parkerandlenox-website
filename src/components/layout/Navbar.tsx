@@ -12,6 +12,7 @@ export function Navbar() {
 
   const LINKS = [
     { href: '/cartelera',  label: t('cartelera') },
+    { href: '/lenox',      label: t('lenox') },
     { href: '/cocina',     label: t('cocina') },
     { href: '/cocteles',   label: t('cocteles') },
     { href: '/faqs',       label: t('faqs') },

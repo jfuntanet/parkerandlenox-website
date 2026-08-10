@@ -1,5 +1,6 @@
 import { SalaSelector }      from '@/components/sections/SalaSelector'
 import { CarreleraPreview }  from '@/components/sections/CarreleraPreview'
+import { AboutSection }      from '@/components/sections/AboutSection'
 import { NewsletterSection } from '@/components/sections/NewsletterSection'
 import { BannersSection }    from '@/components/sections/BannersSection'
 import { ScrollReveal }      from '@/components/ui/ScrollReveal'
@@ -91,6 +92,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <h1 className="sr-only">{H1[locale as 'es' | 'en'] ?? H1.es}</h1>
       <SalaSelector />
       <CarreleraPreview events={events} />
+      <AboutSection />
       <NewsletterSection />
       <BannersSection />
       <ScrollReveal />
