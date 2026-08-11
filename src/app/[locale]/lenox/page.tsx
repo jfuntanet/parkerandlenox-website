@@ -1,8 +1,9 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
+import Image from 'next/image'
 import { ConcertCard } from '@/components/ui/ConcertCard'
 import { ConcertCardHorizontal } from '@/components/ui/ConcertCardHorizontal'
-import { getEvents } from '@/lib/api'
+import { getEvents, getMenus, findMenuByKeyword, type MenuItem } from '@/lib/api'
 import type { TicketEvent } from '@/types/api'
 
 export const dynamic = 'force-dynamic'
@@ -85,6 +86,17 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
   // el core marca la sala en `venue`, igual que filtra CarreleraPreview.
   const events: TicketEvent[] = (await getEvents().catch(() => []))
     .filter(e => e.venue.toLowerCase().includes('lenox'))
+
+  // Cócteles de autor con foto, de la misma carta que sirve /cocteles.
+  // Las fotos ya existían en el core y no se usaban en ninguna página.
+  // Selección determinista (los primeros 4) para no cambiar en cada carga.
+  const menus = await getMenus().catch(() => [])
+  const barra = findMenuByKeyword(menus, 'barra')
+  const cocteles: MenuItem[] = [...(barra?.sections ?? [])]
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .flatMap(s => [...s.items].sort((a, b) => a.sort_order - b.sort_order))
+    .filter(i => i.image_url)
+    .slice(0, 4)
 
   const SECTIONS = ['entrar', 'barra'] as const
 
@@ -189,25 +201,47 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
           )}
         </section>
 
-        <section className="mt-24 max-w-2xl mx-auto text-center">
-          <div className="h-px w-24 mx-auto mb-8"
-            style={{ background: 'linear-gradient(to right, transparent, rgba(160,120,74,0.4), transparent)' }} />
-          <p className="font-serif font-light text-cream mb-7"
-            style={{ fontSize: 'clamp(1.3rem, 2vw, 1.75rem)' }}>
-            {t('cta.title')}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/cartelera"
-              className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] uppercase px-5 py-2.5 border transition-colors hoverable"
-              style={{ borderColor: 'var(--color-parker-bronze)', color: 'var(--color-parker-bronze)' }}>
-              {t('cta.cartelera')}
-            </Link>
-            <Link href="/cocteles"
-              className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] uppercase px-5 py-2.5 border border-white/15 text-white/60 hover:text-cream hover:border-white/40 transition-colors hoverable">
-              {t('cta.cocteles')}
-            </Link>
-          </div>
-        </section>
+        {/* Coctelería con foto. Las imágenes viven en el core desde siempre
+            (campo image_url de la carta) pero ninguna página las usaba. */}
+        {cocteles.length > 0 && (
+          <section className="mt-28 max-w-5xl mx-auto">
+            <div className="flex items-center gap-5 mb-10">
+              <span className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(160,120,74,0.35))' }} />
+              <h2 className="font-serif font-light text-cream leading-snug text-center"
+                style={{ fontSize: 'clamp(1.4rem, 2.1vw, 1.85rem)' }}>
+                {t('barra_fotos.title')}
+              </h2>
+              <span className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(160,120,74,0.35))' }} />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {cocteles.map(c => {
+                const name = locale === 'en' && c.name_en ? c.name_en : c.name
+                return (
+                  <figure key={c.id}>
+                    <div className="relative w-full aspect-[4/5] overflow-hidden bg-black/40 border border-white/[0.06]">
+                      <Image src={c.image_url!} alt={name} fill
+                        sizes="(max-width: 768px) 45vw, 22vw"
+                        className="object-cover" />
+                    </div>
+                    <figcaption className="mt-3 font-serif font-light text-cream leading-snug"
+                      style={{ fontSize: 'clamp(0.95rem, 1.1vw, 1.08rem)' }}>
+                      {name}
+                    </figcaption>
+                  </figure>
+                )
+              })}
+            </div>
+
+            <div className="mt-10 text-center">
+              <Link href="/cocteles"
+                className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] uppercase px-5 py-2.5 border transition-colors hoverable"
+                style={{ borderColor: 'var(--color-parker-bronze)', color: 'var(--color-parker-bronze)' }}>
+                {t('barra_fotos.cta')}
+              </Link>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   )

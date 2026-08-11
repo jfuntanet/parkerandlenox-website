@@ -86,10 +86,9 @@
       "title": "Selectores",
       "empty": "No hay sesiones anunciadas por ahora. Cuando las haya, aparecen aquí."
     },
-    "cta": {
-      "title": "Antes de venir",
-      "cartelera": "Ver la cartelera",
-      "cocteles": "La carta de coctelería"
+    "barra_fotos": {
+      "title": "De la barra",
+      "cta": "Ver la carta completa"
     }
   },
   "newsletter": {

@@ -86,10 +86,9 @@
       "title": "Selectors",
       "empty": "No sessions announced right now. When there are, they'll show up here."
     },
-    "cta": {
-      "title": "Before you come",
-      "cartelera": "See the line-up",
-      "cocteles": "The cocktail menu"
+    "barra_fotos": {
+      "title": "From the bar",
+      "cta": "See the full menu"
     }
   },
   "newsletter": {
