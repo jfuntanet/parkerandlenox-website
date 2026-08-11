@@ -94,15 +94,11 @@ export default async function CarteleraPage({ params }: { params: Promise<{ loca
             </span>
           </h1>
           <p className="mt-7 font-serif font-light text-cream leading-snug"
-            style={{ fontSize: 'clamp(1.35rem, 2.2vw, 1.9rem)' }}>
+            style={{ fontSize: 'clamp(1.2rem, 1.9vw, 1.65rem)' }}>
             {t('h1')}
           </p>
-          <div className="mt-6 mx-auto h-px w-16"
+          <div className="mt-7 mx-auto h-px w-16"
             style={{ background: 'var(--color-parker-bronze)', opacity: 0.4 }} />
-          <p className="mt-8 font-body font-light leading-relaxed"
-            style={{ fontSize: 'clamp(1.08rem, 1.45vw, 1.32rem)', color: 'rgba(237,232,220,0.72)' }}>
-            {t('intro')}
-          </p>
         </div>
       </section>
 
