@@ -63,7 +63,7 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'lenox' })
 
-  const SECTIONS = ['entrar', 'suena', 'barra', 'donde'] as const
+  const SECTIONS = ['entrar', 'barra'] as const
 
   return (
     <div className="relative min-h-screen pt-28 pb-16">
