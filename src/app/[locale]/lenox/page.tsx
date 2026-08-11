@@ -1,5 +1,11 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
+import { ConcertCard } from '@/components/ui/ConcertCard'
+import { ConcertCardHorizontal } from '@/components/ui/ConcertCardHorizontal'
+import { getEvents } from '@/lib/api'
+import type { TicketEvent } from '@/types/api'
+
+export const dynamic = 'force-dynamic'
 
 const SITE_URL = 'https://parkerandlenox.com'
 
@@ -25,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 // Lenox como entidad propia dentro del venue: es una sala distinta, con horario
 // y reglas de acceso distintas a las de Parker.
-function lenoxJsonLd(desc: string) {
+function lenoxJsonLd(desc: string, events: TicketEvent[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BarOrPub',
@@ -56,6 +62,18 @@ function lenoxJsonLd(desc: string) {
       name: 'Parker & Lenox',
       url: SITE_URL,
     },
+    ...(events.length > 0 ? {
+      event: events.map(e => ({
+        '@type': 'MusicEvent',
+        name: e.title,
+        startDate: e.time ? `${e.date}T${e.time}:00-06:00` : e.date,
+        url: `${SITE_URL}/cartelera/${e.slug}`,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        ...(e.imageUrl ? { image: e.imageUrl } : {}),
+        location: { '@type': 'BarOrPub', name: 'Lenox' },
+      })),
+    } : {}),
   }
 }
 
@@ -63,13 +81,18 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'lenox' })
 
+  // Programación propia de Lenox. Comparte el mismo origen que la cartelera;
+  // el core marca la sala en `venue`, igual que filtra CarreleraPreview.
+  const events: TicketEvent[] = (await getEvents().catch(() => []))
+    .filter(e => e.venue.toLowerCase().includes('lenox'))
+
   const SECTIONS = ['entrar', 'barra'] as const
 
   return (
     <div className="relative min-h-screen pt-28 pb-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(lenoxJsonLd(t('metaDescription'))) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(lenoxJsonLd(t('metaDescription'), events)) }}
       />
       <div className="fixed inset-0 pointer-events-none z-0"
         style={{ background: 'radial-gradient(ellipse at 75% 10%, rgba(192,32,42,0.12) 0%, transparent 55%)' }} />
@@ -130,6 +153,40 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Selectores: la programación de Lenox. Hoy suele venir vacía —
+            el core sólo trae eventos de Parker— pero en cuanto se publique
+            uno con venue Lenox aparece aquí con su cartel. */}
+        <section className="mt-28 max-w-5xl mx-auto">
+          <div className="flex items-center gap-5 mb-10">
+            <span className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(192,32,42,0.35))' }} />
+            <h2 className="font-serif font-light text-cream leading-snug text-center"
+              style={{ fontSize: 'clamp(1.4rem, 2.1vw, 1.85rem)' }}>
+              {t('sesiones.title')}
+            </h2>
+            <span className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(192,32,42,0.35))' }} />
+          </div>
+
+          {events.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 auto-rows-fr">
+              {events.map(event => (
+                <div key={event.slug} className="bg-black h-full">
+                  <div className="sm:hidden">
+                    <ConcertCardHorizontal event={event} />
+                  </div>
+                  <div className="hidden sm:block h-full">
+                    <ConcertCard event={event} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="font-body font-light text-center py-6 mx-auto max-w-lg leading-relaxed"
+              style={{ fontSize: 'clamp(0.98rem, 1.15vw, 1.1rem)', color: 'rgba(237,232,220,0.5)' }}>
+              {t('sesiones.empty')}
+            </p>
+          )}
         </section>
 
         <section className="mt-24 max-w-2xl mx-auto text-center">

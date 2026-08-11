@@ -82,6 +82,10 @@
       "title": "La barra y la cocina",
       "body": "La coctelería de autor y la carta de cocina de la casa se piden también en Lenox. Es la misma cocina que atiende al club de adentro."
     },
+    "sesiones": {
+      "title": "Selectores",
+      "empty": "No hay sesiones anunciadas por ahora. Cuando las haya, aparecen aquí."
+    },
     "cta": {
       "title": "Antes de venir",
       "cartelera": "Ver la cartelera",

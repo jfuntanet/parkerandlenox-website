@@ -82,6 +82,10 @@
       "title": "The bar and the kitchen",
       "body": "The house cocktails and the kitchen menu are served at Lenox too. It's the same kitchen that serves the room inside."
     },
+    "sesiones": {
+      "title": "Selectors",
+      "empty": "No sessions announced right now. When there are, they'll show up here."
+    },
     "cta": {
       "title": "Before you come",
       "cartelera": "See the line-up",
