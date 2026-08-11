@@ -80,23 +80,28 @@ export default async function CarteleraPage({ params }: { params: Promise<{ loca
 
       <section className="pt-28 pb-4 px-6 sm:px-12 md:px-20">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="font-mono text-[0.6rem] tracking-[0.5em] uppercase mb-5"
-            style={{ color: 'var(--color-parker-bronze)' }}>
-            {t('eyebrow')}
-          </p>
-          <h1 className="font-serif font-light text-cream leading-[1.05]"
-            style={{ fontSize: 'clamp(2.1rem, 4.2vw, 3.6rem)' }}>
-            {t('h1')}
+          {/* Mismo wordmark que el hero con el monograma deslizado hasta Parker:
+              serif recta en bronce, con el eyebrow Live Music al lado.
+              Espejo de /lenox. */}
+          <h1 className="flex flex-wrap items-baseline justify-center gap-x-6 gap-y-1">
+            <span className="font-serif font-bold leading-none text-[clamp(3rem,8.5vw,6rem)] md:text-[clamp(4.5rem,12.75vw,9rem)]"
+              style={{ color: 'var(--color-parker-bronze)' }}>
+              {t('wordmark')}
+            </span>
+            <span className="font-mono uppercase tracking-[0.5em] text-[0.6rem] md:text-[1.05rem]"
+              style={{ color: 'var(--color-parker-bronze)' }}>
+              {t('livemusic')}
+            </span>
           </h1>
+          <p className="mt-7 font-serif font-light text-cream leading-snug"
+            style={{ fontSize: 'clamp(1.35rem, 2.2vw, 1.9rem)' }}>
+            {t('h1')}
+          </p>
           <div className="mt-6 mx-auto h-px w-16"
             style={{ background: 'var(--color-parker-bronze)', opacity: 0.4 }} />
-          <p className="mt-7 font-body font-light leading-relaxed"
-            style={{ fontSize: 'clamp(0.95rem, 1.1vw, 1.08rem)', color: 'rgba(237,232,220,0.68)' }}>
+          <p className="mt-8 font-body font-light leading-relaxed"
+            style={{ fontSize: 'clamp(1.08rem, 1.45vw, 1.32rem)', color: 'rgba(237,232,220,0.72)' }}>
             {t('intro')}
-          </p>
-          <p className="mt-4 font-body font-light leading-relaxed"
-            style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', color: 'rgba(237,232,220,0.5)' }}>
-            {t('intro2')}
           </p>
         </div>
       </section>
