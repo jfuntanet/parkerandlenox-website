@@ -98,6 +98,20 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
             style={{ fontSize: 'clamp(1.08rem, 1.45vw, 1.32rem)', color: 'rgba(237,232,220,0.72)' }}>
             {t('intro')}
           </p>
+
+          {/* Desvío para quien llegó buscando concierto: Lenox no lo es.
+              Va aparte del intro, no enterrado en él. */}
+          <p className="mt-10 mx-auto max-w-xl border-l-2 pl-5 text-left font-body font-light leading-relaxed"
+            style={{ borderColor: 'var(--color-parker-bronze)', fontSize: 'clamp(0.98rem, 1.15vw, 1.1rem)', color: 'rgba(237,232,220,0.6)' }}>
+            {t.rich('pointer', {
+              link: chunks => (
+                <Link href="/cartelera" className="border-b transition-colors hoverable"
+                  style={{ color: 'var(--color-parker-bronze)', borderColor: 'rgba(160,120,74,0.5)' }}>
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
         </section>
 
         <section className="max-w-5xl mx-auto">

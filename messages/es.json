@@ -72,7 +72,8 @@
     "subtitle": "El listening bar de Parker & Lenox.",
     "metaTitle": "Lenox — Listening bar de vinilos en la CDMX | Parker & Lenox",
     "metaDescription": "Listening bar con selectores de vinilo, equipo hi-fi y coctelería de autor en la colonia Juárez. Sin boleto ni reservación, de martes a sábado desde las 6 p.m.",
-    "intro": "Lenox es la primera de las dos salas de Parker & Lenox: un listening bar en la colonia Juárez donde la música se escucha en equipo hi-fi y la elige alguien, disco por disco. Aquí no hay escenario ni boletos —los conciertos pasan adentro, en Parker—; en Lenox la noche la lleva el vinilo.",
+    "intro": "Lenox es la sala de enfrente de Parker & Lenox: un listening bar en la colonia Juárez donde la música suena en equipo hi-fi y alguien la elige disco por disco.",
+    "pointer": "¿Buscas música en vivo? Esa sucede adentro, en <link>Parker · Live Music</link>.",
     "entrar": {
       "title": "Cómo entrar",
       "body": "No se necesita boleto ni reservación. Se entra por orden de llegada, sujeto a disponibilidad, y si está lleno te anotamos en lista de espera. Abrimos de martes a sábado desde las 6:00 p.m.; domingos y lunes cerramos."
@@ -90,7 +91,7 @@
       "body": "General Prim 100, esquina con Milán 14, colonia Juárez, a una cuadra de Paseo de la Reforma. No contamos con estacionamiento propio, pero hay parquímetros y pensiones a menos de dos cuadras."
     },
     "cta": {
-      "title": "Si lo que buscas es concierto, eso pasa en Parker.",
+      "title": "Antes de venir",
       "cartelera": "Ver la cartelera",
       "cocteles": "La carta de coctelería"
     }

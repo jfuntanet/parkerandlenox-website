@@ -72,7 +72,8 @@
     "subtitle": "The listening bar at Parker & Lenox.",
     "metaTitle": "Lenox — Vinyl Listening Bar in Mexico City | Parker & Lenox",
     "metaDescription": "A listening bar with vinyl selectors, hi-fi sound and craft cocktails in Colonia Juárez. No ticket, no reservation, Tuesday to Saturday from 6 p.m.",
-    "intro": "Lenox is the first of the two rooms at Parker & Lenox: a listening bar in Colonia Juárez, Mexico City, where the music plays on hi-fi and someone chooses it, record by record. There is no stage and no ticket here — the concerts happen inside, at Parker. At Lenox the night is carried by vinyl.",
+    "intro": "Lenox is the front room at Parker & Lenox: a listening bar in Colonia Juárez, Mexico City, where the music plays on hi-fi and someone chooses it record by record.",
+    "pointer": "Looking for live music? That happens inside, at <link>Parker · Live Music</link>.",
     "entrar": {
       "title": "Getting in",
       "body": "No ticket and no reservation. Seating is first come, first served, subject to availability, and if we're full we'll put you on the waitlist. We open Tuesday through Saturday from 6 p.m.; we close Sundays and Mondays."
@@ -90,7 +91,7 @@
       "body": "General Prim 100, corner of Milán 14, Colonia Juárez, one block from Paseo de la Reforma. We have no parking of our own, but there are meters and lots less than two blocks away."
     },
     "cta": {
-      "title": "If it's a concert you're after, that happens at Parker.",
+      "title": "Before you come",
       "cartelera": "See the line-up",
       "cocteles": "The cocktail menu"
     }
