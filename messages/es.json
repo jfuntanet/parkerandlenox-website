@@ -88,7 +88,9 @@
     },
     "barra_fotos": {
       "title": "De la barra",
-      "cta": "Ver la carta completa"
+      "cta": "Ver la carta completa",
+      "prev": "Cóctel anterior",
+      "next": "Cóctel siguiente"
     }
   },
   "newsletter": {

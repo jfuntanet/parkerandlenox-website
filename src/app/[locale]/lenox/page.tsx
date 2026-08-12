@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import Image from 'next/image'
 import { ConcertCard } from '@/components/ui/ConcertCard'
+import { CocktailCarousel } from '@/components/ui/CocktailCarousel'
 import { ConcertCardHorizontal } from '@/components/ui/ConcertCardHorizontal'
 import { getEvents, getMenus, findMenuByKeyword, type MenuItem } from '@/lib/api'
 import type { TicketEvent } from '@/types/api'
@@ -89,14 +89,13 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
 
   // Cócteles de autor con foto, de la misma carta que sirve /cocteles.
   // Las fotos ya existían en el core y no se usaban en ninguna página.
-  // Selección determinista (los primeros 4) para no cambiar en cada carga.
+  // Orden determinista (sort_order de sección e item) para no cambiar en cada carga.
   const menus = await getMenus().catch(() => [])
   const barra = findMenuByKeyword(menus, 'barra')
   const cocteles: MenuItem[] = [...(barra?.sections ?? [])]
     .sort((a, b) => a.sort_order - b.sort_order)
     .flatMap(s => [...s.items].sort((a, b) => a.sort_order - b.sort_order))
     .filter(i => i.image_url)
-    .slice(0, 4)
 
   const SECTIONS = ['entrar', 'barra'] as const
 
@@ -214,24 +213,15 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
               <span className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(160,120,74,0.35))' }} />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {cocteles.map(c => {
-                const name = locale === 'en' && c.name_en ? c.name_en : c.name
-                return (
-                  <figure key={c.id}>
-                    <div className="relative w-full aspect-[4/5] overflow-hidden bg-black/40 border border-white/[0.06]">
-                      <Image src={c.image_url!} alt={name} fill
-                        sizes="(max-width: 768px) 45vw, 22vw"
-                        className="object-cover" />
-                    </div>
-                    <figcaption className="mt-3 font-serif font-light text-cream leading-snug"
-                      style={{ fontSize: 'clamp(0.95rem, 1.1vw, 1.08rem)' }}>
-                      {name}
-                    </figcaption>
-                  </figure>
-                )
-              })}
-            </div>
+            <CocktailCarousel
+              items={cocteles.map(c => ({
+                id: c.id,
+                name: locale === 'en' && c.name_en ? c.name_en : c.name,
+                imageUrl: c.image_url!,
+              }))}
+              prevLabel={t('barra_fotos.prev')}
+              nextLabel={t('barra_fotos.next')}
+            />
 
             <div className="mt-10 text-center">
               <Link href="/cocteles"

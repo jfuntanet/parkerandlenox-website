@@ -88,7 +88,9 @@
     },
     "barra_fotos": {
       "title": "From the bar",
-      "cta": "See the full menu"
+      "cta": "See the full menu",
+      "prev": "Previous cocktail",
+      "next": "Next cocktail"
     }
   },
   "newsletter": {
