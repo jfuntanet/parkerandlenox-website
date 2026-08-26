@@ -291,7 +291,7 @@
     "ticketTypeLegend": "Tipo de boleto",
     "soldOut": "SOLD OUT",
     "lowStock": "Solo {n, plural, =1 {queda 1 boleto} other {quedan # boletos}} para este horario",
-    "fewLeft": "Quedan {n}",
+    "fewLeft": "{n, plural, =1 {Queda 1} other {Quedan #}}",
     "applyCoupon": "Aplicar",
     "couponInvalid": "Código inválido",
     "couponValidateError": "Error al validar el código",
