@@ -166,6 +166,13 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
 
   // Cálculos
   const selectedType = ticketTypes.find(t => t.id === ticketTypeId) ?? ticketTypes[0]
+  // Cupo disponible del horario seleccionado: topa la cantidad desde el inicio
+  // (evita que el cliente avance y falle hasta el final por falta de boletos).
+  const selectedAvail = selectedType?.available ?? 10
+  const selectedCap = selectedType?.capacity ?? 0
+  const maxQty = Math.max(1, Math.min(10, selectedAvail))
+  // Aviso de escasez: solo cuando quede menos del 15% del cupo del horario.
+  const lowStock = selectedAvail > 0 && selectedCap > 0 && selectedAvail < selectedCap * 0.15
   const ticketsUnit = selectedType ? Number(selectedType.price) : 0
   const ticketsSubtotal = ticketsUnit * quantity
   const merchSubtotal = cartSubtotal(merchCart, merchProducts)
@@ -180,6 +187,12 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
   const grandTotal = Math.max(0, subtotal - discount)
   const guestSlots = Math.max(0, quantity - 1)
   const hasGuests = guestSlots > 0
+
+  // Si el cupo del horario es menor a la cantidad elegida, bajar la cantidad
+  // (p.ej. al cambiar a un set con pocos boletos disponibles).
+  useEffect(() => {
+    setQuantity(q => Math.min(q, maxQty))
+  }, [maxQty])
 
   // Sincronizar guests con quantity
   useEffect(() => {
@@ -360,18 +373,25 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
               className="w-10 h-10 rounded-full flex items-center justify-center font-serif text-xl leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
               style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
             <span className="font-serif text-3xl text-cream min-w-[2ch] text-center leading-none">{quantity}</span>
-            <button type="button" aria-label="Más" disabled={quantity>=10}
-              onClick={() => setQuantity(q => Math.min(10, q+1))}
+            <button type="button" aria-label="Más" disabled={quantity>=maxQty}
+              onClick={() => setQuantity(q => Math.min(maxQty, q+1))}
               className="w-10 h-10 rounded-full flex items-center justify-center font-serif text-xl leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
               style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
           </div>
         </div>
+
+        {lowStock && (
+          <p className="font-mono text-[0.65rem] tracking-widest uppercase -mt-1" style={{ color: 'var(--color-lenox-red)' }}>
+            {t('lowStock', { n: selectedAvail })}
+          </p>
+        )}
 
         {ticketTypes.length > 1 && (
           <fieldset className="border-0 p-0 m-0">
             <legend className="sr-only">{t('ticketTypeLegend')}</legend>
             {ticketTypes.map(tt => {
               const isSoldOut = (tt.available ?? 1) <= 0
+              const ttLow = !isSoldOut && (tt.available ?? 0) > 0 && (tt.capacity ?? 0) > 0 && (tt.available ?? 0) < (tt.capacity ?? 0) * 0.15
               return (
                 <label key={tt.id} className={`flex items-center justify-between border-b border-white/10 py-3 transition-colors ${isSoldOut ? 'cursor-not-allowed opacity-70' : 'hover:border-white/25 hoverable cursor-pointer'}`}>
                   <div className="flex items-center gap-3">
@@ -379,6 +399,9 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
                     <span className={`font-body text-base ${isSoldOut ? 'line-through text-cream/50' : 'text-cream'}`}>{tt.name}</span>
                     {isSoldOut && (
                       <span className="font-mono text-[0.65rem] tracking-widest uppercase font-bold" style={{ color: 'var(--color-lenox-red)' }}>{t('soldOut')}</span>
+                    )}
+                    {ttLow && (
+                      <span className="font-mono text-[0.6rem] tracking-widest uppercase" style={{ color: 'var(--color-lenox-red)' }}>{t('fewLeft', { n: tt.available })}</span>
                     )}
                   </div>
                   <span className={`font-mono text-sm ${isSoldOut ? 'line-through opacity-50' : ''}`} style={{color: accent}}>{formatPrice(tt.price)}</span>
@@ -557,20 +580,25 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
             <span className="font-mono text-sm tracking-widest uppercase text-white min-w-[6.5ch] text-center">
               {quantity === 1 ? tFlow('ticketOne') : tFlow('ticketMany', { n: quantity })}
             </span>
-            <button type="button" aria-label={tMerch('increase')} disabled={quantity >= 10}
-              onClick={() => { setQuantity(q => Math.min(10, q + 1)); invalidateCheckout() }}
+            <button type="button" aria-label={tMerch('increase')} disabled={quantity >= maxQty}
+              onClick={() => { setQuantity(q => Math.min(maxQty, q + 1)); invalidateCheckout() }}
               className="w-7 h-7 rounded-full flex items-center justify-center font-serif text-base leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
               style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
           </div>
           <p className="font-body text-base text-cream flex-shrink-0">{formatPrice(ticketsSubtotal)}</p>
         </div>
+        {lowStock && (
+          <p className="font-mono text-[0.6rem] tracking-widest uppercase text-right -mt-1" style={{ color: 'var(--color-lenox-red)' }}>
+            {t('lowStock', { n: selectedAvail })}
+          </p>
+        )}
 
         {summaryLines.length > 0 && (
           <>
             <div className="h-px bg-white/[0.06]" />
             {summaryLines.map(l => {
               const stock = merchProducts?.find(p => p.id === l.id)?.stock ?? 10
-              const maxQty = Math.min(10, stock)
+              const merchMax = Math.min(10, stock)
               const setQty = (nextQty: number) => {
                 const next = new Map(merchCart)
                 if (nextQty <= 0) next.delete(l.id)
@@ -592,7 +620,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
                           className="w-6 h-6 rounded-full flex items-center justify-center font-serif text-sm leading-none hover:opacity-80 transition-opacity hoverable"
                           style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
                         <span className="font-mono text-xs text-white min-w-[1.5ch] text-center">{l.qty}</span>
-                        <button type="button" aria-label={tFlow('addOne')} disabled={l.qty >= maxQty} onClick={() => setQty(l.qty + 1)}
+                        <button type="button" aria-label={tFlow('addOne')} disabled={l.qty >= merchMax} onClick={() => setQty(l.qty + 1)}
                           className="w-6 h-6 rounded-full flex items-center justify-center font-serif text-sm leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
                           style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
                         <span className="font-mono text-[0.65rem] tracking-widest uppercase text-white/40 ml-1">

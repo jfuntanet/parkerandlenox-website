@@ -28,6 +28,7 @@ export interface TicketType {
   name: string
   price: number
   available: number
+  capacity?: number
   startTime?: string | null
 }
 

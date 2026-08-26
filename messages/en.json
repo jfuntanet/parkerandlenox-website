@@ -290,6 +290,8 @@
     "cardWaitlist": "Waitlist",
     "ticketTypeLegend": "Ticket type",
     "soldOut": "SOLD OUT",
+    "lowStock": "Only {n, plural, =1 {1 ticket} other {# tickets}} left for this set",
+    "fewLeft": "{n} left",
     "applyCoupon": "Apply",
     "couponInvalid": "Invalid code",
     "couponValidateError": "Error validating the code",
