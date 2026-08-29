@@ -48,8 +48,8 @@ export default async function CicloPage({ params }: { params: Promise<{ locale: 
           {/* Columna izquierda: imagen + noches */}
           <div>
             {pkg.imageUrl && (
-              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-black/40 mb-8">
-                <img src={pkg.imageUrl} alt={pkg.name} className="absolute inset-0 w-full h-full object-cover" />
+              <div className="relative aspect-[4/5] max-w-xs mx-auto sm:mx-0 rounded-2xl overflow-hidden bg-black/40 mb-8">
+                <img src={pkg.imageUrl} alt={pkg.name} className="absolute inset-0 w-full h-full object-contain" />
               </div>
             )}
 
