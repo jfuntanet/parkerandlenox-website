@@ -1,10 +1,11 @@
 import { SalaSelector }      from '@/components/sections/SalaSelector'
 import { CarreleraPreview }  from '@/components/sections/CarreleraPreview'
+import { CicloCard }         from '@/components/ui/CicloCard'
 import { AboutSection }      from '@/components/sections/AboutSection'
 import { NewsletterSection } from '@/components/sections/NewsletterSection'
 import { BannersSection }    from '@/components/sections/BannersSection'
 import { ScrollReveal }      from '@/components/ui/ScrollReveal'
-import { getEvents }         from '@/lib/api'
+import { getEvents, getPackages } from '@/lib/api'
 import type { TicketEvent }  from '@/types/api'
 
 export const dynamic = 'force-dynamic'
@@ -81,7 +82,10 @@ function venueJsonLd(locale: 'es' | 'en', events: TicketEvent[]) {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  const events = await getEvents().catch(() => [])
+  const [events, packages] = await Promise.all([
+    getEvents().catch(() => []),
+    getPackages().catch(() => []),
+  ])
 
   return (
     <>
@@ -90,6 +94,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(venueJsonLd(locale as 'es' | 'en', events)) }}
       />
       <h1 className="sr-only">{H1[locale as 'es' | 'en'] ?? H1.es}</h1>
+      {packages.length > 0 && (
+        <section className="px-3 md:px-16 pt-24 pb-4">
+          <div className="flex flex-col gap-6">
+            {packages.map(pkg => (
+              <CicloCard key={pkg.slug} pkg={pkg} />
+            ))}
+          </div>
+        </section>
+      )}
       <SalaSelector />
       <CarreleraPreview events={events} />
       <AboutSection />
