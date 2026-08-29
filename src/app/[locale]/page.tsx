@@ -94,8 +94,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(venueJsonLd(locale as 'es' | 'en', events)) }}
       />
       <h1 className="sr-only">{H1[locale as 'es' | 'en'] ?? H1.es}</h1>
+      <SalaSelector />
       {packages.length > 0 && (
-        <section className="px-3 md:px-16 pt-24 pb-4">
+        <section className="px-3 md:px-16 pt-10 pb-4">
           <div className="flex flex-col gap-6">
             {packages.map(pkg => (
               <CicloCard key={pkg.slug} pkg={pkg} />
@@ -103,7 +104,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         </section>
       )}
-      <SalaSelector />
       <CarreleraPreview events={events} />
       <AboutSection />
       <NewsletterSection />
