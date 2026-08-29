@@ -38,6 +38,7 @@ export interface TicketPackageNight {
   date: string
   time: string
   slug: string
+  imageUrl: string | null
 }
 
 export interface TicketPackage {
