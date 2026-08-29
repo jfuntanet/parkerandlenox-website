@@ -1,7 +1,8 @@
 import { getTranslations } from 'next-intl/server'
 import { CarreleraPreview } from '@/components/sections/CarreleraPreview'
+import { CicloCard } from '@/components/ui/CicloCard'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
-import { getEvents } from '@/lib/api'
+import { getEvents, getPackages } from '@/lib/api'
 import type { TicketEvent } from '@/types/api'
 
 export const dynamic = 'force-dynamic'
@@ -69,7 +70,10 @@ function listJsonLd(events: TicketEvent[], locale: string) {
 export default async function CarteleraPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'cartelera' })
-  const events = await getEvents().catch(() => [])
+  const [events, packages] = await Promise.all([
+    getEvents().catch(() => []),
+    getPackages().catch(() => []),
+  ])
 
   return (
     <>
@@ -101,6 +105,16 @@ export default async function CarteleraPage({ params }: { params: Promise<{ loca
             style={{ background: 'var(--color-parker-bronze)', opacity: 0.4 }} />
         </div>
       </section>
+
+      {packages.length > 0 && (
+        <section className="px-3 md:px-16 pt-4 pb-2">
+          <div className="flex flex-col gap-6">
+            {packages.map(pkg => (
+              <CicloCard key={pkg.slug} pkg={pkg} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <CarreleraPreview events={events} />
       <ScrollReveal />

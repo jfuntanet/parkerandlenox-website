@@ -1,4 +1,4 @@
-import type { TicketEvent, EventDetail } from '@/types/api'
+import type { TicketEvent, EventDetail, TicketPackage } from '@/types/api'
 
 const BASE = process.env.CORE_API_URL!
 const KEY  = process.env.CORE_API_KEY!
@@ -21,6 +21,16 @@ export async function getEvents(): Promise<TicketEvent[]> {
 
 export async function getEventDetail(slug: string): Promise<EventDetail> {
   return apiFetch(`/v1/tickets/events/${slug}/availability`)
+}
+
+// Ciclos (paquetes de conciertos) vendibles de la marca.
+export async function getPackages(): Promise<TicketPackage[]> {
+  return apiFetch('/v1/tickets/public/packages?brand=parker_lenox')
+}
+
+export async function getPackage(slug: string): Promise<TicketPackage | undefined> {
+  const all = await getPackages()
+  return all.find(p => p.slug === slug)
 }
 
 // -- Menús (comida + coctelería) --

@@ -32,6 +32,27 @@ export interface TicketType {
   startTime?: string | null
 }
 
+// Ciclo = paquete de N conciertos vendidos juntos a precio especial.
+export interface TicketPackageNight {
+  title: string
+  date: string
+  time: string
+  slug: string
+}
+
+export interface TicketPackage {
+  slug: string
+  name: string
+  brand: string
+  price: number
+  individualPrice: number
+  savings: number
+  available: number
+  soldOut: boolean
+  nights: TicketPackageNight[]
+  imageUrl: string | null
+}
+
 export interface EventDetail {
   event: {
     title: string
