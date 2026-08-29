@@ -42,9 +42,6 @@ export function CicloCard({ pkg }: Props) {
 
       {/* Explicación del paquete */}
       <div className="text-center mt-5">
-        <p className="font-mono text-[0.55rem] tracking-[0.35em] uppercase mb-1.5" style={{ color: bronze }}>
-          Ciclo · {pkg.nights.length} conciertos
-        </p>
         <h3 className="font-serif text-lg sm:text-xl font-normal leading-tight mb-2">
           {pkg.name}
         </h3>
