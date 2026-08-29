@@ -9,13 +9,14 @@ const API_KEY = process.env.CORE_API_KEY!
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}))
   const {
-    packageSlug, customerName, customerEmail, guestName,
+    packageSlug, customerName, customerEmail, guestName, quantity,
     session_hash_source, utm_source, utm_medium, utm_campaign, utm_content,
   } = body as {
     packageSlug: string
     customerName: string
     customerEmail: string
     guestName?: string
+    quantity?: number
     session_hash_source?: string
     utm_source?: string
     utm_medium?: string
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify({
       packageSlug, customerName, customerEmail,
       guestName: guestName || customerName,
+      quantity: quantity && quantity > 1 ? quantity : undefined,
       intentMode: true,
       session_hash_source: session_hash_source || undefined,
       utm_source: utm_source || undefined,
