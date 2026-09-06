@@ -393,9 +393,12 @@
   "waitlist": {
     "badge": "Sold out",
     "title": "¿No te lo quieres perder?",
-    "subtitle": "Déjanos tu correo y te avisamos si se liberan lugares para este evento.",
+    "subtitle": "Déjanos tu correo o tu teléfono y te avisamos si se liberan lugares para este evento.",
     "namePlaceholder": "Tu nombre (opcional)",
+    "emailHelp": "Danos tu email para tenerte al tanto de nuevas fechas de este concierto",
     "emailPlaceholder": "Tu email",
+    "phoneHelp": "Danos tu número de teléfono para avisarte en caso de que se libere algún lugar",
+    "phonePlaceholder": "Tu teléfono (opcional)",
     "newsletterOptin": "También suscríbeme al newsletter para enterarme antes de los próximos eventos",
     "cta": "Avísame",
     "submitting": "Enviando…",

@@ -10,10 +10,11 @@ export async function POST(req: NextRequest) {
   const slug  = typeof body.slug  === 'string' ? body.slug.trim()  : ''
   const email = typeof body.email === 'string' ? body.email.trim() : ''
   const name  = typeof body.name  === 'string' ? body.name.trim()  : ''
+  const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
   const subscribeNewsletter = body.subscribeNewsletter === true
 
   if (!slug)  return NextResponse.json({ error: 'Missing slug' }, { status: 400 })
-  if (!email) return NextResponse.json({ error: 'Missing email' }, { status: 400 })
+  if (!email && !phone) return NextResponse.json({ error: 'Missing email or phone' }, { status: 400 })
 
   const res = await fetch(`${BASE}/v1/tickets/public/event-waitlist`, {
     method: 'POST',
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
       Accept: 'application/json',
       'x-api-key': API_KEY,
     },
-    body: JSON.stringify({ slug, email, name, subscribeNewsletter }),
+    body: JSON.stringify({ slug, email, name, phone, subscribeNewsletter }),
     cache: 'no-store',
   })
   const data = await res.json().catch(() => ({}))

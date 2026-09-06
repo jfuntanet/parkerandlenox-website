@@ -14,13 +14,14 @@ export function WaitlistForm({ slug, accent = 'var(--color-parker-bronze)' }: Pr
   const t = useTranslations('waitlist')
   const [email, setEmail]     = useState('')
   const [name, setName]       = useState('')
+  const [phone, setPhone]     = useState('')
   const [optIn, setOptIn]     = useState(true)
   const [status, setStatus]   = useState<'idle' | 'loading' | 'ok' | 'already' | 'err'>('idle')
   const [errMsg, setErrMsg]   = useState('')
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!email.trim()) return
+    if (!email.trim() && !phone.trim()) return
     setStatus('loading'); setErrMsg('')
     try {
       const res = await fetch('/api/event-waitlist', {
@@ -30,6 +31,7 @@ export function WaitlistForm({ slug, accent = 'var(--color-parker-bronze)' }: Pr
           slug,
           email: email.trim(),
           name: name.trim() || undefined,
+          phone: phone.trim() || undefined,
           subscribeNewsletter: optIn,
         }),
       })
@@ -74,12 +76,25 @@ export function WaitlistForm({ slug, accent = 'var(--color-parker-bronze)' }: Pr
             disabled={status === 'loading'}
             className="w-full rounded-full border border-white/20 bg-black/40 px-5 py-3 font-body text-base text-cream placeholder:text-white/40 focus:border-white/60 focus:outline-none disabled:opacity-50"
           />
+          <p className="font-body text-sm leading-snug px-2 -mb-1" style={{ color: 'rgba(237,232,220,0.6)' }}>
+            {t('emailHelp')}
+          </p>
           <input
             type="email"
-            required
             placeholder={t('emailPlaceholder')}
             value={email}
             onChange={e => setEmail(e.target.value)}
+            disabled={status === 'loading'}
+            className="w-full rounded-full border border-white/20 bg-black/40 px-5 py-3 font-body text-base text-cream placeholder:text-white/40 focus:border-white/60 focus:outline-none disabled:opacity-50"
+          />
+          <p className="font-body text-sm leading-snug px-2 -mb-1 mt-1" style={{ color: 'rgba(237,232,220,0.6)' }}>
+            {t('phoneHelp')}
+          </p>
+          <input
+            type="tel"
+            placeholder={t('phonePlaceholder')}
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
             disabled={status === 'loading'}
             className="w-full rounded-full border border-white/20 bg-black/40 px-5 py-3 font-body text-base text-cream placeholder:text-white/40 focus:border-white/60 focus:outline-none disabled:opacity-50"
           />
@@ -98,7 +113,7 @@ export function WaitlistForm({ slug, accent = 'var(--color-parker-bronze)' }: Pr
           </label>
           <button
             type="submit"
-            disabled={status === 'loading' || !email.trim()}
+            disabled={status === 'loading' || (!email.trim() && !phone.trim())}
             className="w-full sm:w-auto sm:self-start mt-2 px-8 py-3 rounded-full font-mono text-[0.7rem] tracking-[0.3em] uppercase transition-colors hoverable disabled:cursor-not-allowed disabled:opacity-40"
             style={{
               background: 'transparent',
