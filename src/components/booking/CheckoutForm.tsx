@@ -45,6 +45,7 @@ const stripeAppearance = {
     '.Label':  { fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(237,232,220,0.6)' },
     '.Tab':    { borderRadius: '999px', border: '1px solid rgba(255,255,255,0.15)', backgroundColor: 'transparent' },
     '.TabSelected': { border: '1px solid rgb(160,120,74)', backgroundColor: 'transparent' },
+    '.AccordionItem': { padding: '10px 16px', backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.12)' },
     '.Block':  { backgroundColor: 'transparent', border: 'none' },
     '.CheckboxInput': { borderRadius: '4px' },
   },
@@ -768,7 +769,7 @@ function PayInnerElement({ returnUrl, payFnRef, onErr }: {
     return () => { payFnRef.current = null }
   }, [stripe, elements, returnUrl, payFnRef, onErr])
 
-  return <PaymentElement options={{ layout: 'tabs' }} />
+  return <PaymentElement options={{ layout: { type: 'accordion', spacedAccordionItems: false } }} />
 }
 
 // ─── MerchUpsell wrapper que reporta products al padre ───
