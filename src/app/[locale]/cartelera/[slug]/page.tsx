@@ -3,9 +3,11 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
-import { getEventDetail }                     from '@/lib/api'
+import { getEventDetail, getPackages }        from '@/lib/api'
+import type { TicketPackage }                 from '@/types/api'
 import { CheckoutForm }                       from '@/components/booking/CheckoutForm'
 import { WaitlistForm }                       from '@/components/booking/WaitlistForm'
+import { CicloCard }                          from '@/components/ui/CicloCard'
 import { ViewItemEvent }                      from '@/components/analytics/ViewItemEvent'
 import { formatDateShort, formatTime }        from '@/lib/format'
 
@@ -61,10 +63,12 @@ export default async function EventDetailPage({ params }: Props) {
   } catch {
     notFound()
   }
-  return <EventDetailInner slug={slug} detail={detail} />
+  const packages = await getPackages().catch(() => [] as TicketPackage[])
+  const matchingPackage = packages.find(p => p.nights.some(n => n.slug === slug))
+  return <EventDetailInner slug={slug} detail={detail} matchingPackage={matchingPackage} />
 }
 
-function EventDetailInner({ slug, detail }: { slug: string; detail: NonNullable<Awaited<ReturnType<typeof getEventDetail>>> }) {
+function EventDetailInner({ slug, detail, matchingPackage }: { slug: string; detail: NonNullable<Awaited<ReturnType<typeof getEventDetail>>>; matchingPackage?: TicketPackage }) {
   const t = useTranslations('event')
   const { event, ticketTypes, salesActive } = detail
   const accent = venueAccent(event.venue)
@@ -264,6 +268,15 @@ function EventDetailInner({ slug, detail }: { slug: string; detail: NonNullable<
             </div>
           )}
         </div>
+
+        {matchingPackage && !isPast && (
+          <div className="mt-10">
+            <p className="font-mono text-[0.55rem] tracking-[0.4em] uppercase text-center text-white/40 mb-4">
+              También parte de un ciclo
+            </p>
+            <CicloCard pkg={matchingPackage} />
+          </div>
+        )}
 
         <div className="mt-8">
           <Link href="/cartelera" className="font-mono text-[0.6rem] tracking-widest uppercase text-white/30 hover:text-cream transition-colors hoverable">
