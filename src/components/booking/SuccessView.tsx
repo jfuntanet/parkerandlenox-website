@@ -191,9 +191,11 @@ export function SuccessView({ paymentIntent, redirectStatus, orderId, isFree }: 
       const res = await fetch('/api/update-and-send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // hideTotal = checkbox "regalo": solo entonces el correo al invitado
+        // esconde el costo; sin regalo, el boleto viaja con su costo real.
         body: JSON.stringify(orderId
-          ? { orderId, tickets: payload }
-          : { paymentIntentId: paymentIntent, tickets: payload }
+          ? { orderId, tickets: payload, hideTotal }
+          : { paymentIntentId: paymentIntent, tickets: payload, hideTotal }
         ),
       })
       const d = await res.json()
