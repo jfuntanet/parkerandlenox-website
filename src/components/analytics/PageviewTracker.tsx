@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { pushEvent } from '@/lib/analytics'
+import { pushEvent, fbqTrack } from '@/lib/analytics'
 
 /**
  * Rastrea page_view en cada cambio de ruta client-side (Next.js SPA).
@@ -12,6 +12,11 @@ import { pushEvent } from '@/lib/analytics'
  */
 export function PageviewTracker() {
   const pathname = usePathname()
+  // El PageView inicial de Meta lo dispara el snippet de TrackingScripts.
+  // Aqui solo se cubren las navegaciones client-side: en un SPA el snippet
+  // no se vuelve a ejecutar al navegar. Sin este guard, la primera vista
+  // se contaria dos veces.
+  const primeraVista = useRef(true)
 
   useEffect(() => {
     pushEvent('page_view', {
@@ -19,6 +24,11 @@ export function PageviewTracker() {
       page_location: window.location.href,
       page_title: document.title,
     })
+    if (primeraVista.current) {
+      primeraVista.current = false
+      return
+    }
+    fbqTrack('PageView')
   }, [pathname])
 
   return null

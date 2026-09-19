@@ -14,6 +14,10 @@ export default function robots(): MetadataRoute.Robots {
           '/checkout/',       // páginas de pago (incluye success con datos sensibles)
           '/cartelera/*/checkout/', // checkout flow por evento
           '/prensa/archivo',  // archivo completo de menciones (mantén el prensa curado indexado)
+          '/lenox-negroniweek', // landing Campari (URL directa por email, no descubierta)
+          '/lenox-negroniweek/', // idem con slash final
+          '/*/lenox-negroniweek', // por locale (/es, /en)
+          '/*/lenox-negroniweek/',
         ],
       },
     ],

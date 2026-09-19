@@ -51,10 +51,33 @@ function setCookie(name: string, value: string, days = 30): void {
 // checkout en /checkout/[slug]:
 //   /cartelera/luz-varela-par-1177 → "luz-varela-par-1177"
 //   /checkout/luz-varela-par-1177  → "luz-varela-par-1177"
+//   /ciclo/ciclo-coltrane-100      → "ciclo-coltrane-100"
 //   /  ·  /cocteles  ·  /cartelera → slug=null (pageview a nivel sitio)
+// Los ciclos NO resuelven a un concert_id (son N noches, no una): el core los
+// inserta con concert_id=NULL conservando el slug, que es justo lo que hace
+// falta para medirlos. Sin esto la pagina del ciclo caia en slug=null y su
+// trafico era indistinguible del de la home.
+// Paginas de contenido que queremos medir por separado. Sin esto caen todas en
+// slug=null junto con la home y su trafico es indistinguible — era imposible
+// sacar la conversion de /lenox-negroniweek (visitas -> pases).
+// Prefijo "pg:" para no confundirlas nunca con un slug de evento.
+const PAGINAS_MEDIDAS = [
+  'lenox-negroniweek', 'lenox', 'cocteles', 'cocina', 'cartelera',
+  'faqs', 'musicos', 'prensa',
+]
+
+// El sitio es bilingue: la version en ingles vive bajo /en. Sin quitar ese
+// prefijo, /en/cartelera/<slug> no hacia match y no se media.
+function stripLocale(path: string): string {
+  return path.replace(/^\/(en|es)(?=\/|$)/, '') || '/'
+}
+
 function slugFromPathname(path: string): string | null {
-  const m = path.match(/^\/(cartelera|checkout)\/([^/]+)\/?$/)
+  const p = stripLocale(path)
+  const m = p.match(/^\/(cartelera|checkout|ciclo)\/([^/]+)\/?$/)
   if (m && m[2] !== 'success' && m[2] !== 'gracias') return m[2]
+  const pagina = p.replace(/^\/+|\/+$/g, '')
+  if (PAGINAS_MEDIDAS.includes(pagina)) return `pg:${pagina}`
   return null
 }
 

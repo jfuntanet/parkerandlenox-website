@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation'
 import { ConcertCard } from '@/components/ui/ConcertCard'
 import { CocktailCarousel } from '@/components/ui/CocktailCarousel'
 import { ConcertCardHorizontal } from '@/components/ui/ConcertCardHorizontal'
+import { NegroniWeekBanner } from '@/components/NegroniWeekBanner'
 import { getEvents, getMenus, findMenuByKeyword, type MenuItem } from '@/lib/api'
 import type { TicketEvent } from '@/types/api'
 
@@ -148,23 +149,7 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
           </p>
         </section>
 
-        <section className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-16">
-            {SECTIONS.map(k => (
-              <div key={k}>
-                <div className="h-px w-8 mb-5" style={{ background: 'var(--color-parker-bronze)', opacity: 0.6 }} />
-                <h2 className="font-serif font-light text-cream leading-snug mb-4"
-                  style={{ fontSize: 'clamp(1.4rem, 2.1vw, 1.85rem)' }}>
-                  {t(`${k}.title`)}
-                </h2>
-                <p className="font-body font-light leading-relaxed"
-                  style={{ fontSize: 'clamp(1rem, 1.15vw, 1.12rem)', color: 'rgba(237,232,220,0.68)' }}>
-                  {t(`${k}.body`)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <NegroniWeekBanner />
 
         {/* Selectores: la programación de Lenox. Hoy suele venir vacía —
             el core sólo trae eventos de Parker— pero en cuanto se publique
@@ -198,6 +183,26 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
               {t('sesiones.empty')}
             </p>
           )}
+        </section>
+
+        {/* Cómo entrar + Barra: van después de la cartelera para que primero
+            el visitante vea qué está pasando y luego la info operativa. */}
+        <section className="max-w-5xl mx-auto mt-28">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-16">
+            {SECTIONS.map(k => (
+              <div key={k}>
+                <div className="h-px w-8 mb-5" style={{ background: 'var(--color-parker-bronze)', opacity: 0.6 }} />
+                <h2 className="font-serif font-light text-cream leading-snug mb-4"
+                  style={{ fontSize: 'clamp(1.4rem, 2.1vw, 1.85rem)' }}>
+                  {t(`${k}.title`)}
+                </h2>
+                <p className="font-body font-light leading-relaxed"
+                  style={{ fontSize: 'clamp(1rem, 1.15vw, 1.12rem)', color: 'rgba(237,232,220,0.68)' }}>
+                  {t(`${k}.body`)}
+                </p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Coctelería con foto. Las imágenes viven en el core desde siempre
