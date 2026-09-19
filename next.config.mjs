@@ -12,6 +12,18 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // ─── QR de la cartelera FÍSICA → /reservaciones, que nunca existió ───
+      // El cartel colgado manda a esa ruta y la gente se estrellaba en un 404.
+      // No se puede reimprimir el papel, así que el redirect le pega la UTM al
+      // vuelo para que esos escaneos por fin se midan (utm_content=qr-reservaciones
+      // los separa del QR nuevo).
+      { source: '/reservaciones',      destination: '/cartelera?utm_source=cartelera&utm_medium=qr&utm_campaign=cartelera-impresa&utm_content=qr-reservaciones', permanent: true },
+      { source: '/reservaciones/',     destination: '/cartelera?utm_source=cartelera&utm_medium=qr&utm_campaign=cartelera-impresa&utm_content=qr-reservaciones', permanent: true },
+      { source: '/en/reservaciones',   destination: '/cartelera?utm_source=cartelera&utm_medium=qr&utm_campaign=cartelera-impresa&utm_content=qr-reservaciones', permanent: true },
+      { source: '/en/reservaciones/',  destination: '/cartelera?utm_source=cartelera&utm_medium=qr&utm_campaign=cartelera-impresa&utm_content=qr-reservaciones', permanent: true },
+      { source: '/reservations',       destination: '/cartelera?utm_source=cartelera&utm_medium=qr&utm_campaign=cartelera-impresa&utm_content=qr-reservaciones', permanent: true },
+      { source: '/en/reservations',    destination: '/cartelera?utm_source=cartelera&utm_medium=qr&utm_campaign=cartelera-impresa&utm_content=qr-reservaciones', permanent: true },
+
       // ─── Boletos (WP) → Cartelera (Next) — CRÍTICO para links compartidos ───
       { source: '/boletos',         destination: '/cartelera',       permanent: true },
       { source: '/boletos/',        destination: '/cartelera',       permanent: true },
