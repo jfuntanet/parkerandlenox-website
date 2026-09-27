@@ -3,7 +3,6 @@ import { Link } from '@/i18n/navigation'
 import { ConcertCard } from '@/components/ui/ConcertCard'
 import { CocktailCarousel } from '@/components/ui/CocktailCarousel'
 import { ConcertCardHorizontal } from '@/components/ui/ConcertCardHorizontal'
-import { NegroniWeekBanner } from '@/components/NegroniWeekBanner'
 import { getEvents, getMenus, findMenuByKeyword, type MenuItem } from '@/lib/api'
 import type { TicketEvent } from '@/types/api'
 
@@ -148,8 +147,6 @@ export default async function LenoxPage({ params }: { params: Promise<{ locale: 
             })}
           </p>
         </section>
-
-        <NegroniWeekBanner />
 
         {/* Selectores: la programación de Lenox. Hoy suele venir vacía —
             el core sólo trae eventos de Parker— pero en cuanto se publique

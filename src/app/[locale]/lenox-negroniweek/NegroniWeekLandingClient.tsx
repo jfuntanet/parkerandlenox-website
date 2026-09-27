@@ -4,55 +4,51 @@ import { useState, type FormEvent } from 'react'
 
 const API_URL = 'https://core.notabot.mx'
 
+// Negroni Week cerró el 27-sep-2026. La landing ya no emite pases: da el aviso de
+// cierre y ofrece el opt-in a la cartelera. Los leads caen en la lista de Listmonk
+// "Negroni Week 2026" (id 21), que se incluye a mano como destinataria del semanal.
+const NEGRONI_LIST_UUID = 'b1fc850d-57d4-4442-a3f9-af44e43f31a8'
+
 type State =
   | { kind: 'idle' }
   | { kind: 'loading' }
-  | { kind: 'ok'; code: string; alreadyExisted: boolean }
+  | { kind: 'ok' }
   | { kind: 'error'; message: string }
-
-// source del pase: de dónde llegó (utm de la pauta) para separar pauta vs orgánico
-function readSource(): string {
-  if (typeof window === 'undefined') return 'web'
-  const q = new URLSearchParams(window.location.search)
-  const parts = [q.get('utm_source'), q.get('utm_campaign'), q.get('utm_content')].filter(Boolean)
-  return parts.length ? parts.join('|').slice(0, 120) : 'web'
-}
 
 // Lead en el pixel de P&L — sin esto Meta no puede optimizar a registro
 function trackLead() {
   const fbq = (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq
   if (typeof fbq === 'function') {
-    fbq('track', 'Lead', { content_name: 'negroni-week-2026', content_category: 'lenox' })
+    fbq('track', 'Lead', { content_name: 'cartelera-optin', content_category: 'negroni-week-outro' })
   }
 }
 
 export function NegroniWeekLandingClient() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [terms, setTerms] = useState(false)
   const [state, setState] = useState<State>({ kind: 'idle' })
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
     if (state.kind === 'loading') return
-    if (!terms) {
-      setState({ kind: 'error', message: 'Acepta los términos para continuar' })
-      return
-    }
     setState({ kind: 'loading' })
     try {
-      const r = await fetch(`${API_URL}/v1/promo/negroni-week/register`, {
+      const r = await fetch(`${API_URL}/v1/store/public/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ fullName: fullName.trim(), email: email.trim().toLowerCase(), source: readSource() }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          name: fullName.trim(),
+          listUuid: NEGRONI_LIST_UUID,
+        }),
       })
       const data = await r.json().catch(() => ({}))
       if (!r.ok) {
-        setState({ kind: 'error', message: data?.error || 'No se pudo generar el pase' })
+        setState({ kind: 'error', message: data?.error || 'No pudimos guardar tu correo' })
         return
       }
       trackLead()
-      setState({ kind: 'ok', code: data.code, alreadyExisted: !!data.alreadyExisted })
+      setState({ kind: 'ok' })
     } catch {
       setState({ kind: 'error', message: 'No se pudo conectar. Intenta de nuevo.' })
     }
@@ -71,10 +67,10 @@ export function NegroniWeekLandingClient() {
           <img
             src="/negroni/campari-white.png"
             alt="Campari"
-            style={{ width: '160px', maxWidth: '45%', height: 'auto', display: 'inline-block', opacity: 0.95 }}
+            style={{ width: '160px', maxWidth: '45%', height: 'auto', display: 'inline-block', opacity: 0.8 }}
           />
-          <div style={{ fontSize: 11, letterSpacing: '0.4em', textTransform: 'uppercase', opacity: 0.7, marginTop: 20 }}>
-            presenta
+          <div style={{ fontSize: 11, letterSpacing: '0.4em', textTransform: 'uppercase', opacity: 0.6, marginTop: 20 }}>
+            presentó
           </div>
           <h1
             className="mt-2"
@@ -99,7 +95,7 @@ export function NegroniWeekLandingClient() {
               style={{ width: '130px', maxWidth: '38vw', height: 'auto', display: 'block' }}
             />
           </div>
-          <div style={{ fontSize: 13, letterSpacing: '0.28em', textTransform: 'uppercase', opacity: 0.88, marginTop: 22 }}>
+          <div style={{ fontSize: 13, letterSpacing: '0.28em', textTransform: 'uppercase', opacity: 0.6, marginTop: 22 }}>
             15 – 27 septiembre 2026
           </div>
         </div>
@@ -113,47 +109,57 @@ export function NegroniWeekLandingClient() {
             backdropFilter: 'blur(6px)',
           }}
         >
+          <div style={{ textAlign: 'center' }}>
+            <h2 style={{
+              fontSize: '1.5rem', margin: '0 0 10px',
+              fontFamily: "'Playfair Display', Georgia, serif",
+            }}>
+              Negroni Week terminó
+            </h2>
+            <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.85, margin: 0 }}>
+              Gracias por acompañarnos del 15 al 27 de septiembre. Los negronis se quedan en la
+              carta de Lenox.
+            </p>
+          </div>
+
+          <hr style={{
+            border: 0, borderTop: '1px solid rgba(255,240,220,0.15)',
+            margin: '26px 0 24px',
+          }} />
+
           {state.kind === 'ok' ? (
             <div style={{ textAlign: 'center' }}>
               <div
                 style={{
-                  width: 64, height: 64, borderRadius: '50%',
+                  width: 56, height: 56, borderRadius: '50%',
                   background: '#c8102e',
-                  margin: '0 auto 18px',
+                  margin: '0 auto 16px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 32,
+                  fontSize: 28,
                 }}
               >✓</div>
-              <h2 style={{ fontSize: '1.6rem', margin: '0 0 8px', fontFamily: "'Playfair Display', serif" }}>
-                {state.alreadyExisted ? 'Ya tenías tu pase' : '¡Listo!'}
-              </h2>
-              <p style={{ fontSize: 15, lineHeight: 1.55, opacity: 0.9, marginBottom: 20 }}>
-                {state.alreadyExisted
-                  ? 'Ya habíamos generado tu pase antes — te lo reenviamos por correo.'
-                  : 'Revisa tu correo. Ahí llega tu pase con QR listo para presentar en barra.'}
-              </p>
-              <div
-                style={{
-                  fontFamily: "'Space Mono', monospace",
-                  fontSize: 14, letterSpacing: '0.25em', textTransform: 'uppercase',
-                  color: '#f0b5b5',
-                  border: '1px dashed rgba(255,200,200,0.3)',
-                  borderRadius: 6, padding: '10px 14px', display: 'inline-block',
-                }}
-              >{state.code}</div>
-              <p style={{ fontSize: 12, opacity: 0.6, marginTop: 16 }}>
-                Guarda tu código por si el correo no llega. Escríbenos a rsvp@parkerandlenox.com si no lo encuentras.
+              <h3 style={{ fontSize: '1.3rem', margin: '0 0 8px', fontFamily: "'Playfair Display', Georgia, serif" }}>
+                Quedaste en la lista
+              </h3>
+              <p style={{ fontSize: 14.5, lineHeight: 1.55, opacity: 0.85, margin: 0 }}>
+                Te escribimos cuando abramos la siguiente cartelera.
               </p>
             </div>
           ) : (
             <form onSubmit={onSubmit}>
-              <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.9, marginBottom: 22 }}>
-                Regístrate y recibe tu pase por correo. Preséntalo en barra para acceder a nuestro{' '}
-                <strong>menú de negronis a $120</strong> del 15 al 27 de septiembre en Lenox.
+              <h3 style={{
+                fontSize: '1.25rem', margin: '0 0 10px', textAlign: 'center',
+                fontFamily: "'Playfair Display', Georgia, serif",
+              }}>
+                ¿Te avisamos qué sigue?
+              </h3>
+              <p style={{ fontSize: 14.5, lineHeight: 1.6, opacity: 0.85, marginBottom: 22, textAlign: 'center' }}>
+                Déjanos tu correo y te mandamos la cartelera de Parker&nbsp;&amp;&nbsp;Lenox antes de
+                que los boletos salgan a la venta.
               </p>
 
               <label style={labelStyle}>
-                Nombre completo
+                Nombre
                 <input
                   type="text" required value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
@@ -170,24 +176,6 @@ export function NegroniWeekLandingClient() {
                   autoComplete="email" style={inputStyle}
                   disabled={state.kind === 'loading'}
                 />
-              </label>
-
-              <label
-                style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 10,
-                  fontSize: 12.5, opacity: 0.85, marginTop: 18,
-                  lineHeight: 1.5, cursor: 'pointer',
-                }}
-              >
-                <input
-                  type="checkbox" checked={terms}
-                  onChange={(e) => setTerms(e.target.checked)}
-                  style={{ marginTop: 3, accentColor: '#c8102e' }}
-                />
-                <span>
-                  Acepto recibir información sobre esta promoción y confirmo ser mayor de edad. Válido solo en Lenox,
-                  del 15 al 27 de septiembre 2026.
-                </span>
               </label>
 
               {state.kind === 'error' && (
@@ -211,10 +199,27 @@ export function NegroniWeekLandingClient() {
                   opacity: state.kind === 'loading' ? 0.7 : 1,
                 }}
               >
-                {state.kind === 'loading' ? 'Enviando…' : 'Recibir mi pase'}
+                {state.kind === 'loading' ? 'Enviando…' : 'Quiero saber'}
               </button>
+
+              <p style={{ fontSize: 12, opacity: 0.55, marginTop: 14, textAlign: 'center', lineHeight: 1.5 }}>
+                Un correo a la semana. Te puedes dar de baja cuando quieras.
+              </p>
             </form>
           )}
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: 26 }}>
+          <a
+            href="/#cartelera"
+            style={{
+              fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
+              color: '#f5efe7', opacity: 0.7, textDecoration: 'underline',
+              textUnderlineOffset: 4,
+            }}
+          >
+            Ver la cartelera
+          </a>
         </div>
 
         <div style={{ textAlign: 'center', marginTop: 34 }}>
