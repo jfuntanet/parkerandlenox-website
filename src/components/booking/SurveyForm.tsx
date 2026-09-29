@@ -76,6 +76,10 @@ export function SurveyForm() {
 
   const [ratings, setRatings] = useState<Record<string, number>>({})
   const [comentario, setComentario] = useState('')
+  // Anonimato: la reseña no lleva datos de contacto salvo que la persona los dé
+  // aquí. Que sepamos quién es por el token NO nos autoriza a contestarle.
+  const [contactar, setContactar] = useState(false)
+  const [correo, setCorreo] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -120,10 +124,9 @@ export function SurveyForm() {
             precios:            ratings.precios            ?? null,
             comentario:         comentario.trim() || null,
           },
-          clientData: {
-            nombre: info?.customerName || null,
-            email:  info?.customerEmail || null,
-          },
+          clientData: contactar && correo.trim()
+            ? { nombre: info?.customerName || null, email: correo.trim() }
+            : { nombre: null, email: null },
         }),
       })
       const data = await res.json().catch(() => ({}))
@@ -236,6 +239,38 @@ export function SurveyForm() {
           />
           <p className="font-mono text-[0.55rem] tracking-widest uppercase text-white/30 mt-2 text-right">
             {comentario.length}/500
+          </p>
+        </section>
+
+        {/* Contacto opcional. Sin esto la reseña es anónima y nadie puede contestarla. */}
+        <section>
+          <SectionLabel>¿Quieres respuesta?</SectionLabel>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={contactar}
+              onChange={(e) => {
+                setContactar(e.target.checked)
+                if (e.target.checked && !correo) setCorreo(info?.customerEmail || '')
+              }}
+              className="mt-1 h-4 w-4"
+              style={{ accentColor: ACCENT }}
+            />
+            <span className="font-body text-sm leading-relaxed" style={{ color: 'rgba(237,232,220,0.75)' }}>
+              Sí, quiero que me contesten.
+            </span>
+          </label>
+          {contactar && (
+            <input
+              type="email"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
+              placeholder="tu@correo.com"
+              className="mt-3 w-full rounded-2xl border border-white/20 bg-black/40 px-5 py-3 font-body text-base text-cream placeholder:text-white/40 focus:border-white/60 focus:outline-none"
+            />
+          )}
+          <p className="mt-3 font-body text-xs leading-relaxed" style={{ color: 'rgba(237,232,220,0.45)' }}>
+            Si lo dejas sin marcar, tu reseña llega de forma anónima y no podremos escribirte.
           </p>
         </section>
 
