@@ -47,8 +47,13 @@ export function parseCartKey(key: string): { productId: string; variantId: strin
   return { productId, variantId: variantId || null }
 }
 
-function variantLabel(v: MerchProductVariant): string {
-  return [v.size, v.color].filter(Boolean).join(' / ')
+// Etiqueta corta de talla: "Extra Large (XL)" → "XL". El color solo se muestra si
+// el producto tiene tallas en más de un color (si todas son iguales, sobra).
+function variantLabel(v: MerchProductVariant, all?: MerchProductVariant[]): string {
+  const abbr = v.size?.match(/\(([^)]+)\)/)?.[1]?.trim() || v.size || ''
+  const colors = new Set((all ?? [v]).map(x => x.color).filter(Boolean))
+  const showColor = colors.size > 1 && v.color
+  return [abbr, showColor ? v.color : null].filter(Boolean).join(' · ')
 }
 
 // Datos de una línea del carrito: título con talla, precio y stock de ESA talla.
@@ -62,7 +67,7 @@ export function cartLine(key: string, products: MerchProduct[] | null) {
     product: p,
     productId,
     variantId,
-    title: v ? `${p.title} · ${variantLabel(v)}` : p.title,
+    title: v ? `${p.title} · ${variantLabel(v, p.variants)}` : p.title,
     unit: v?.priceOverride != null ? Number(v.priceOverride) : Number(p.price),
     stock: v ? Math.max(0, Number(v.stock || 0)) : Math.max(0, Number(p.stock || 0)),
   }
@@ -160,7 +165,7 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
                           background: active ? accent : 'transparent',
                           color: active ? 'var(--color-black)' : 'rgba(237,232,220,0.8)',
                         }}>
-                        {variantLabel(v)}
+                        {variantLabel(v, p.variants)}
                       </button>
                     )
                   })}
