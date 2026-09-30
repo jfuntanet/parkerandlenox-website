@@ -520,11 +520,14 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
               {tFlow('buyerData')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* name/autoComplete: el navegador sugiere el nombre y correo guardados del cliente */}
               <input type="text" required placeholder={tFlow('yourNameRequired')}
+                name="name" autoComplete="name" autoCapitalize="words"
                 value={customerName}
                 onChange={e => { setCustomerName(e.target.value); invalidateCheckout() }}
                 className={inputCls} />
               <input type="email" required placeholder={tFlow('yourEmailRequired')}
+                name="email" autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false}
                 value={customerEmail}
                 onChange={e => { setCustomerEmail(e.target.value); invalidateCheckout() }}
                 className={inputCls} />
@@ -696,6 +699,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         <div className="pt-2">
           <div className="relative">
             <input type="text" value={couponCode}
+              autoComplete="off" autoCapitalize="characters" spellCheck={false}
               onChange={e => { setCouponCode(e.target.value); setCouponError(null) }}
               disabled={!!couponApplied}
               placeholder={tFlow('couponInputPlaceholder')}
