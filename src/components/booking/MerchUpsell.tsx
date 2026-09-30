@@ -35,7 +35,38 @@ function availableStock(p: MerchProduct): number {
   return Math.max(0, Number(p.stock || 0))
 }
 
+// Llave del carrito: "productId" o "productId:variantId" para productos con talla.
 export type CartMap = Map<string, number>
+
+export function cartKey(productId: string, variantId?: string | null): string {
+  return variantId ? `${productId}:${variantId}` : productId
+}
+
+export function parseCartKey(key: string): { productId: string; variantId: string | null } {
+  const [productId, variantId] = key.split(':')
+  return { productId, variantId: variantId || null }
+}
+
+function variantLabel(v: MerchProductVariant): string {
+  return [v.size, v.color].filter(Boolean).join(' / ')
+}
+
+// Datos de una línea del carrito: título con talla, precio y stock de ESA talla.
+export function cartLine(key: string, products: MerchProduct[] | null) {
+  const { productId, variantId } = parseCartKey(key)
+  const p = products?.find(x => x.id === productId)
+  if (!p) return null
+  const v = variantId ? p.variants?.find(x => x.id === variantId) : undefined
+  if (variantId && !v) return null
+  return {
+    product: p,
+    productId,
+    variantId,
+    title: v ? `${p.title} · ${variantLabel(v)}` : p.title,
+    unit: v?.priceOverride != null ? Number(v.priceOverride) : Number(p.price),
+    stock: v ? Math.max(0, Number(v.stock || 0)) : Math.max(0, Number(p.stock || 0)),
+  }
+}
 
 interface Props {
   cart: CartMap
@@ -48,6 +79,8 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
   const tMerch = useTranslations('merch')
   const [products, setProducts] = useState<MerchProduct[] | null>(null)
   const [err, setErr] = useState<string | null>(null)
+  // Talla elegida por producto (solo productos con variantes).
+  const [sizeByProduct, setSizeByProduct] = useState<Record<string, string>>({})
 
   useEffect(() => {
     let alive = true
@@ -62,10 +95,10 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
     return () => { alive = false }
   }, [tFlow])
 
-  function setQty(pid: string, qty: number) {
+  function setQty(key: string, qty: number) {
     const next = new Map(cart)
-    if (qty <= 0) next.delete(pid)
-    else next.set(pid, qty)
+    if (qty <= 0) next.delete(key)
+    else next.set(key, qty)
     onChange(next)
   }
 
@@ -94,10 +127,14 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
       {products.map(p => {
-        const qty = cart.get(p.id) ?? 0
+        const hasSizes = (p.variants?.length ?? 0) > 0
+        const size = hasSizes ? p.variants.find(v => v.id === sizeByProduct[p.id]) : undefined
+        const key = cartKey(p.id, size?.id)
+        const qty = hasSizes && !size ? 0 : (cart.get(key) ?? 0)
         const stockAvail = availableStock(p)
         const soldOut = stockAvail <= 0
-        const maxQty = Math.min(10, stockAvail)
+        const maxQty = Math.min(10, size ? Math.max(0, Number(size.stock || 0)) : stockAvail)
+        const needsSize = hasSizes && !size
         return (
           <div key={p.id}
             className="rounded-xl border border-white/[0.10] overflow-hidden flex flex-col"
@@ -109,9 +146,30 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
                 {formatPrice(p.price)} <span className="font-mono text-xs md:text-[0.55rem] tracking-widest text-white/50">MXN</span>
               </p>
 
+              {hasSizes && !soldOut && (
+                <div className="flex flex-wrap gap-1.5" role="group" aria-label={tMerch('size')}>
+                  {p.variants.map(v => {
+                    const out = Number(v.stock || 0) <= 0
+                    const active = v.id === size?.id
+                    return (
+                      <button key={v.id} type="button" disabled={out}
+                        onClick={() => setSizeByProduct(s => ({ ...s, [p.id]: v.id }))}
+                        className="min-w-[2.25rem] px-2 py-1 rounded-full font-mono text-xs border transition-colors hoverable disabled:opacity-25 disabled:line-through disabled:cursor-not-allowed"
+                        style={{
+                          borderColor: active ? accent : 'rgba(255,255,255,0.2)',
+                          background: active ? accent : 'transparent',
+                          color: active ? 'var(--color-black)' : 'rgba(237,232,220,0.8)',
+                        }}>
+                        {variantLabel(v)}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+
               <div className="mt-auto">
                 {qty === 0 ? (
-                  <button type="button" disabled={soldOut} onClick={() => setQty(p.id, 1)}
+                  <button type="button" disabled={soldOut || needsSize || maxQty <= 0} onClick={() => setQty(key, 1)}
                     className="w-full py-2.5 md:py-2 rounded-full font-mono text-sm md:text-[0.6rem] tracking-[0.25em] uppercase border transition-all duration-300 hoverable disabled:opacity-30 disabled:cursor-not-allowed"
                     style={{
                       borderColor: soldOut ? 'rgba(160,120,74,0.25)' : accent,
@@ -119,15 +177,15 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
                     }}
                     onMouseEnter={e => { if (!soldOut) { e.currentTarget.style.background = accent; e.currentTarget.style.color = 'var(--color-black)' } }}
                     onMouseLeave={e => { if (!soldOut) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = accent } }}>
-                    {tMerch('add')}
+                    {needsSize && !soldOut ? tMerch('pickSize') : tMerch('add')}
                   </button>
                 ) : (
                   <div className="flex items-center justify-center gap-3">
-                    <button type="button" aria-label={tMerch('decrease')} onClick={() => setQty(p.id, qty - 1)}
+                    <button type="button" aria-label={tMerch('decrease')} onClick={() => setQty(key, qty - 1)}
                       className="w-8 h-8 rounded-full flex items-center justify-center font-serif text-lg leading-none hover:opacity-80 transition-opacity hoverable"
                       style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
                     <span className="font-serif text-xl text-cream min-w-[2ch] text-center leading-none">{qty}</span>
-                    <button type="button" aria-label={tMerch('increase')} disabled={qty >= maxQty} onClick={() => setQty(p.id, qty + 1)}
+                    <button type="button" aria-label={tMerch('increase')} disabled={qty >= maxQty} onClick={() => setQty(key, qty + 1)}
                       className="w-8 h-8 rounded-full flex items-center justify-center font-serif text-lg leading-none hover:opacity-80 disabled:opacity-30 transition-opacity hoverable"
                       style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>+</button>
                   </div>
@@ -145,9 +203,9 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
 export function cartSubtotal(cart: CartMap, products: MerchProduct[] | null): number {
   if (!products || cart.size === 0) return 0
   let s = 0
-  for (const p of products) {
-    const q = cart.get(p.id) ?? 0
-    if (q > 0) s += Number(p.price) * q
+  for (const [key, q] of cart.entries()) {
+    const line = cartLine(key, products)
+    if (line && q > 0) s += line.unit * q
   }
   return s
 }

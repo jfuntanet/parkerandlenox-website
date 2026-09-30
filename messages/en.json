@@ -180,7 +180,9 @@
     "add": "Add",
     "decrease": "Less",
     "increase": "More",
-    "soldOut": "Sold out"
+    "soldOut": "Sold out",
+    "size": "Size",
+    "pickSize": "Choose your size"
   },
   "success": {
     "metaTitle": "Tickets confirmed — Parker & Lenox",

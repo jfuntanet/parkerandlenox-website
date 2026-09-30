@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import { MerchUpsell, cartSubtotal, type MerchProduct, type CartMap } from './MerchUpsell'
+import { MerchUpsell, cartSubtotal, cartLine, parseCartKey, type MerchProduct, type CartMap } from './MerchUpsell'
 import { formatPrice, formatDateShort, formatTime } from '@/lib/format'
 import { pushEvent } from '@/lib/analytics'
 import type { EventDetail } from '@/types/api'
@@ -277,7 +277,10 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
     setSubmitting(true); setSubmitError(null)
     try {
       const validGuests = guests.filter(g => (g.name && g.name.trim()) || (g.email && g.email.trim()))
-      const extraItems = Array.from(merchCart.entries()).map(([productId, q]) => ({ productId, quantity: q }))
+      const extraItems = Array.from(merchCart.entries()).map(([key, q]) => {
+        const { productId, variantId } = parseCartKey(key)
+        return variantId ? { productId, variantId, quantity: q } : { productId, quantity: q }
+      })
       // Marketing Analytics: el beacon (Beacon.tsx) expone el sid (cookie pl_sid) y las UTMs
       // en window.__PL_SID / __PL_UTM. Los mandamos para que el core atribuya la orden a la
       // sesión (orders.last_session_hash + last_utm_*). Sin esto la vista Fuentes ve 0 órdenes.
@@ -443,10 +446,10 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
   const summaryLines: { id: string; title: string; image: string | null; qty: number; unit: number; sub: number }[] =
     merchProducts && merchProducts.length
       ? (Array.from(merchCart.entries())
-          .map(([pid, q]) => {
-            const p = merchProducts.find(x => x.id === pid)
-            if (!p) return null
-            return { id: pid, title: p.title, image: p.imageUrl, qty: q, unit: Number(p.price), sub: Number(p.price) * q }
+          .map(([key, q]) => {
+            const line = cartLine(key, merchProducts)
+            if (!line) return null
+            return { id: key, title: line.title, image: line.product.imageUrl, qty: q, unit: line.unit, sub: line.unit * q }
           })
           .filter(Boolean) as { id: string; title: string; image: string | null; qty: number; unit: number; sub: number }[])
       : []
@@ -598,7 +601,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           <>
             <div className="h-px bg-white/[0.06]" />
             {summaryLines.map(l => {
-              const stock = merchProducts?.find(p => p.id === l.id)?.stock ?? 10
+              const stock = cartLine(l.id, merchProducts)?.stock ?? 10
               const merchMax = Math.min(10, stock)
               const setQty = (nextQty: number) => {
                 const next = new Map(merchCart)

@@ -180,7 +180,9 @@
     "add": "Agregar",
     "decrease": "Menos",
     "increase": "Más",
-    "soldOut": "Agotado"
+    "soldOut": "Agotado",
+    "size": "Talla",
+    "pickSize": "Elige tu talla"
   },
   "success": {
     "metaTitle": "Boletos confirmados — Parker & Lenox",
