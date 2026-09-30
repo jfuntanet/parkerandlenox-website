@@ -130,7 +130,7 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
       {products.map(p => {
         const hasSizes = (p.variants?.length ?? 0) > 0
         const size = hasSizes ? p.variants.find(v => v.id === sizeByProduct[p.id]) : undefined
@@ -142,12 +142,12 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
         const needsSize = hasSizes && !size
         return (
           <div key={p.id}
-            className="rounded-xl border border-white/[0.10] overflow-hidden flex flex-col"
+            className="rounded-xl border border-white/[0.10] overflow-hidden flex flex-row sm:flex-col"
             style={{ background: '#1a1a1a' }}>
             <MerchImage product={p} soldOut={soldOut} />
-            <div className="p-4 flex flex-col flex-1 gap-2">
-              <h3 className="font-serif text-xl md:text-lg leading-tight text-cream">{p.title}</h3>
-              <p className="font-serif text-lg md:text-base" style={{ color: accent }}>
+            <div className="p-3 sm:p-4 flex flex-col flex-1 min-w-0 gap-2">
+              <h3 className="font-serif text-lg sm:text-xl md:text-lg leading-tight text-cream line-clamp-2">{p.title}</h3>
+              <p className="font-serif text-base sm:text-lg md:text-base" style={{ color: accent }}>
                 {formatPrice(p.price)} <span className="font-mono text-xs md:text-[0.55rem] tracking-widest text-white/50">MXN</span>
               </p>
 
@@ -159,7 +159,7 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
                     return (
                       <button key={v.id} type="button" disabled={out}
                         onClick={() => setSizeByProduct(s => ({ ...s, [p.id]: v.id }))}
-                        className="min-w-[2.25rem] px-2 py-1 rounded-full font-mono text-xs border transition-colors hoverable disabled:opacity-25 disabled:line-through disabled:cursor-not-allowed"
+                        className="min-w-[2.25rem] px-2 py-1.5 sm:py-1 rounded-full font-mono text-xs border transition-colors hoverable disabled:opacity-25 disabled:line-through disabled:cursor-not-allowed"
                         style={{
                           borderColor: active ? accent : 'rgba(255,255,255,0.2)',
                           background: active ? accent : 'transparent',
@@ -175,7 +175,7 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
               <div className="mt-auto">
                 {qty === 0 ? (
                   <button type="button" disabled={soldOut || needsSize || maxQty <= 0} onClick={() => setQty(key, 1)}
-                    className="w-full py-2.5 md:py-2 rounded-full font-mono text-sm md:text-[0.6rem] tracking-[0.25em] uppercase border transition-all duration-300 hoverable disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-full py-2 rounded-full font-mono text-xs md:text-[0.6rem] tracking-[0.15em] sm:tracking-[0.25em] uppercase whitespace-nowrap border transition-all duration-300 hoverable disabled:opacity-30 disabled:cursor-not-allowed"
                     style={{
                       borderColor: soldOut ? 'rgba(160,120,74,0.25)' : accent,
                       color:       soldOut ? 'rgba(160,120,74,0.4)'  : accent,
@@ -185,7 +185,7 @@ export function MerchUpsell({ cart, onChange, accent }: Props) {
                     {needsSize && !soldOut ? tMerch('pickSize') : tMerch('add')}
                   </button>
                 ) : (
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center justify-start sm:justify-center gap-3">
                     <button type="button" aria-label={tMerch('decrease')} onClick={() => setQty(key, qty - 1)}
                       className="w-8 h-8 rounded-full flex items-center justify-center font-serif text-lg leading-none hover:opacity-80 transition-opacity hoverable"
                       style={{ background: 'var(--color-parker-bronze)', color: 'var(--color-black)' }}>−</button>
@@ -222,7 +222,7 @@ function MerchImage({ product, soldOut }: { product: MerchProduct; soldOut: bool
   const [failed, setFailed] = useState(false)
   const showImg = product.imageUrl && !failed
   return (
-    <div className="relative aspect-square overflow-hidden flex items-center justify-center"
+    <div className="relative aspect-square w-28 sm:w-auto shrink-0 self-start sm:self-auto overflow-hidden flex items-center justify-center"
       style={{ background: '#1a1a1a' }}>
       {showImg ? (
         // eslint-disable-next-line @next/next/no-img-element
