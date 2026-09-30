@@ -10,6 +10,14 @@ const nextConfig = {
       { protocol: 'https', hostname: 'core.notabot.mx' },
     ],
   },
+  // Reporte para patrocinador (Negroni Week × Campari): se comparte por liga
+  // directa y no debe indexarse. Respaldo del <meta robots> del propio HTML;
+  // a propósito NO va en robots.ts, que es público y expondría la URL.
+  async headers() {
+    return [
+      { source: '/negroni/:path*.html', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
+    ]
+  },
   async redirects() {
     return [
       // ─── QR de la cartelera FÍSICA → /reservaciones, que nunca existió ───
