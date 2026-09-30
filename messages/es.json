@@ -272,7 +272,8 @@
       "merchLoading": "Cargando merch…",
       "merchNone": "No hay merch disponible por ahora.",
       "merchLoadError": "No se pudo cargar el merch"
-    }
+    },
+    "couponMerchOnly": "solo merch"
   },
   "event": {
     "pastBadge": "Ya pasó",

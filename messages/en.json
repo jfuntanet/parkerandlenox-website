@@ -272,7 +272,8 @@
       "merchLoading": "Loading merch…",
       "merchNone": "No merch available right now.",
       "merchLoadError": "Could not load merch"
-    }
+    },
+    "couponMerchOnly": "merch only"
   },
   "event": {
     "pastBadge": "Past",

@@ -138,7 +138,12 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
   const [guests, setGuests]               = useState<{ name?: string; email?: string }[]>([])
   const [customerNotes, setCustomerNotes] = useState('')
   const [couponCode, setCouponCode]       = useState('')
-  const [couponApplied, setCouponApplied] = useState<{code:string; discountType:'percent'|'fixed'; discountValue:number} | null>(null)
+  // appliesTo='merch': cupón de tienda que descuenta el merch (nunca por debajo de minMerchCharge).
+  const [couponApplied, setCouponApplied] = useState<{
+    code: string; discountType: 'percent' | 'fixed'; discountValue: number
+    appliesTo: 'tickets' | 'merch'
+    productIds?: string[]; brandFilter?: string[]; categoryFilter?: string[]; minMerchCharge?: number
+  } | null>(null)
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponError, setCouponError]     = useState<string | null>(null)
   const [merchCart, setMerchCart]         = useState<CartMap>(new Map())
@@ -180,11 +185,30 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
   const subtotal = ticketsSubtotal + merchSubtotal
   // El cupón sólo aplica al subtotal de boletos, NO al merch (así lo hace el backend
   // — el discount se resta al unitPrice del ticket, no al extraAmount).
-  const discount = couponApplied
+  const ticketDiscount = couponApplied && couponApplied.appliesTo === 'tickets'
     ? (couponApplied.discountType === 'percent'
         ? Math.round(ticketsSubtotal * (couponApplied.discountValue / 100))
         : Math.min(ticketsSubtotal, couponApplied.discountValue * quantity))
     : 0
+  // Cupón de merch: igual que el core (lib/ticket-merch): basta con que aplique a un
+  // producto del carrito; descuenta el subtotal de merch sin bajar de minMerchCharge.
+  const merchCouponFits = !!couponApplied && couponApplied.appliesTo === 'merch' &&
+    Array.from(merchCart.keys()).some(key => {
+      const p = cartLine(key, merchProducts)?.product
+      if (!p) return false
+      const c = couponApplied
+      return (!c.productIds?.length || c.productIds.includes(p.id)) &&
+        (!c.brandFilter?.length || c.brandFilter.includes(p.brand)) &&
+        (!c.categoryFilter?.length || c.categoryFilter.includes(p.category))
+    })
+  const merchDiscount = merchCouponFits && couponApplied
+    ? Math.max(0, Math.min(
+        couponApplied.discountType === 'percent'
+          ? merchSubtotal * (couponApplied.discountValue / 100)
+          : Math.min(merchSubtotal, couponApplied.discountValue),
+        merchSubtotal - (couponApplied.minMerchCharge ?? 50)))
+    : 0
+  const discount = Math.round((ticketDiscount + merchDiscount) * 100) / 100
   const grandTotal = Math.max(0, subtotal - discount)
   const guestSlots = Math.max(0, quantity - 1)
   const hasGuests = guestSlots > 0
@@ -261,6 +285,9 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
           code: data.code || couponCode.trim().toUpperCase(),
           discountType: data.discountType || 'percent',
           discountValue: Number(data.discountValue || 0),
+          appliesTo: data.appliesTo === 'merch' ? 'merch' : 'tickets',
+          productIds: data.productIds, brandFilter: data.brandFilter, categoryFilter: data.categoryFilter,
+          minMerchCharge: data.minMerchCharge,
         })
         invalidateCheckout()
       }
@@ -296,7 +323,10 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
         body: JSON.stringify({
           slug, ticketTypeId, quantity, customerName, customerEmail,
           guests: validGuests.length ? validGuests : undefined,
-          couponCode: couponApplied ? couponApplied.code : (couponCode.trim() || undefined),
+          couponCode: couponApplied
+            ? (couponApplied.appliesTo === 'tickets' ? couponApplied.code : undefined)
+            : (couponCode.trim() || undefined),
+          merchCouponCode: couponApplied?.appliesTo === 'merch' ? couponApplied.code : undefined,
           customerNotes: customerNotes.trim() || undefined,
           extraItems: extraItems.length ? extraItems : undefined,
           session_hash_source: _plSid || undefined,
@@ -689,6 +719,7 @@ export function CheckoutForm({ slug, event, ticketTypes, accent, initialQty = 1,
               <span className="font-serif text-base leading-none" style={{ color: accent }}>✓</span>
               <span className="font-mono text-xs tracking-[0.15em] uppercase truncate" style={{ color: accent }}>
                 {couponApplied.code} · {couponApplied.discountType === 'percent' ? `${couponApplied.discountValue}% off` : formatPrice(couponApplied.discountValue) + ' off'}
+                {couponApplied.appliesTo === 'merch' && ` · ${tFlow('couponMerchOnly')}`}
               </span>
             </div>
           )}

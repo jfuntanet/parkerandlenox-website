@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}))
   const {
     slug, ticketTypeId, quantity, customerName, customerEmail,
-    guests, couponCode, customerNotes, extraItems,
+    guests, couponCode, merchCouponCode, customerNotes, extraItems,
     // Marketing Analytics: sid del beacon + UTMs, para que el core atribuya la orden a la sesión.
     session_hash_source, utm_source, utm_medium, utm_campaign, utm_content,
   } = body as {
@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
     customerEmail: string
     guests?: { name?: string; email?: string }[]
     couponCode?: string
+    merchCouponCode?: string
     customerNotes?: string
     // Merch agregado en el checkout; el core lo cobra en el mismo pago y crea el pedido en Tienda.
     extraItems?: { productId: string; variantId?: string; quantity: number }[]
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
       slug, ticketTypeId, quantity, customerName, customerEmail,
       guests: guests && guests.length ? guests : undefined,
       couponCode: couponCode || undefined,
+      merchCouponCode: merchCouponCode || undefined,
       customerNotes: customerNotes || undefined,
       extraItems: Array.isArray(extraItems) && extraItems.length ? extraItems : undefined,
       session_hash_source: session_hash_source || undefined,
