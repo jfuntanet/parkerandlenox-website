@@ -396,17 +396,17 @@
   "waitlist": {
     "badge": "Sold out",
     "title": "¿No te lo quieres perder?",
-    "subtitle": "Déjanos tu correo o tu teléfono y te avisamos si se liberan lugares para este evento.",
+    "subtitle": "Déjanos tu correo o tu teléfono. Si se libera un lugar para este evento, te contactamos.",
     "namePlaceholder": "Tu nombre (opcional)",
     "emailHelp": "Danos tu email para tenerte al tanto de nuevas fechas de este concierto",
     "emailPlaceholder": "Tu email",
-    "phoneHelp": "Danos tu número de teléfono para avisarte en caso de que se libere algún lugar",
+    "phoneHelp": "Con tu teléfono podemos contactarte más rápido si se libera un lugar",
     "phonePlaceholder": "Tu teléfono (opcional)",
     "newsletterOptin": "También suscríbeme al newsletter para enterarme antes de los próximos eventos",
-    "cta": "Avísame",
+    "cta": "Anótame",
     "submitting": "Enviando…",
     "successTitle": "Estás en la lista",
-    "successHint": "Te avisaremos por correo si se libera un lugar",
+    "successHint": "Si se libera un lugar, te contactamos.",
     "alreadyInList": "Ya estás en la lista para este evento",
     "error": "No pudimos guardarte, intenta de nuevo"
   }
